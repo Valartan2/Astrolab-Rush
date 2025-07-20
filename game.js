@@ -286,7 +286,7 @@ const meteorSpeedFactor = 0.40; // Ralentir les météorites à 40% de la vitess
 const baseSpeed = (elapsed < maxDifficultyTime ? 10 + (elapsed / maxDifficultyTime) * 10 : 20) * speedFactor;
 
 const spawnRate = isMobile ? 20 : 15;
-if (frameCount % spawnRate === 0 && bubbles.length < 15 && !gameOver) {
+if (frameCount % spawnRate === 0 && bubbles.length < 30 && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
 }
 
