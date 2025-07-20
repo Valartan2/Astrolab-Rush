@@ -281,7 +281,7 @@ distanceDisplay.style.display = "block";
 
     const elapsed = (timestamp - startTime) / 1000;
     const speedFactor = isMobile ? 0.7 : 1; // 📱 Ralentit de 30% sur mobile
-const meteorSpeedFactor = 0.3; // Ralentir les météorites à 40% de la vitesse de base
+const meteorSpeedFactor = 0.32; // Ralentir les météorites à 40% de la vitesse de base
 
 const baseSpeed = (elapsed < maxDifficultyTime ? 10 + (elapsed / maxDifficultyTime) * 10 : 20) * speedFactor;
 
