@@ -75,7 +75,7 @@
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
 
-  const maxDifficultyTime = 90;
+  const maxDifficultyTime = 10;
 
   const stars = Array.from({ length: 150 }, () => ({
     x: Math.random() * width,
