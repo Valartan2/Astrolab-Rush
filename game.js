@@ -281,13 +281,15 @@ distanceDisplay.style.display = "block";
 
     const elapsed = (timestamp - startTime) / 1000;
     const speedFactor = isMobile ? 0.7 : 1; // 📱 Ralentit de 30% sur mobile
+const meteorSpeedFactor = 0.4; // Ralentir les météorites à 40% de la vitesse de base
+
 const baseSpeed = (elapsed < maxDifficultyTime ? 10 + (elapsed / maxDifficultyTime) * 10 : 20) * speedFactor;
 
-
-    const spawnRate = isMobile ? 20 : 15;
+const spawnRate = isMobile ? 20 : 15;
 if (frameCount % spawnRate === 0 && bubbles.length < 30 && !gameOver) {
-  createBubble(baseSpeed);
+  createBubble(baseSpeed * meteorSpeedFactor);
 }
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').then(reg => {
