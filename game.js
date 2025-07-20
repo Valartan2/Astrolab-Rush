@@ -222,7 +222,7 @@ function displayLeaderboard() {
 // 🔽 Adapter les vitesses selon le device
   player.gravityDown = isMobile ? 3.5 : 0.9;
   player.gravityUp = isMobile ? -3.5 : -0.8;
-  player.maxSpeed = isMobile ? 20 : 6;
+  player.maxSpeed = isMobile ? 25 : 6;
   player.radius = isMobile ? 18 : 25;
 
     bubbles = [];
