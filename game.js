@@ -75,7 +75,7 @@
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
 
-  const CONSTANT_SPEED = 7; // ou la vitesse que tu veux, constante
+  const CONSTANT_SPEED = 10; // ou la vitesse que tu veux, constante
 
 
   const stars = Array.from({ length: 150 }, () => ({
