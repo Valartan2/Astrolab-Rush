@@ -243,13 +243,16 @@ document.activeElement.blur();
   }
 
   submitScoreBtn.onclick = () => {
-    const name = playerNameInput.value.trim() || "Anonyme";
-    saveHighScore(name, Math.floor(distance));
-    highScoreInput.style.display = "none";
-    displayLeaderboard();
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-  };
+  const name = playerNameInput.value.trim() || "Anonyme";
+  saveHighScore(name, Math.floor(distance));
+
+  // Enlève le champ texte du DOM
+  highScoreInput.remove();
+
+  displayLeaderboard();
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+};
 
   playButton.onclick = () => {
     menu.style.display = "none";
@@ -342,8 +345,9 @@ if ('serviceWorker' in navigator) {
           gameOverText.style.display = "block";
 
           if (checkIfHighScore(distance)) {
-            highScoreInput.style.display = "block";
-            playerNameInput.focus();
+  showHighScoreInput(); // 👇 Tu vas créer cette fonction ci-dessous
+}
+
           } else {
             rejouerBtn.style.display = "block";
             displayLeaderboard();
@@ -436,5 +440,41 @@ function animateMenuStars() {
   requestAnimationFrame(animateMenuStars);
 }
 animateMenuStars();
+function showHighScoreInput() {
+  const div = document.createElement("div");
+  div.id = "highScoreInput";
+  div.innerHTML = `
+    <div>Nouveau record ! Entrez votre nom :</div>
+    <input type="text" id="playerName" placeholder="Votre nom" maxlength="15" />
+    <button id="submitScore">Valider</button>
+  `;
+  document.body.appendChild(div);
+
+  // Style optionnel (ajoute tes classes CSS si besoin)
+  div.style.position = "absolute";
+  div.style.top = "62%";
+  div.style.left = "50%";
+  div.style.transform = "translateX(-50%)";
+  div.style.zIndex = "9999";
+  div.style.background = "#fff";
+  div.style.padding = "20px";
+  div.style.border = "4px solid black";
+  div.style.borderRadius = "20px";
+  div.style.textAlign = "center";
+
+  const input = div.querySelector("#playerName");
+  const button = div.querySelector("#submitScore");
+
+  button.onclick = () => {
+    const name = input.value.trim() || "Anonyme";
+    saveHighScore(name, Math.floor(distance));
+    div.remove(); // 🔥 Supprime le champ définitivement
+    displayLeaderboard();
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+  };
+
+  input.focus();
+}
 
 })();
