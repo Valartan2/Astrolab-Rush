@@ -314,11 +314,13 @@ if (frameCount % spawnRate === 0 && bubbles.length < 30 && !gameOver) {
 
       distance += baseSpeed / 60;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
+      }
+      
       // ➕ Fin de la gameLoop
 if (!gameOver || particles.length > 0) {
   requestAnimationFrame(gameLoop);
+      }
 }
-
 
       // ✅ Récompense à 1km
       if (!hasReached1km && distance >= 1000) {
