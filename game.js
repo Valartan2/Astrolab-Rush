@@ -75,7 +75,8 @@
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
 
-  const maxDifficultyTime = 10;
+  const CONSTANT_SPEED = 10; // ou la vitesse que tu veux, constante
+
 
   const stars = Array.from({ length: 150 }, () => ({
     x: Math.random() * width,
