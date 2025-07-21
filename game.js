@@ -338,13 +338,13 @@ if ('serviceWorker' in navigator) {
           gameOverText.style.display = "block";
 
           if (checkIfHighScore(distance)) {
-            highScoreInput.style.display = "block";
-            playerNameInput.focus();
-          } else {
-            rejouerBtn.style.display = "block";
-            displayLeaderboard();
-            shareBtn.style.display = "block";
-          }
+  showHighScoreInput(); // 👈 on appelle la nouvelle fonction dynamique
+} else {
+  rejouerBtn.style.display = "block";
+  displayLeaderboard();
+  shareBtn.style.display = "block";
+}
+
           break;
         }
       }
@@ -432,5 +432,45 @@ function animateMenuStars() {
   requestAnimationFrame(animateMenuStars);
 }
 animateMenuStars();
+  function showHighScoreInput() {
+  const div = document.createElement("div");
+  div.id = "highScoreInput";
+  div.innerHTML = `
+    <div>Nouveau record ! Entrez votre nom :</div>
+    <input type="text" id="playerName" placeholder="Votre nom" maxlength="15" />
+    <button id="submitScore">Valider</button>
+  `;
+  document.body.appendChild(div);
+
+  // Style simple à adapter selon ton design
+  Object.assign(div.style, {
+    position: "absolute",
+    top: "62%",
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: "9999",
+    background: "#fff",
+    padding: "20px",
+    border: "4px solid black",
+    borderRadius: "20px",
+    textAlign: "center",
+    fontFamily: "inherit"
+  });
+
+  const input = div.querySelector("#playerName");
+  const button = div.querySelector("#submitScore");
+
+  button.onclick = () => {
+    const name = input.value.trim() || "Anonyme";
+    saveHighScore(name, Math.floor(distance));
+    div.remove(); // 💥 supprime le champ du DOM
+    displayLeaderboard();
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+  };
+
+  input.focus();
+}
+
 
 })();
