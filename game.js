@@ -289,15 +289,6 @@ if (frameCount % spawnRate === 0 && bubbles.length < 30 && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(reg => {
-      console.log('Service Worker enregistré avec succès:', reg.scope);
-    }).catch(err => {
-      console.error('Erreur d\'enregistrement du Service Worker:', err);
-    });
-  });
-}
 
 
     bubbles.forEach((b, i) => {
@@ -473,3 +464,12 @@ animateMenuStars();
 
 
 })();
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('Service Worker enregistré avec succès:', reg.scope);
+    }).catch(err => {
+      console.error('Erreur d\'enregistrement du Service Worker:', err);
+    });
+  });
+}
