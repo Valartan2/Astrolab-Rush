@@ -75,8 +75,6 @@
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
 
-  const maxDifficultyTime = 10;
-
   const stars = Array.from({ length: 150 }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
@@ -283,8 +281,7 @@ distanceDisplay.style.display = "block";
     const speedFactor = isMobile ? 0.60 : 1; // 📱 Ralentit de 60% sur mobile
 const meteorSpeedFactor = 0.60; // Ralentir les météorites à 60% de la vitesse de base
 
-const baseSpeed = (elapsed < maxDifficultyTime ? 10 + (elapsed / maxDifficultyTime) * 10 : 20) * speedFactor;
-
+const baseSpeed = 10 * speedFactor; // ou n'importe quelle valeur constante
 
 
 const spawnRate = isMobile ? 20 : 15;
