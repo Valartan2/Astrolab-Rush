@@ -4,20 +4,22 @@
   <meta charset="UTF-8" />
   <title>AstroLab</title>
 
-  <!-- 🔗 Lien vers le manifest -->
-  <link rel="manifest" href="manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#001122" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- 📱 Icône pour l’installation (facultatif mais recommandé) -->
-  
-  
-<link rel="apple-touch-icon" href="/icon-180.png">
-
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-180.png" />
 
   <style>
+    /* ✅ Fix iOS tap highlight & interaction delays */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
     html, body {
-      margin: 0; padding: 0; overflow: hidden;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
       background: linear-gradient(to top, #001122, #002233);
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
     }
@@ -25,6 +27,7 @@
     canvas {
       display: block;
       background: linear-gradient(to top, #000000, #222222);
+      outline: none; /* ✅ Évite les contours visuels */
     }
 
     #gameTitle {
@@ -32,13 +35,12 @@
       color: white;
       text-shadow: 2px 2px 4px black;
       margin-bottom: 20px;
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      user-select: none; /* empêche la sélection du texte */
+      user-select: none;
     }
 
     #playButton, #rejouer, #shareScore, #submitScore {
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      font-weight: bold; 
+      font-weight: bold;
       font-size: 28px;
       padding: 12px 30px;
       color: black;
@@ -65,7 +67,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 10;/* plus haut que #menuStars */
+      z-index: 10;
       text-align: center;
     }
 
@@ -102,9 +104,6 @@
       font-size: 48px;
       color: #ff3b3b;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-      border-radius: 0;
-      padding: 0;
-      box-shadow: none;
       display: none;
       z-index: 16;
       animation: pulse 2s infinite;
@@ -175,8 +174,6 @@
     }
 
     #shareScore {
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      font-weight: bold;
       position: absolute;
       top: 80%;
       left: 50%;
@@ -216,7 +213,6 @@
     }
 
     #rejouer {
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
       position: absolute;
       top: calc(55% + 100px);
       left: 50%;
@@ -229,10 +225,10 @@
       border-radius: 15px;
       cursor: pointer;
       box-shadow: 4px 4px 0 black;
-      text-transform: uppercase;
       display: none;
       z-index: 15;
       transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
     }
 
     #rejouer:hover {
@@ -240,62 +236,44 @@
       transform: translateX(-50%) translateY(-2px);
       box-shadow: 6px 6px 0 black;
     }
-#menuStars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  background: #001122;
-}
-/* 🎯 Responsive : adaptation automatique pour mobile */
-@media (max-width: 768px) {
-  #playButton {
-    font-size: 20px;
-    padding: 10px 25px;
-    width: auto; /* ou fixe si tu veux */
-  }
-  
-  #rejouer {
-    font-size: 18px;
-    padding: 8px 20px;
-    width: auto;
-  }
-  
-  #shareScore {
-    font-size: 16px;
-    padding: 10px 22px;
-    width: auto;
-  }
-  
-  #leaderboard {
-    max-width: 90vw;
-    font-size: 16px;
-    padding: 15px;
-  }
 
-  /* Exemple pour game over */
-  #gameOverText {
-    font-size: 32px;
-  }
-}
+    #menuStars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      background: #001122;
+    }
 
-
+    /* 🎯 Responsive */
+    @media (max-width: 768px) {
+      #playButton {
+        font-size: 20px;
+        padding: 10px 25px;
+      }
+      #rejouer {
+        font-size: 18px;
+        padding: 8px 20px;
+      }
+      #shareScore {
+        font-size: 16px;
+        padding: 10px 22px;
+      }
+      #leaderboard {
+        max-width: 90vw;
+        font-size: 16px;
+        padding: 15px;
+      }
+      #gameOverText {
+        font-size: 32px;
+      }
+    }
   </style>
-  * {
-    -webkit-tap-highlight-color: transparent; /* ✅ Supprime le flash bleu sur iOS Safari */
-    touch-action: manipulation; /* ✅ Réduit les délais de réponse */
-  }
-
-  canvas {
-    outline: none; /* ✅ Évite les contours visuels */
-  }
-
-
 </head>
 <body>
-<canvas id="menuStars"></canvas>
+  <canvas id="menuStars"></canvas>
 
   <div id="menu">
     <h1 id="gameTitle">AstroLab</h1>
@@ -328,7 +306,7 @@
 
   <script src="game.js"></script>
 
-  <!-- ✅ Enregistrement du Service Worker -->
+  <!-- ✅ Service Worker -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
@@ -345,3 +323,4 @@
   </script>
 </body>
 </html>
+
