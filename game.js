@@ -236,6 +236,10 @@ function displayLeaderboard() {
     player.velocityY = 0;
     [rejouerBtn, gameOverText, leaderboard, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
     playerNameInput.value = "";
+    playerNameInput.blur();
+playerNameInput.setSelectionRange(0, 0);
+document.activeElement.blur();
+
   }
 
   submitScoreBtn.onclick = () => {
