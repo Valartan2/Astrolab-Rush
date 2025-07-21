@@ -280,8 +280,8 @@ distanceDisplay.style.display = "block";
     drawStars();
 
     const elapsed = (timestamp - startTime) / 1000;
-    const speedFactor = isMobile ? 0.75 : 1; // 📱 Ralentit de 75% sur mobile
-const meteorSpeedFactor = 0.75; // Ralentir les météorites à 75% de la vitesse de base
+    const speedFactor = isMobile ? 0.60 : 1; // 📱 Ralentit de 60% sur mobile
+const meteorSpeedFactor = 0.60; // Ralentir les météorites à 60% de la vitesse de base
 
 const baseSpeed = (elapsed < maxDifficultyTime ? 10 + (elapsed / maxDifficultyTime) * 10 : 20) * speedFactor;
 
