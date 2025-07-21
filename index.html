@@ -283,6 +283,16 @@
 
 
   </style>
+  * {
+    -webkit-tap-highlight-color: transparent; /* ✅ Supprime le flash bleu sur iOS Safari */
+    touch-action: manipulation; /* ✅ Réduit les délais de réponse */
+  }
+
+  canvas {
+    outline: none; /* ✅ Évite les contours visuels */
+  }
+</style>
+
 </head>
 <body>
 <canvas id="menuStars"></canvas>
