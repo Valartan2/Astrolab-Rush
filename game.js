@@ -223,9 +223,9 @@ function displayLeaderboard() {
 
   function resetGame() {
 // 🔽 Adapter les vitesses selon le device
-  player.gravityDown = isMobile ? 0.9 : 0.9;
-  player.gravityUp = isMobile ? -0.8 : -0.8;
-  player.maxSpeed = isMobile ? 6 : 6;
+  player.gravityDown = isMobile ? 1.0 : 0.9;
+  player.gravityUp = isMobile ? -1.0 : -0.8;
+  player.maxSpeed = isMobile ? 7 : 6;
   player.radius = isMobile ? 18 : 25;
 
     bubbles = [];
