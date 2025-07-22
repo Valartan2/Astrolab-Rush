@@ -77,7 +77,7 @@
 
   const distanceSpeedFactor = 2.5;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
 
-  const CONSTANT_SPEED = 9; // ou la vitesse que tu veux, constante
+  const CONSTANT_SPEED = 8; // ou la vitesse que tu veux, constante
 
 
   const stars = Array.from({ length: 150 }, () => ({
@@ -237,7 +237,7 @@ function displayLeaderboard() {
     startTime = performance.now();
     player.y = height / 2;
     player.velocityY = 0;
-    player.x = isMobile ? 80 : 150; // 🚀 Reculer la fusée à gauche sur mobile
+    player.x = isMobile ? 75 : 150; // 🚀 Reculer la fusée à gauche sur mobile
     [rejouerBtn, gameOverText, leaderboard, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
     playerNameInput.value = "";
   }
