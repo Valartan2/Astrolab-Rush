@@ -13,7 +13,7 @@
   const playButton = document.getElementById("playButton");
   const shareBtn = document.getElementById("shareScore");
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
+  
 
   const rocketImg = new Image();
   rocketImg.src = 'rocket.png';
@@ -74,6 +74,8 @@
   let distance = 0;
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
+
+  const distanceSpeedFactor = 1.5;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
 
   const CONSTANT_SPEED = 9; // ou la vitesse que tu veux, constante
 
@@ -328,7 +330,7 @@ if ('serviceWorker' in navigator) {
         player.velocityY = 0;
       }
 
-      distance += baseSpeed / 60;
+      distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
 
       // ✅ Récompense à 1km
