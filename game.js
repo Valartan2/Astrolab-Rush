@@ -340,7 +340,7 @@ if ('serviceWorker' in navigator) {
           gameOver = true;
           gameOverText.style.display = "block";
 
-        if (!hasReached1km && distance >= 100) { // ← remplace 1000 par 100 pour tester
+        if (!hasReached1km && distance >= 1000) { // ← remplace 1000 par 100 pour tester
   hasReached1km = true;
   afficherRecompense();
 }
