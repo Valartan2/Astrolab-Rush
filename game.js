@@ -399,27 +399,7 @@ if ('serviceWorker' in navigator) {
 }
 
     `
-    message.style.position = "absolute";
-    message.style.top = "50%";
-    message.style.left = "50%";
-    message.style.transform = "translate(-50%, -50%)";
-    message.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
-    message.style.color = "white";
-    message.style.padding = "30px";
-    message.style.fontSize = "22px";
-    message.style.fontWeight = "bold";
-    message.style.border = "3px solid gold";
-    message.style.borderRadius = "20px";
-    message.style.boxShadow = "0 0 20px gold";
-    message.style.zIndex = "9999";
-    message.style.textAlign = "center";
-    message.id = "rewardMessage";
-
-    document.body.appendChild(message);
-
-    setTimeout(() => {
-      message.remove();
-    }, 6000);
+  
   }
 // ⭐ Fond étoilé pour le menu
 const menuCanvas = document.getElementById("menuStars");
