@@ -398,7 +398,7 @@ if ('serviceWorker' in navigator) {
   };
 }
 
-    `;
+    `
     message.style.position = "absolute";
     message.style.top = "50%";
     message.style.left = "50%";
