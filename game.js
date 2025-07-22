@@ -380,10 +380,24 @@ if ('serviceWorker' in navigator) {
 
   // ✅ Fonction d'affichage de la récompense 1km
   function afficherRecompense() {
-    const message = document.createElement("div");
-    message.innerHTML = `
-      🚀 <strong>Bravo !</strong> Tu as atteint <strong>1 km</strong> !<br>
-      <span style="font-size: 28px; color: gold;">🎖️ Grade : <strong>AS DE L'ESPACE</strong></span>
+  const reward = document.getElementById("rewardMessage");
+  reward.style.display = "block";
+
+  const continueBtn = document.getElementById("continueButton");
+  continueBtn.onclick = () => {
+    reward.style.display = "none";
+
+    // 👇 Ensuite, on affiche les éléments du game over
+    document.getElementById("leaderboard").style.display = "block";
+    document.getElementById("rejouer").style.display = "block";
+    document.getElementById("shareScore").style.display = "block";
+
+    if (isHighScore(distance)) {
+      document.getElementById("highScoreInput").style.display = "block";
+    }
+  };
+}
+
     `;
     message.style.position = "absolute";
     message.style.top = "50%";
