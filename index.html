@@ -324,6 +324,11 @@
       lastTouchEnd = now;
     }, false);
 
+    // ✅ Empêche le zoom par pincement (pinch-to-zoom)
+    document.addEventListener('gesturestart', function (e) {
+      e.preventDefault();
+    });
+
     // ✅ Enregistrement du Service Worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
