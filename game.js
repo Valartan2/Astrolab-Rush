@@ -267,7 +267,7 @@ distanceDisplay.style.display = "block";
   };
 
   shareBtn.onclick = () => {
-    const text = `J'ai fait ${Math.floor(distance)} m dans Ballon Esquive ! Peux-tu faire mieux ? 🚀🎮`;
+    const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab ! Peux-tu faire mieux ? 🚀🎮`;
     const url = window.location.href;
     if (navigator.share) {
       navigator.share({ title: "Ballon Esquive - Mon score", text, url }).catch(console.error);
