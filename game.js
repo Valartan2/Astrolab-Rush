@@ -334,17 +334,15 @@ if ('serviceWorker' in navigator) {
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
 
-      // ✅ Récompense à 1km
-      if (!hasReached1km && distance >= 1000) {
-        hasReached1km = true;
-        afficherRecompense();
-      }
-
       for (let i = 0; i < bubbles.length; i++) {
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
           gameOverText.style.display = "block";
+
+          if (distance >= 1000) {
+      afficherRecompense();
+    }
 
           if (checkIfHighScore(distance)) {
             highScoreInput.style.display = "block";
