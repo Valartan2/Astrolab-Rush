@@ -288,7 +288,7 @@ const baseSpeed = CONSTANT_SPEED * speedFactor;
 
 
 const spawnRate = isMobile ? 20 : 15;
-if (frameCount % spawnRate === 0 && bubbles.length < 40 && !gameOver) {
+if (frameCount % spawnRate === 0 && bubbles.length < 50 && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
 }
 
