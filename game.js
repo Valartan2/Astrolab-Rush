@@ -77,7 +77,7 @@
 
   const distanceSpeedFactor = 2.5;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
 
-  const CONSTANT_SPEED = 20; // ou la vitesse que tu veux, constante
+  const CONSTANT_SPEED = 18; // ou la vitesse que tu veux, constante
 
 
   const stars = Array.from({ length: 150 }, () => ({
