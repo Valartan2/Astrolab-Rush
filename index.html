@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <title>AstroLab</title>
 
-  <!-- 🔗 Lien vers le manifest -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#001122" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="apple-touch-icon" href="/icon-180.png">
 
   <style>
+    /* 🎨 STYLES GLOBAUX */
     html, body {
       margin: 0;
       padding: 0;
@@ -18,7 +18,6 @@
       height: 100%;
       background: linear-gradient(to top, #001122, #002233);
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
@@ -38,16 +37,29 @@
       outline: none;
     }
 
-    #gameTitle {
-      font-size: 48px;
-      color: white;
-      text-shadow: 2px 2px 4px black;
-      margin-bottom: 20px;
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      user-select: none;
+    #menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      text-align: center;
     }
 
-    #playButton, #rejouer, #shareScore, #submitScore {
+    #menuImage {
+      display: block;
+      margin: 0 auto 50px auto;
+      max-width: 200px;
+      width: 50vw;
+      height: auto;
+      max-height: 150px;
+      object-fit: contain;
+    }
+
+    #playButton,
+    #rejouer,
+    #shareScore,
+    #submitScore {
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
       font-weight: bold;
       font-size: 28px;
@@ -71,23 +83,11 @@
       box-shadow: 6px 6px 0 black;
     }
 
-    #menu {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      text-align: center;
-    }
-
-    #menuImage {
-      display: block;
-      margin: 0 auto 50px auto;
-      max-width: 200px;
-      width: 50vw;
-      height: auto;
-      max-height: 150px;
-      object-fit: contain;
+    #gameTitle {
+      font-size: 48px;
+      color: white;
+      text-shadow: 2px 2px 4px black;
+      margin-bottom: 20px;
     }
 
     #distance {
@@ -123,6 +123,38 @@
       50% { transform: translateX(-50%) scale(1.05); }
     }
 
+    #leaderboard {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fffbe6;
+      padding: 20px;
+      border-radius: 20px;
+      border: 4px solid black;
+      color: #222;
+      font-size: 18px;
+      max-width: 260px;
+      z-index: 14;
+      display: none;
+      text-align: center;
+      box-shadow: 4px 4px 0 black;
+    }
+
+    #leaderboard h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 22px;
+      color: black;
+    }
+
+    #leaderboard ol {
+      padding-left: 20px;
+      margin: 0;
+      text-align: left;
+      font-weight: bold;
+    }
+
     #highScoreInput {
       position: absolute;
       top: 62%;
@@ -149,39 +181,6 @@
       width: 200px;
     }
 
-    #leaderboard {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fffbe6;
-      padding: 20px;
-      border-radius: 20px;
-      border: 4px solid black;
-      color: #222;
-      font-size: 18px;
-      max-width: 260px;
-      z-index: 14;
-      display: none;
-      text-align: center;
-      box-shadow: 4px 4px 0 black;
-    }
-
-    #leaderboard h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 22px;
-      color: black;
-      text-shadow: 1px 1px 0 black;
-    }
-
-    #leaderboard ol {
-      padding-left: 20px;
-      margin: 0;
-      text-align: left;
-      font-weight: bold;
-    }
-
     #shareScore {
       position: absolute;
       top: 80%;
@@ -204,46 +203,13 @@
       box-shadow: 6px 6px 0 black;
     }
 
-    #success-banner {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.85);
-      color: #00ffcc;
-      padding: 12px 24px;
-      border-radius: 16px;
-      font-size: 20px;
-      font-weight: bold;
-      display: none;
-      z-index: 999;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
-      text-align: center;
-    }
-
     #rejouer {
       position: absolute;
       top: calc(55% + 100px);
       left: 50%;
       transform: translateX(-50%);
-      font-size: 28px;
-      padding: 12px 30px;
-      color: black;
-      background: #ffaa00;
-      border: 4px solid black;
-      border-radius: 15px;
-      cursor: pointer;
-      box-shadow: 4px 4px 0 black;
-      text-transform: uppercase;
       display: none;
       z-index: 15;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    #rejouer:hover {
-      background: #ff8800;
-      transform: translateX(-50%) translateY(-2px);
-      box-shadow: 6px 6px 0 black;
     }
 
     #menuStars {
@@ -256,17 +222,38 @@
       background: #001122;
     }
 
+    #rewardMessage {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #00ffcc;
+      padding: 20px;
+      border-radius: 16px;
+      border: 4px solid #00ffcc;
+      box-shadow: 0 0 12px #00ffcc;
+      text-align: center;
+      display: none;
+      z-index: 100;
+    }
+
+    #rewardMessage button {
+      margin-top: 10px;
+      font-size: 18px;
+      padding: 8px 20px;
+      background: #00ffcc;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: black;
+    }
+
     @media (max-width: 768px) {
       #playButton, #rejouer, #shareScore {
         font-size: 20px;
         padding: 10px 25px;
-        width: auto;
-      }
-
-      #leaderboard {
-        max-width: 90vw;
-        font-size: 16px;
-        padding: 15px;
       }
 
       #gameOverText {
@@ -275,6 +262,7 @@
     }
   </style>
 </head>
+
 <body>
   <canvas id="menuStars"></canvas>
 
@@ -304,24 +292,22 @@
     <button id="submitScore">Valider</button>
   </div>
 
-  <div id="success-banner"></div>
-  
-  <div id="rewardMessage" style="display: none; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); z-index: 20; background: #000c; color: #00ffcc; padding: 20px; border-radius: 20px; border: 4px solid #00ffcc; box-shadow: 0 0 12px #00ffcc; text-align: center;">
-  <h2>🌟 As de l'espace !</h2>
-  <p>Tu as dépassé les 1 km !</p>
-  <button id="continueButton" style="margin-top: 10px; font-size: 18px; padding: 8px 20px; background: #00ffcc; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">Continuer</button>
-</div>
-
+  <!-- ✅ Zone "As de l'espace" -->
+  <div id="rewardMessage">
+    <h2>🌟 As de l'espace !</h2>
+    <p>Tu as dépassé les 1 km !</p>
+    <button id="continueButton">Continuer</button>
+  </div>
 
   <script src="game.js"></script>
 
   <script>
-    // ✅ Empêche le scroll sur iPhone
+    // ✅ Anti scroll
     document.body.addEventListener('touchmove', function (e) {
       e.preventDefault();
     }, { passive: false });
 
-    // ✅ Empêche le zoom double-tap
+    // ✅ Anti double-tap zoom
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function (e) {
       const now = new Date().getTime();
@@ -331,20 +317,15 @@
       lastTouchEnd = now;
     }, false);
 
-    // ✅ Empêche le zoom par pincement (pinch-to-zoom)
-    document.addEventListener('gesturestart', function (e) {
-      e.preventDefault();
-    });
-
-    // ✅ Enregistrement du Service Worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").then(
+    // ✅ Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').then(
           function (registration) {
-            console.log("✅ Service Worker enregistré :", registration);
+            console.log('✅ Service Worker enregistré :', registration);
           },
           function (err) {
-            console.error("❌ Erreur d'enregistrement du Service Worker :", err);
+            console.error('❌ Erreur Service Worker :', err);
           }
         );
       });
