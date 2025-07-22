@@ -467,13 +467,16 @@ function animateMenuStars() {
   requestAnimationFrame(animateMenuStars);
 }
 animateMenuStars();
-// AVANT LA FIN DU SCRIPT
 function resetTop5() {
   localStorage.removeItem("highScores");
   displayLeaderboard();
   alert("Top 5 réinitialisé !");
 }
 
-debugButton.addEventListener("click", resetTop5);
+const debugButton = document.getElementById("debugButton");
+if (debugButton) {
+  debugButton.addEventListener("click", resetTop5);
+}
+
 
 })();
