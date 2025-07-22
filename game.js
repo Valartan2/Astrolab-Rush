@@ -378,35 +378,61 @@ if ('serviceWorker' in navigator) {
     }
   }
 
-  // ✅ Fonction d'affichage de la récompense 1km
-  function afficherRecompense() {
-    const message = document.createElement("div");
-    message.innerHTML = `
-      🚀 <strong>Bravo !</strong> Tu as atteint <strong>1 km</strong> !<br>
-      <span style="font-size: 28px; color: gold;">🎖️ Grade : <strong>AS DE L'ESPACE</strong></span>
-    `;
-    message.style.position = "absolute";
-    message.style.top = "50%";
-    message.style.left = "50%";
-    message.style.transform = "translate(-50%, -50%)";
-    message.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
-    message.style.color = "white";
-    message.style.padding = "30px";
-    message.style.fontSize = "22px";
-    message.style.fontWeight = "bold";
-    message.style.border = "3px solid gold";
-    message.style.borderRadius = "20px";
-    message.style.boxShadow = "0 0 20px gold";
-    message.style.zIndex = "9999";
-    message.style.textAlign = "center";
-    message.id = "rewardMessage";
+ function afficherRecompense() {
+  // Si le message existe déjà, on ne le crée pas deux fois
+  if (document.getElementById("rewardMessage")) return;
 
-    document.body.appendChild(message);
+  const message = document.createElement("div");
+  message.innerHTML = `
+    🚀 <strong>Bravo !</strong> Tu as atteint <strong>1 km</strong> !<br>
+    <span style="font-size: 28px; color: gold;">🎖️ Grade : <strong>AS DE L'ESPACE</strong></span><br><br>
+    <button id="continueButton" style="
+      font-size: 18px; 
+      padding: 10px 25px; 
+      background: gold; 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      font-weight: bold;
+      color: black;
+      box-shadow: 0 0 10px gold;
+    ">Continuer</button>
+  `;
+  message.style.position = "absolute";
+  message.style.top = "30%"; // Plus haut pour ne pas empiéter sur input
+  message.style.left = "50%";
+  message.style.transform = "translate(-50%, -50%)";
+  message.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+  message.style.color = "white";
+  message.style.padding = "30px";
+  message.style.fontSize = "22px";
+  message.style.fontWeight = "bold";
+  message.style.border = "3px solid gold";
+  message.style.borderRadius = "20px";
+  message.style.boxShadow = "0 0 20px gold";
+  message.style.zIndex = "9999";
+  message.style.textAlign = "center";
+  message.id = "rewardMessage";
 
-    setTimeout(() => {
-      message.remove();
-    }, 6000);
-  }
+  document.body.appendChild(message);
+
+  // Supprime le setTimeout pour garder le message visible jusqu'à clic
+
+  document.getElementById("continueButton").addEventListener("click", () => {
+    message.remove();
+
+    // Affiche les éléments du game over
+    document.getElementById("leaderboard").style.display = "block";
+    document.getElementById("rejouer").style.display = "block";
+    document.getElementById("shareScore").style.display = "block";
+
+    // Affiche le formulaire nom si record
+    if (isHighScore(distance)) {
+      document.getElementById("highScoreInput").style.display = "block";
+    }
+  });
+}
+
 // ⭐ Fond étoilé pour le menu
 const menuCanvas = document.getElementById("menuStars");
 const menuCtx = menuCanvas.getContext("2d");
