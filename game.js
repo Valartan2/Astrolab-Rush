@@ -289,7 +289,7 @@ const baseSpeed = CONSTANT_SPEED * speedFactor;
 
 const spawnRate = isMobile ? 10 : 15; // Mobile : spawn toutes les 10 frames
 
-const maxMeteorites = isMobile ? 45 : 30; // Mobile : jusqu'à 45 météorites en même temps
+const maxMeteorites = isMobile ? 60 : 30; // Mobile : jusqu'à 60 météorites en même temps
 
 if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
