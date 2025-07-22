@@ -237,7 +237,7 @@ function displayLeaderboard() {
     startTime = performance.now();
     player.y = height / 2;
     player.velocityY = 0;
-    player.x = isMobile ? 45 : 150; // 🚀 Reculer la fusée à gauche sur mobile
+    player.x = isMobile ? 40 : 150; // 🚀 Reculer la fusée à gauche sur mobile
     [rejouerBtn, gameOverText, leaderboard, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
     playerNameInput.value = "";
   }
