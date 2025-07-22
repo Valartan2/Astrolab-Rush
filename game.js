@@ -75,7 +75,7 @@
   let startTime = 0;
   let hasReached1km = false; // ✅ Nouveau
 
-  const distanceSpeedFactor = 2;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
+  const distanceSpeedFactor = 2.5;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
 
   const CONSTANT_SPEED = 9; // ou la vitesse que tu veux, constante
 
