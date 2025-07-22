@@ -340,7 +340,7 @@ if ('serviceWorker' in navigator) {
           gameOver = true;
           gameOverText.style.display = "block";
 
-          if (distance >= 1000) {
+          if (distance >= 100) {
       afficherRecompense();
     }
 
