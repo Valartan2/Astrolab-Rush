@@ -289,7 +289,8 @@ const meteorSpeedFactor = 0.70; // Ralentir les météorites à 50% de la vitess
 
 const baseSpeed = CONSTANT_SPEED * speedFactor;
 
-const spawnRate = isMobile ? 15 : 15; // Mobile : spawn toutes les 10 frames
+
+    const spawnRate = isMobile ? 15 : 15; // Mobile : spawn toutes les 10 frames
 
 const maxMeteorites = isMobile ? 40 : 30; // Mobile : jusqu'à 60 météorites en même temps
 
