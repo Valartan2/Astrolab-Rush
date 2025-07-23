@@ -173,6 +173,73 @@
       box-shadow: 6px 6px 0 black;
     }
 
+   #objectifsBtn {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 3px solid black;
+  background: #fff04f;
+  color: black;
+  cursor: pointer;
+  display: none;
+  box-shadow: 3px 3px 0 black;
+  z-index: 18;
+}
+    #objectifList {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#objectifPanel {
+  background: #fffbe6;
+  padding: 20px 30px;
+  border-radius: 20px;
+  border: 5px solid black;
+  text-align: center;
+  box-shadow: 6px 6px 0 #000;
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
+  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+  max-width: 90vw;
+  width: 300px;
+}
+
+#objectifPanel ul {
+  list-style: none;
+  padding: 0;
+}
+
+#objectifPanel li {
+  font-size: 18px;
+  padding: 6px 0;
+}
+
+.objectif-achieved::before {
+  content: "✅ ";
+  color: green;
+}
+
+
+#objectifsBtn:hover {
+  background: #fdd835;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 6px 6px 0 black;
+}
+
+
     #success-banner {
       position: fixed;
       top: 20px;
@@ -189,6 +256,7 @@
       box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
       text-align: center;
     }
+
 
     #rejouer {
       position: absolute;
@@ -258,6 +326,13 @@
     <p><strong>Meilleur Score :</strong> <span id="bestScore">0</span> m</p>
     <p><strong>Grade :</strong> <span id="grade">-</span></p>
   </div>
+<div id="objectifList" style="display: none;">
+  <div id="objectifPanel">
+    <h2>Objectifs</h2>
+    <ul id="objectifItems"></ul>
+    <button id="closeObjectifs">Fermer</button>
+  </div>
+</div>
 
   <div id="gameOverText">GAME OVER</div>
 
