@@ -287,6 +287,15 @@ objectifList.style.display = "none"; // (au cas où la fenêtre reste ouverte)
     distanceDisplay.style.display = "block"; // <-- ✅ afficher durant la partie après rejouer
     requestAnimationFrame(gameLoop);
   };
+  objectifsBtn.onclick = () => {
+  updateObjectifDisplay();
+  objectifList.style.display = "flex";
+};
+
+closeObjectifs.onclick = () => {
+  objectifList.style.display = "none";
+};
+
 
   shareBtn.onclick = () => {
     const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab ! Peux-tu faire mieux ? 🚀🎮`;
@@ -296,15 +305,7 @@ objectifList.style.display = "none"; // (au cas où la fenêtre reste ouverte)
     } else {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + " " + url)}`, "_blank");
     }
-    objectifsBtn.onclick = () => {
-  updateObjectifDisplay();
-  objectifList.style.display = "flex";
-};
-
-closeObjectifs.onclick = () => {
-  objectifList.style.display = "none";
-};
-
+  };
 
 
   /* -------------------- Start Screen -------------------- */
