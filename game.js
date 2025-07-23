@@ -4,11 +4,6 @@
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
   const distanceDisplay = document.getElementById("distance");
-  const highScoreInput = document.getElementById("highScoreInput");
-  const playerNameInput = document.getElementById("playerName");
-  const submitScoreBtn = document.getElementById("submitScore");
-  const leaderboard = document.getElementById("leaderboard");
-  const leaderboardList = leaderboard.querySelector("ol");
   const menu = document.getElementById("menu");
   const playButton = document.getElementById("playButton");
   const shareBtn = document.getElementById("shareScore");
@@ -194,32 +189,6 @@ const radius = Math.random() * extra + base;
     });
   }
 
-  function getHighScores() {
-    try {
-      const stored = JSON.parse(localStorage.getItem("highScores"));
-      return Array.isArray(stored) ? stored.filter(s => s.name && typeof s.distance === "number") : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveHighScore(name, distance) {
-    let scores = getHighScores();
-    scores.push({ name, distance });
-    scores.sort((a, b) => b.distance - a.distance);
-    localStorage.setItem("highScores", JSON.stringify(scores.slice(0, 5)));
-  }
-
-  function checkIfHighScore(dist) {
-    const scores = getHighScores();
-    return scores.length < 5 || dist > Math.min(...scores.map(s => s.distance));
-  }
-
-function displayLeaderboard() {
-  const scores = getHighScores();
-  leaderboardList.innerHTML = scores.map(s => `<li>${s.name}: ${Math.floor(s.distance)} m</li>`).join('');
-  leaderboard.style.display = scores.length ? "block" : "none";
-}
 
   function resetGame() {
 // 🔽 Adapter les vitesses selon le device
@@ -238,18 +207,10 @@ function displayLeaderboard() {
     player.y = height / 2;
     player.velocityY = 0;
     player.x = isMobile ? 75 : 150; // 🚀 Reculer la fusée à gauche sur mobile
-    [rejouerBtn, gameOverText, leaderboard, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
-    playerNameInput.value = "";
+    [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
   }
 
-  submitScoreBtn.onclick = () => {
-    const name = playerNameInput.value.trim() || "Anonyme";
-    saveHighScore(name, Math.floor(distance));
-    highScoreInput.style.display = "none";
-    displayLeaderboard();
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-  };
+  
 
   playButton.onclick = () => {
     menu.style.display = "none";
@@ -344,12 +305,9 @@ if ('serviceWorker' in navigator) {
       afficherRecompense();
     }
 
-          if (checkIfHighScore(distance)) {
-            highScoreInput.style.display = "block";
-            playerNameInput.focus();
-          } else {
+          
             rejouerBtn.style.display = "block";
-            displayLeaderboard();
+           
             shareBtn.style.display = "block";
           }
           break;
