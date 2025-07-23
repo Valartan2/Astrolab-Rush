@@ -206,15 +206,16 @@
   }
 
   function afficherTableauScore(score) {
-    const bestScore = Math.max(score, parseInt(localStorage.getItem("bestScore") || "0"));
-    localStorage.setItem("bestScore", bestScore);
+  const bestScore = Math.max(Math.floor(score), parseInt(localStorage.getItem("bestScore") || "0"));
+  localStorage.setItem("bestScore", bestScore);
 
-    currentScoreSpan.textContent = Math.floor(score);
-    bestScoreSpan.textContent = bestScore;
-    gradeSpan.textContent = getGrade(score);
+  currentScoreSpan.textContent = Math.floor(score);
+  bestScoreSpan.textContent = bestScore;
+  gradeSpan.textContent = getGrade(score);
 
-    scoreBoard.style.display = "block";
-  }
+  scoreBoard.style.display = "block";
+}
+
 
   /* -------------------- Reset -------------------- */
   function resetGame() {
