@@ -103,7 +103,7 @@ function updateObjectifDisplay() {
   let hasReached1km = false;
 
   const distanceSpeedFactor = 2.5;
-  const CONSTANT_SPEED = 18;
+  const CONSTANT_SPEED = 20;
 
   /* -------------------- Stars Background -------------------- */
   const stars = Array.from({ length: 150 }, () => ({
