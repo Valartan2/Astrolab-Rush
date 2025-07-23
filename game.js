@@ -347,6 +347,8 @@
 
           afficherTableauScore(distance); // 🆕 show score board
 
+          distanceDisplay.style.display = "none"; // <--- cacher la distance
+
           if (distance >= 1000) {
             afficherRecompense();
           }
