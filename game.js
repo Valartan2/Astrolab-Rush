@@ -11,6 +11,32 @@
   const currentScoreSpan = document.getElementById("currentScore");
   const bestScoreSpan = document.getElementById("bestScore");
   const gradeSpan = document.getElementById("grade");
+  const objectifsBtn = document.getElementById("objectifsBtn");
+const objectifList = document.getElementById("objectifList");
+const objectifItems = document.getElementById("objectifItems");
+const closeObjectifs = document.getElementById("closeObjectifs");
+
+const gradeObjectifs = [
+  { threshold: 0, label: "🔸 Recrue Interstellaire" },
+  { threshold: 500, label: "🌌 Aventurier Spatial" },
+  { threshold: 1000, label: "🚀 As de L'espace" },
+  { threshold: 1500, label: "🚀🚀 Héros Galactique" },
+  { threshold: 2000, label: "🚀🚀🚀 Pilote Légendaire" },
+];
+
+function updateObjectifDisplay() {
+  const bestScore = parseInt(localStorage.getItem("bestScore") || "0");
+  objectifItems.innerHTML = "";
+  gradeObjectifs.forEach(obj => {
+    const li = document.createElement("li");
+    li.textContent = `${obj.label} (${obj.threshold} m)`;
+    if (bestScore >= obj.threshold) {
+      li.classList.add("objectif-achieved");
+    }
+    objectifItems.appendChild(li);
+  });
+}
+
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
   /* -------------------- Assets -------------------- */
@@ -212,6 +238,7 @@
   currentScoreSpan.textContent = Math.floor(score);
   bestScoreSpan.textContent = bestScore;
   gradeSpan.textContent = getGrade(score);
+  updateObjectifDisplay();
 
   scoreBoard.style.display = "block";
 }
@@ -237,6 +264,9 @@
     player.x = isMobile ? 75 : 150;
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
+    objectifsBtn.style.display = "none";
+objectifList.style.display = "none"; // (au cas où la fenêtre reste ouverte)
+
     scoreBoard.style.display = "none"; // 🆕 hide scoreboard
   }
 
@@ -266,7 +296,16 @@
     } else {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + " " + url)}`, "_blank");
     }
-  };
+    objectifsBtn.onclick = () => {
+  updateObjectifDisplay();
+  objectifList.style.display = "flex";
+};
+
+closeObjectifs.onclick = () => {
+  objectifList.style.display = "none";
+};
+
+
 
   /* -------------------- Start Screen -------------------- */
   menu.style.display = "block";
@@ -326,6 +365,7 @@
 
           rejouerBtn.style.display = "block";
           shareBtn.style.display = "block";
+          objectifsBtn.style.display = "block";
           break;
         }
       }
