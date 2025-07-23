@@ -282,6 +282,7 @@
 
   rejouerBtn.onclick = () => {
     resetGame();
+    distanceDisplay.style.display = "block"; // <-- ✅ afficher durant la partie après rejouer
     requestAnimationFrame(gameLoop);
   };
 
