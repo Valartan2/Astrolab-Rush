@@ -4,16 +4,12 @@
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
   const distanceDisplay = document.getElementById("distance");
-  const highScoreInput = document.getElementById("highScoreInput");
   const playerNameInput = document.getElementById("playerName");
   const submitScoreBtn = document.getElementById("submitScore");
-  const leaderboard = document.getElementById("leaderboard");
-  const leaderboardList = leaderboard.querySelector("ol");
   const menu = document.getElementById("menu");
   const playButton = document.getElementById("playButton");
   const shareBtn = document.getElementById("shareScore");
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  
 
   const rocketImg = new Image();
   rocketImg.src = 'rocket.png';
@@ -26,8 +22,7 @@
     'meteorite4.png',
     'meteorite5.png',
     'meteorite6.png'
- 
-];
+  ];
 
   meteoriteImageSources.forEach(src => {
     const img = new Image();
@@ -37,16 +32,16 @@
 
   let width, height;
   function resize() {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
-  canvas.style.width = window.innerWidth + "px";
-  canvas.style.height = window.innerHeight + "px";
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(dpr, dpr);
-  width = canvas.width / dpr;
-  height = canvas.height / dpr;
-}
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    width = canvas.width / dpr;
+    height = canvas.height / dpr;
+  }
 
   window.addEventListener("resize", resize);
   resize();
@@ -73,12 +68,10 @@
   let gameOver = false;
   let distance = 0;
   let startTime = 0;
-  let hasReached1km = false; // ✅ Nouveau
+  let hasReached1km = false;
 
-  const distanceSpeedFactor = 2.5;  // 1 = même vitesse que météorites, 1.5 = 50% plus rapide
-
-  const CONSTANT_SPEED = 20; // ou la vitesse que tu veux, constante
-
+  const distanceSpeedFactor = 2.5;
+  const CONSTANT_SPEED = 20;
 
   const stars = Array.from({ length: 150 }, () => ({
     x: Math.random() * width,
@@ -89,8 +82,8 @@
 
   function createBubble(speed) {
     const base = isMobile ? 15 : 25;
-const extra = isMobile ? 10 : 15;
-const radius = Math.random() * extra + base;
+    const extra = isMobile ? 10 : 15;
+    const radius = Math.random() * extra + base;
 
     const y = radius + Math.random() * (height - 2 * radius);
     const image = meteoriteImages[Math.floor(Math.random() * meteoriteImages.length)];
@@ -194,59 +187,29 @@ const radius = Math.random() * extra + base;
     });
   }
 
-  function getHighScores() {
-    try {
-      const stored = JSON.parse(localStorage.getItem("highScores"));
-      return Array.isArray(stored) ? stored.filter(s => s.name && typeof s.distance === "number") : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveHighScore(name, distance) {
-    let scores = getHighScores();
-    scores.push({ name, distance });
-    scores.sort((a, b) => b.distance - a.distance);
-    localStorage.setItem("highScores", JSON.stringify(scores.slice(0, 5)));
-  }
-
-  function checkIfHighScore(dist) {
-    const scores = getHighScores();
-    return scores.length < 5 || dist > Math.min(...scores.map(s => s.distance));
-  }
-
-function displayLeaderboard() {
-  const scores = getHighScores();
-  leaderboardList.innerHTML = scores.map(s => `<li>${s.name}: ${Math.floor(s.distance)} m</li>`).join('');
-  leaderboard.style.display = scores.length ? "block" : "none";
-}
-
   function resetGame() {
-// 🔽 Adapter les vitesses selon le device
-  player.gravityDown = isMobile ? 0.9 : 0.9;
-  player.gravityUp = isMobile ? -0.8 : -0.8;
-  player.maxSpeed = isMobile ? 6 : 6;
-  player.radius = isMobile ? 18 : 25;
+    player.gravityDown = isMobile ? 0.9 : 0.9;
+    player.gravityUp = isMobile ? -0.8 : -0.8;
+    player.maxSpeed = isMobile ? 6 : 6;
+    player.radius = isMobile ? 18 : 25;
 
     bubbles = [];
     particles = [];
     frameCount = 0;
     gameOver = false;
     distance = 0;
-    hasReached1km = false; // ✅ Réinitialisation
+    hasReached1km = false;
     startTime = performance.now();
     player.y = height / 2;
     player.velocityY = 0;
-    player.x = isMobile ? 75 : 150; // 🚀 Reculer la fusée à gauche sur mobile
-    [rejouerBtn, gameOverText, leaderboard, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
+    player.x = isMobile ? 75 : 150;
+    [rejouerBtn, gameOverText, highScoreInput, shareBtn].forEach(e => e.style.display = "none");
     playerNameInput.value = "";
   }
 
   submitScoreBtn.onclick = () => {
-    const name = playerNameInput.value.trim() || "Anonyme";
-    saveHighScore(name, Math.floor(distance));
+    // Désormais, juste cacher l'input score et afficher rejouer + partage
     highScoreInput.style.display = "none";
-    displayLeaderboard();
     rejouerBtn.style.display = "block";
     shareBtn.style.display = "block";
   };
@@ -254,10 +217,8 @@ function displayLeaderboard() {
   playButton.onclick = () => {
     menu.style.display = "none";
     resetGame();
-menuCanvas.style.display = "none";
-distanceDisplay.style.display = "block";
-
-
+    menuCanvas.style.display = "none";
+    distanceDisplay.style.display = "block";
     requestAnimationFrame(gameLoop);
   };
 
@@ -279,36 +240,29 @@ distanceDisplay.style.display = "block";
   menu.style.display = "block";
   distanceDisplay.style.display = "none";
 
-
   function gameLoop(timestamp) {
     drawStars();
 
     const elapsed = (timestamp - startTime) / 1000;
-    const speedFactor = isMobile ? 0.7 : 1; // 📱 Ralentit de 30% sur mobile
-const meteorSpeedFactor = 0.70; // Ralentir les météorites à 50% de la vitesse de base
+    const speedFactor = isMobile ? 0.7 : 1;
+    const meteorSpeedFactor = 0.70;
+    const baseSpeed = CONSTANT_SPEED * speedFactor;
+    const spawnRate = isMobile ? 15 : 15;
+    const maxMeteorites = isMobile ? 40 : 30;
 
-const baseSpeed = CONSTANT_SPEED * speedFactor;
+    if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
+      createBubble(baseSpeed * meteorSpeedFactor);
+    }
 
-
-const spawnRate = isMobile ? 15 : 15; // Mobile : spawn toutes les 10 frames
-
-const maxMeteorites = isMobile ? 40 : 30; // Mobile : jusqu'à 60 météorites en même temps
-
-if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
-  createBubble(baseSpeed * meteorSpeedFactor);
-}
-
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(reg => {
-      console.log('Service Worker enregistré avec succès:', reg.scope);
-    }).catch(err => {
-      console.error('Erreur d\'enregistrement du Service Worker:', err);
-    });
-  });
-}
-
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Service Worker enregistré avec succès:', reg.scope);
+        }).catch(err => {
+          console.error('Erreur d\'enregistrement du Service Worker:', err);
+        });
+      });
+    }
 
     bubbles.forEach((b, i) => {
       b.x -= b.speed;
@@ -341,103 +295,29 @@ if ('serviceWorker' in navigator) {
           gameOverText.style.display = "block";
 
           if (distance >= 1000) {
-      afficherRecompense();
-    }
-
-          if (checkIfHighScore(distance)) {
-            highScoreInput.style.display = "block";
-            playerNameInput.focus();
-          } else {
-            rejouerBtn.style.display = "block";
-            displayLeaderboard();
-            shareBtn.style.display = "block";
+            afficherRecompense();
           }
+
+          highScoreInput.style.display = "none";
+          rejouerBtn.style.display = "block";
+          shareBtn.style.display = "block";
           break;
         }
       }
     }
 
-    particles.forEach(p => {
+    particles.forEach((p, i) => {
       p.update();
-      p.draw();
+      if (p.alpha <= 0) particles.splice(i, 1);
     });
-    particles = particles.filter(p => p.alpha > 0);
 
-    if (!gameOver) {
-      drawFlame(player.x - player.radius, player.y);
-      drawRocket(player.x, player.y, player.radius);
-    }
-
+    drawRocket(player.x, player.y, player.radius);
     bubbles.forEach(drawMeteorite);
+    particles.forEach(p => p.draw());
 
+    flamePulse += 0.1;
     frameCount++;
-    flamePulse += 0.15;
 
-    if (!gameOver || particles.length > 0) {
-      requestAnimationFrame(gameLoop);
-    }
+    if (!gameOver) requestAnimationFrame(gameLoop);
   }
-
-  // ✅ Fonction d'affichage de la récompense 1km
-  function afficherRecompense() {
-    const message = document.createElement("div");
-    message.innerHTML = `
-      🚀 <strong>Bravo !</strong> Tu as atteint <strong>1 km</strong> !<br>
-      <span style="font-size: 28px; color: gold;">🎖️ Grade : <strong>AS DE L'ESPACE</strong></span>
-    `;
-    message.style.position = "absolute";
-    message.style.top = "50%";
-    message.style.left = "50%";
-    message.style.transform = "translate(-50%, -50%)";
-    message.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
-    message.style.color = "white";
-    message.style.padding = "30px";
-    message.style.fontSize = "22px";
-    message.style.fontWeight = "bold";
-    message.style.border = "3px solid gold";
-    message.style.borderRadius = "20px";
-    message.style.boxShadow = "0 0 20px gold";
-    message.style.zIndex = "9999";
-    message.style.textAlign = "center";
-    message.id = "rewardMessage";
-
-    document.body.appendChild(message);
-
-    setTimeout(() => {
-      message.remove();
-    }, 6000);
-  }
-// ⭐ Fond étoilé pour le menu
-const menuCanvas = document.getElementById("menuStars");
-const menuCtx = menuCanvas.getContext("2d");
-let menuStars = [];
-
-function resizeMenuCanvas() {
-  menuCanvas.width = window.innerWidth;
-  menuCanvas.height = window.innerHeight;
-  menuStars = Array.from({ length: 100 }, () => ({
-    x: Math.random() * menuCanvas.width,
-    y: Math.random() * menuCanvas.height,
-    radius: Math.random() * 1.5 + 0.5,
-    speed: Math.random() * 0.5 + 0.2,
-  }));
-}
-resizeMenuCanvas();
-window.addEventListener("resize", resizeMenuCanvas);
-
-function animateMenuStars() {
-  menuCtx.fillStyle = "#001122";
-  menuCtx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
-  menuCtx.fillStyle = "white";
-  menuStars.forEach(s => {
-    s.x -= s.speed;
-    if (s.x < 0) s.x = menuCanvas.width;
-    menuCtx.beginPath();
-    menuCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-    menuCtx.fill();
-  });
-  requestAnimationFrame(animateMenuStars);
-}
-animateMenuStars();
-
 })();
