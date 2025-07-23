@@ -224,11 +224,11 @@ function updateObjectifDisplay() {
 
   /* -------------------- Score Board Helpers -------------------- */
   function getGrade(score) {
-    if (score >= 2000) return "🚀 🚀🚀 Pilote Légendaire";
-    if (score >= 1500) return "🚀🚀 Héros Galactique";
-    if (score >= 1000) return "🚀 As de L'espace";
+    if (score >= 2000) return " Pilote Légendaire";
+    if (score >= 1500) return " Héros Galactique";
+    if (score >= 1000) return " As de L'espace";
     if (score >= 500) return " Aventurier Spatial";
-    return "🔸 Recrue Interstellaire";
+    return " Recrue Interstellaire";
   }
 
   function afficherTableauScore(score) {
