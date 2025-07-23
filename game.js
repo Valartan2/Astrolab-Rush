@@ -310,6 +310,8 @@
 
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
+      mettreAJourObjectifs(distance);
+
 
       /* Collision */
       for (let i = 0; i < bubbles.length; i++) {
