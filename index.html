@@ -43,7 +43,7 @@
       user-select: none;
     }
 
-    #playButton, #rejouer, #shareScore, #submitScore {
+    #playButton, #rejouer {
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
       font-weight: bold;
       font-size: 28px;
@@ -59,9 +59,7 @@
     }
 
     #playButton:hover,
-    #rejouer:hover,
-    #shareScore:hover,
-    #submitScore:hover {
+    #rejouer:hover {
       background: #ff8800;
       transform: translateY(-2px);
       box-shadow: 6px 6px 0 black;
@@ -119,104 +117,6 @@
       50% { transform: translateX(-50%) scale(1.05); }
     }
 
-    #highScoreInput {
-      position: absolute;
-      top: 62%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
-      z-index: 17;
-      background: #fff;
-      color: black;
-      padding: 20px;
-      border-radius: 20px;
-      border: 4px solid black;
-      box-shadow: 4px 4px 0 black;
-      text-align: center;
-    }
-
-    #highScoreInput input {
-      padding: 10px;
-      font-size: 20px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 2px solid black;
-      text-align: center;
-      width: 200px;
-    }
-
-    #leaderboard {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fffbe6;
-      padding: 20px;
-      border-radius: 20px;
-      border: 4px solid black;
-      color: #222;
-      font-size: 18px;
-      max-width: 260px;
-      z-index: 14;
-      display: none;
-      text-align: center;
-      box-shadow: 4px 4px 0 black;
-    }
-
-    #leaderboard h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 22px;
-      color: black;
-      text-shadow: 1px 1px 0 black;
-    }
-
-    #leaderboard ol {
-      padding-left: 20px;
-      margin: 0;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    #shareScore {
-      position: absolute;
-      top: 80%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      padding: 10px 20px;
-      border-radius: 12px;
-      border: 3px solid black;
-      background: #00cfcf;
-      color: black;
-      cursor: pointer;
-      display: none;
-      box-shadow: 3px 3px 0 black;
-    }
-
-    #shareScore:hover {
-      background: #00cfcf;
-      transform: translateX(-50%) translateY(-2px);
-      box-shadow: 6px 6px 0 black;
-    }
-
-    #success-banner {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.85);
-      color: #00ffcc;
-      padding: 12px 24px;
-      border-radius: 16px;
-      font-size: 20px;
-      font-weight: bold;
-      display: none;
-      z-index: 999;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
-      text-align: center;
-    }
-
     #rejouer {
       position: absolute;
       top: calc(55% + 100px);
@@ -252,17 +152,28 @@
       background: #001122;
     }
 
+    #success-banner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #00ffcc;
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      display: none;
+      z-index: 999;
+      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+      text-align: center;
+    }
+
     @media (max-width: 768px) {
-      #playButton, #rejouer, #shareScore {
+      #playButton, #rejouer {
         font-size: 20px;
         padding: 10px 25px;
         width: auto;
-      }
-
-      #leaderboard {
-        max-width: 90vw;
-        font-size: 16px;
-        padding: 15px;
       }
 
       #gameOverText {
@@ -284,21 +195,9 @@
 
   <div id="distance">Distance: 0 m</div>
 
-  <div id="leaderboard">
-    <h3>Top 5 Distances</h3>
-    <ol></ol>
-  </div>
-
   <div id="gameOverText">GAME OVER</div>
 
   <button id="rejouer">Rejouer</button>
-  <button id="shareScore">Partager mon score</button>
-
-  <div id="highScoreInput">
-    <div>Nouveau record ! Entrez votre nom :</div>
-    <input type="text" id="playerName" placeholder="Votre nom" maxlength="15" />
-    <button id="submitScore">Valider</button>
-  </div>
 
   <div id="success-banner"></div>
 
