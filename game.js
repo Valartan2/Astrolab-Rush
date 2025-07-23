@@ -198,7 +198,7 @@
 
   /* -------------------- Score Board Helpers -------------------- */
   function getGrade(score) {
-    if (score >= 1000) return "🚀 Légende";
+    if (score >= 1000) return "🚀 As de l'espace";
     if (score >= 700) return "🥇 Or";
     if (score >= 500) return "🥈 Argent";
     if (score >= 300) return "🥉 Bronze";
