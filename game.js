@@ -77,7 +77,7 @@
   let hasReached1km = false;
 
   const distanceSpeedFactor = 2.5;
-  const CONSTANT_SPEED = 20;
+  const CONSTANT_SPEED = 15;
 
   /* -------------------- Stars Background -------------------- */
   const stars = Array.from({ length: 150 }, () => ({
