@@ -121,11 +121,11 @@
     /* 🆕 Tableau de score */
     #scoreBoard {
       position: absolute;
-      top: calc(50% - 180px);
+      top: calc(30% - 100px);
       left: 50%;
       transform: translateX(-50%);
       background: #fffbe6;
-      padding: 30px 40px;
+      padding: 20px 30px;
       border-radius: 20px;
       border: 5px solid black;
       text-align: center;
@@ -136,7 +136,8 @@
       color: #222;
       font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
       display: none;
-    
+      width: 260px;           /* ✅ largeur réduite */
+      max-width: 90vw;
     }
 
     #scoreBoard h2 {
