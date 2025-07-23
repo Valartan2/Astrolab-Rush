@@ -117,9 +117,38 @@
       0%, 100% { transform: translateX(-50%) scale(1); }
       50% { transform: translateX(-50%) scale(1.05); }
     }
-    
-   
-   
+
+    /* 🆕 Tableau de score */
+    #scoreBoard {
+      position: absolute;
+      top: calc(50% - 180px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fefefe;
+      padding: 30px 40px;
+      border-radius: 20px;
+      border: 5px solid black;
+      text-align: center;
+      z-index: 17;
+      box-shadow: 6px 6px 0 #000;
+      font-size: 22px;
+      font-weight: bold;
+      color: #222;
+      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+      display: none;
+    }
+
+    #scoreBoard h2 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      color: #444;
+    }
+
+    #scoreBoard p {
+      margin: 8px 0;
+      font-size: 22px;
+    }
+
     #shareScore {
       position: absolute;
       top: 80%;
@@ -201,8 +230,6 @@
         width: auto;
       }
 
-     
-
       #gameOverText {
         font-size: 32px;
       }
@@ -222,14 +249,19 @@
 
   <div id="distance">Distance: 0 m</div>
 
-  
+  <!-- 🆕 Tableau de score -->
+  <div id="scoreBoard">
+    <h2>Tableau de Score</h2>
+    <p><strong>Score :</strong> <span id="currentScore">0</span> m</p>
+    <p><strong>Meilleur :</strong> <span id="bestScore">0</span> m</p>
+    <p><strong>Médaille :</strong> <span id="grade">-</span></p>
+  </div>
 
   <div id="gameOverText">GAME OVER</div>
 
   <button id="rejouer">Rejouer</button>
   <button id="shareScore">Partager mon score</button>
 
-  
   <div id="success-banner"></div>
 
   <script src="game.js"></script>
