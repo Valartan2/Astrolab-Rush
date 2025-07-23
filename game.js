@@ -7,9 +7,13 @@
   const menu = document.getElementById("menu");
   const playButton = document.getElementById("playButton");
   const shareBtn = document.getElementById("shareScore");
+  const scoreBoard = document.getElementById("scoreBoard");
+  const currentScoreSpan = document.getElementById("currentScore");
+  const bestScoreSpan = document.getElementById("bestScore");
+  const gradeSpan = document.getElementById("grade");
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  
 
+  /* -------------------- Assets -------------------- */
   const rocketImg = new Image();
   rocketImg.src = 'rocket.png';
 
@@ -29,6 +33,7 @@
     meteoriteImages.push(img);
   });
 
+  /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -41,10 +46,10 @@
     width = canvas.width / dpr;
     height = canvas.height / dpr;
   }
-
   window.addEventListener("resize", resize);
   resize();
 
+  /* -------------------- Player -------------------- */
   const player = {
     x: 150,
     y: height / 2,
@@ -55,12 +60,14 @@
     maxSpeed: 6,
   };
 
+  /* -------------------- Input -------------------- */
   let pressing = false;
   window.addEventListener("keydown", e => { if (e.code === "Space") pressing = true; });
   window.addEventListener("keyup", e => { if (e.code === "Space") pressing = false; });
   window.addEventListener("touchstart", () => { pressing = true; }, { passive: true });
   window.addEventListener("touchend", () => { pressing = false; }, { passive: true });
 
+  /* -------------------- Game State -------------------- */
   let bubbles = [];
   let frameCount = 0;
   let flamePulse = 0;
@@ -72,6 +79,7 @@
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 20;
 
+  /* -------------------- Stars Background -------------------- */
   const stars = Array.from({ length: 150 }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
@@ -79,6 +87,7 @@
     speed: Math.random() * 0.6 + 0.2,
   }));
 
+  /* -------------------- Bubble (Meteorite) -------------------- */
   function createBubble(speed) {
     const base = isMobile ? 15 : 25;
     const extra = isMobile ? 10 : 15;
@@ -104,6 +113,7 @@
     return Math.sqrt(dx * dx + dy * dy) < c.radius + b.radius;
   }
 
+  /* -------------------- Particles -------------------- */
   class Particle {
     constructor(x, y) {
       this.x = x;
@@ -129,7 +139,6 @@
       ctx.restore();
     }
   }
-
   let particles = [];
   function createExplosion(x, y) {
     for (let i = 0; i < 30; i++) {
@@ -137,6 +146,7 @@
     }
   }
 
+  /* -------------------- Flame & Draw -------------------- */
   function drawFlame(x, y) {
     const pulse = Math.sin(flamePulse) * 0.5 + 0.5;
     const flameLength = 30 + pulse * 25;
@@ -186,11 +196,32 @@
     });
   }
 
+  /* -------------------- Score Board Helpers -------------------- */
+  function getGrade(score) {
+    if (score >= 1000) return "🚀 Légende";
+    if (score >= 700) return "🥇 Or";
+    if (score >= 500) return "🥈 Argent";
+    if (score >= 300) return "🥉 Bronze";
+    return "🔸 Débutant";
+  }
+
+  function afficherTableauScore(score) {
+    const bestScore = Math.max(score, parseInt(localStorage.getItem("bestScore") || "0"));
+    localStorage.setItem("bestScore", bestScore);
+
+    currentScoreSpan.textContent = Math.floor(score);
+    bestScoreSpan.textContent = bestScore;
+    gradeSpan.textContent = getGrade(score);
+
+    scoreBoard.style.display = "block";
+  }
+
+  /* -------------------- Reset -------------------- */
   function resetGame() {
     // Adapter les vitesses selon le device
-    player.gravityDown = isMobile ? 0.9 : 0.9;
-    player.gravityUp = isMobile ? -0.8 : -0.8;
-    player.maxSpeed = isMobile ? 6 : 6;
+    player.gravityDown = 0.9;
+    player.gravityUp = -0.8;
+    player.maxSpeed = 6;
     player.radius = isMobile ? 18 : 25;
 
     bubbles = [];
@@ -203,10 +234,12 @@
     player.y = height / 2;
     player.velocityY = 0;
     player.x = isMobile ? 75 : 150;
+
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
+    scoreBoard.style.display = "none"; // 🆕 hide scoreboard
   }
 
-  // ✅ Fonction d'affichage de la récompense 1km
+  /* -------------------- Reward -------------------- */
   function afficherRecompense() {
     const message = document.createElement("div");
     message.innerHTML = `
@@ -236,6 +269,7 @@
     }, 6000);
   }
 
+  /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
     menu.style.display = "none";
     resetGame();
@@ -254,15 +288,17 @@
     const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab ! Peux-tu faire mieux ? 🚀🎮`;
     const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: "Ballon Esquive - Mon score", text, url }).catch(console.error);
+      navigator.share({ title: "AstroLab - Mon score", text, url }).catch(console.error);
     } else {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + " " + url)}`, "_blank");
     }
   };
 
+  /* -------------------- Start Screen -------------------- */
   menu.style.display = "block";
   distanceDisplay.style.display = "none";
 
+  /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
     drawStars();
 
@@ -301,11 +337,14 @@
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
 
+      /* Collision */
       for (let i = 0; i < bubbles.length; i++) {
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
           gameOverText.style.display = "block";
+
+          afficherTableauScore(distance); // 🆕 show score board
 
           if (distance >= 1000) {
             afficherRecompense();
@@ -318,10 +357,7 @@
       }
     }
 
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
+    particles.forEach(p => { p.update(); p.draw(); });
     particles = particles.filter(p => p.alpha > 0);
 
     if (!gameOver) {
@@ -339,7 +375,7 @@
     }
   }
 
-  // Service Worker (en dehors de la boucle de jeu)
+  /* -------------------- Service Worker (outside loop) -------------------- */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then(reg => {
@@ -350,7 +386,7 @@
     });
   }
 
-  // ⭐ Fond étoilé pour le menu
+  /* -------------------- Menu Stars Background -------------------- */
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) {
     const menuCtx = menuCanvas.getContext("2d");
@@ -384,5 +420,5 @@
     }
     animateMenuStars();
   }
-
 })();
+
