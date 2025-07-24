@@ -298,10 +298,10 @@ closeObjectifs.onclick = () => {
 
 
   shareBtn.onclick = () => {
-    const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab ! Peux-tu faire mieux ? 🚀🎮`;
+    const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab Rush ! Peux-tu faire mieux ? 🚀🎮`;
     const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: "AstroLab - Mon score", text, url }).catch(console.error);
+      navigator.share({ title: "AstroLab Rush - Mon score", text, url }).catch(console.error);
     } else {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text + " " + url)}`, "_blank");
     }
