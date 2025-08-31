@@ -17,7 +17,7 @@ const objectifItems = document.getElementById("objectifItems");
 const closeObjectifs = document.getElementById("closeObjectifs");
 
 const gradeObjectifs = [
-  { threshold: 0, label: " Interstellar Recruit" },
+  { threshold: 0, label:    " Interstellar Recruit" },
   { threshold: 1000, label: " Space Adventurer" },
   { threshold: 2000, label: " Meteorite Hunter" },
   { threshold: 3000, label: " Cosmic Explorer" },
