@@ -18,10 +18,12 @@ const closeObjectifs = document.getElementById("closeObjectifs");
 
 const gradeObjectifs = [
   { threshold: 0, label:    " Interstellar Recruit" },
-  { threshold: 1000, label: " Space Adventurer" },
-  { threshold: 2000, label: " Meteorite Hunter" },
-  { threshold: 3000, label: " Cosmic Explorer" },
-  { threshold: 4000, label: " Legendary Pilot" },
+  { threshold: 5000, label: " Stellar Commander" },
+  { threshold: 6000, label: " Galactic Hero" },
+  { threshold: 7000, label: " Astral Veteran" },
+  { threshold: 8000, label: " Space Ace" },
+  { threshold: 9000, label: " Star Guardian" },
+  { threshold: 10000, label: " Lord of the Cosmos" },
 ];
 
 function updateObjectifDisplay() {
