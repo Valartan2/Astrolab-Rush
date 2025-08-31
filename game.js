@@ -17,11 +17,11 @@ const objectifItems = document.getElementById("objectifItems");
 const closeObjectifs = document.getElementById("closeObjectifs");
 
 const gradeObjectifs = [
-  { threshold: 0, label: " Recrue Interstellaire" },
-  { threshold: 500, label: " Aventurier Spatial" },
-  { threshold: 1000, label: " As de L'espace" },
-  { threshold: 1500, label: " Héros Galactique" },
-  { threshold: 2000, label: " Pilote Légendaire" },
+  { threshold: 0, label: " Interstellar Recruit" },
+  { threshold: 1000, label: " Space Adventurer" },
+  { threshold: 2000, label: " Meteorite Hunter" },
+  { threshold: 3000, label: " Cosmic Explorer" },
+  { threshold: 4000, label: " Legendary Pilot" },
 ];
 
 function updateObjectifDisplay() {
