@@ -151,8 +151,47 @@
       font-size: 22px;
     }
 
-  
+    #shareScore {
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 3px solid black;
+      background: #00cfcf;
+      color: black;
+      cursor: pointer;
+      display: none;
+      box-shadow: 3px 3px 0 black;
+    }
 
+    #shareScore:hover {
+      background: #00cfcf;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 6px 6px 0 black;
+    }
+
+   #objectifsBtn {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 3px solid black;
+  background: #fff04f;
+  color: black;
+  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+  cursor: pointer;
+  display: none;
+  box-shadow: 3px 3px 0 black;
+  z-index: 18;
+ text-transform: uppercase;
+}
     #objectifList {
   position: fixed;
   top: 0;
@@ -197,6 +236,11 @@
 }
 
 
+#objectifsBtn:hover {
+  background: #fdd835;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 6px 6px 0 black;
+}
 
 
     #success-banner {
@@ -216,6 +260,30 @@
       text-align: center;
     }
 
+
+    #rejouer {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      padding: 10px 20px;
+      color: black;
+      background: #ffaa00;
+      border: 3px solid black;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 black;
+      text-transform: uppercase;
+      display: none;
+      z-index: 18;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #rejouer:hover {
+      background: #ff8800;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 6px 6px 0 black;
     }
 
     #menuStars {
@@ -258,7 +326,7 @@
   <div id="scoreBoard">
     <h2>Congratulations!</h2>
     <p><strong>You have completed :</strong> <span id="currentScore">0</span> m</p>
-    <p><strong> You have become: Space Adventurer and you have earned a new rocket! Keep it up!!"
+    <p><strong> and you have earned a new rocket! Keep it up!!"
     <p</strong> <span id="grade">-</span></p>
   </div>
 <div id="objectifList" style="display: none;">
