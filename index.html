@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Select a Rocket</title>
+  <title>AstroLab Rush</title>
 
   <!-- 🔗 Lien vers le manifest -->
   <link rel="manifest" href="manifest.json" />
@@ -313,7 +313,7 @@
   <canvas id="menuStars"></canvas>
 
   <div id="menu">
-    <h1 id="gameTitle">Select a Rocket</h1>
+    <h1 id="gameTitle">AstroLab Rush</h1>
     <img id="menuImage" src="menu.png" alt="Image menu" />
     <button id="playButton">Play</button>
   </div>
@@ -324,10 +324,10 @@
 
   <!-- 🆕 Tableau de score -->
   <div id="scoreBoard">
-    <h2>Congratulations!</h2>
-    <p><strong>You have completed :</strong> <span id="currentScore">0</span> m</p>
-    <p><strong> and you have earned a new rocket! Keep it up!!"
-    <p</strong> <span id="grade">-</span></p>
+    <h2>ScoreBoard</h2>
+    <p><strong>Current Score :</strong> <span id="currentScore">0</span> m</p>
+    <p><strong>Best Score :</strong> <span id="bestScore">0</span> m</p>
+    <p><strong>Grade :</strong> <span id="grade">-</span></p>
   </div>
 <div id="objectifList" style="display: none;">
   <div id="objectifPanel">
@@ -339,7 +339,9 @@
 
   <div id="gameOverText">GAME OVER</div>
 
-  
+  <button id="rejouer">Play Again</button>
+  <button id="objectifsBtn">Objectives</button>
+  <button id="shareScore">Share my Score</button>
 
   <div id="success-banner"></div>
 
