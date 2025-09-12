@@ -227,11 +227,11 @@ function updateObjectifDisplay() {
 
   /* -------------------- Score Board Helpers -------------------- */
   function getGrade(score) {
-    if (score >= 2000) return " Pilote Légendaire";
-    if (score >= 1500) return " Héros Galactique";
-    if (score >= 1000) return " As de L'espace";
-    if (score >= 500) return " Aventurier Spatial";
-    return " Recrue Interstellaire";
+    if (score >= 2000) return " Supreme Navigator";
+    if (score >= 1500) return " Champion of the Cosmos";
+    if (score >= 1000) return " Eternal Voyager";
+    if (score >= 500) return " Master of Infinity";
+    return " Lord of the Multiverse";
   }
 
   function afficherTableauScore(score) {
