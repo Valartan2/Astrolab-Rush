@@ -84,9 +84,9 @@ function updateObjectifDisplay() {
     y: height / 2,
     radius: 25,
     velocityY: 0,
-    gravityUp: -0.8,
-    gravityDown: 0.9,
-    maxSpeed: 6,
+    gravityUp: -1.6,
+    gravityDown: 1.6,
+    maxSpeed: 12,
   };
 
   /* -------------------- Input -------------------- */
