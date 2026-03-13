@@ -261,7 +261,7 @@ function resetGame() {
     player.maxSpeed = 6;
   }
 
-  player.radius = 70;
+  player.radius = 50;
 
   bubbles = [];
   particles = [];
