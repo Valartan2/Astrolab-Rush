@@ -84,9 +84,9 @@ function updateObjectifDisplay() {
     y: height / 2,
     radius: 25,
     velocityY: 0,
-    gravityUp: -3.2,
-    gravityDown: 3.2,
-    maxSpeed: 24,
+    gravityUp: -0.8,
+    gravityDown: 0.9,
+    maxSpeed: 6,
   };
 
   /* -------------------- Input -------------------- */
@@ -322,11 +322,9 @@ closeObjectifs.onclick = () => {
     const elapsed = (timestamp - startTime) / 1000;
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
-    const speedLevel = Math.floor(distance / 100);
-    const baseSpeed = (CONSTANT_SPEED + speedLevel * 2) * speedFactor;
-    const rocketSpeedFactor = 1 + speedLevel * 0.10;
-    const spawnRate = isMobile ? 25 : 25;
-    const maxMeteorites = isMobile ? 20 : 15;
+    const baseSpeed = CONSTANT_SPEED * speedFactor;
+    const spawnRate = isMobile ? 15 : 15;
+    const maxMeteorites = isMobile ? 40 : 30;
 
     if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
       createBubble(baseSpeed * meteorSpeedFactor);
@@ -340,17 +338,10 @@ closeObjectifs.onclick = () => {
     });
 
     if (!gameOver) {
-      player.velocityY += pressing
-  ? player.gravityDown * rocketSpeedFactor
-  : player.gravityUp * rocketSpeedFactor;
-
-player.velocityY = Math.max(
-  -player.maxSpeed * rocketSpeedFactor,
-  Math.min(player.velocityY, player.maxSpeed * rocketSpeedFactor)
-);
+      player.velocityY += pressing ? player.gravityDown : player.gravityUp;
+      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY;
-      const inertia = Math.max(0.87 - speedLevel * 0.01, 0.65);
-      player.velocityY *= inertia;
+      player.velocityY *= 0.87;
 
       if (player.y < player.radius) {
         player.y = player.radius;
