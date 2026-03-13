@@ -16,6 +16,9 @@ const objectifList = document.getElementById("objectifList");
 const objectifItems = document.getElementById("objectifItems");
 const closeObjectifs = document.getElementById("closeObjectifs");
 
+const music = document.getElementById("gameMusic");
+if (music) music.volume = 0.3;
+  
 const gradeObjectifs = [
   { threshold: 0, label:    " Lord of the Multiverse" },
   { threshold: 500, label: " Master of Infinity" },
@@ -286,6 +289,12 @@ function resetGame() {
 
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
+
+    if (music) {
+    music.currentTime = 0;
+    music.play();
+  }
+    
     menu.style.display = "none";
     resetGame();
     const menuCanvas = document.getElementById("menuStars");
@@ -369,6 +378,7 @@ closeObjectifs.onclick = () => {
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
+          if (music) music.pause();
           gameOverText.style.display = "block";
 
           afficherTableauScore(distance); // 🆕 show score board
