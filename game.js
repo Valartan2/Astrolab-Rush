@@ -323,8 +323,8 @@ closeObjectifs.onclick = () => {
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
     const baseSpeed = CONSTANT_SPEED * speedFactor;
-    const spawnRate = isMobile ? 15 : 15;
-    const maxMeteorites = isMobile ? 40 : 30;
+    const spawnRate = isMobile ? 25 : 25;
+    const maxMeteorites = isMobile ? 20 : 15;
 
     if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
       createBubble(baseSpeed * meteorSpeedFactor);
