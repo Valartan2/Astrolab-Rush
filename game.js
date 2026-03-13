@@ -291,8 +291,9 @@ function resetGame() {
   playButton.onclick = () => {
 
     if (music) {
+    music.pause();
     music.currentTime = 0;
-    music.play();
+    music.play().catch(()=>{});
   }
     
     menu.style.display = "none";
@@ -306,8 +307,9 @@ function resetGame() {
   rejouerBtn.onclick = () => {
 
     if (music) {
+    music.pause();
     music.currentTime = 0;
-    music.play();
+    music.play().catch(()=>{});
   }
     
     resetGame();
