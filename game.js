@@ -44,7 +44,7 @@ function updateObjectifDisplay() {
 
   /* -------------------- Assets -------------------- */
   const rocketImg = new Image();
-  rocketImg.src = 'rocket.png';
+  rocketImg.src = 'FuséeBase.png';
 
   const meteoriteImages = [];
   const meteoriteImageSources = [
@@ -389,7 +389,7 @@ closeObjectifs.onclick = () => {
     particles = particles.filter(p => p.alpha > 0);
 
     if (!gameOver) {
-      drawFlame(player.x - player.radius, player.y);
+      
       drawRocket(player.x, player.y, player.radius);
     }
 
