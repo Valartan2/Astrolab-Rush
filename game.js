@@ -304,6 +304,12 @@ function resetGame() {
   };
 
   rejouerBtn.onclick = () => {
+
+    if (music) {
+    music.currentTime = 0;
+    music.play();
+  }
+    
     resetGame();
     distanceDisplay.style.display = "block"; // <-- ✅ afficher durant la partie après rejouer
     requestAnimationFrame(gameLoop);
