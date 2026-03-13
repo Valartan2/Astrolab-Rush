@@ -324,7 +324,7 @@ closeObjectifs.onclick = () => {
     const meteorSpeedFactor = 0.70;
     const speedLevel = Math.floor(distance / 100);
     const baseSpeed = (CONSTANT_SPEED + speedLevel * 2) * speedFactor;
-    const rocketSpeedFactor = 1 + speedLevel * 0.05;
+    const rocketSpeedFactor = 1 + speedLevel * 0.10;
     const spawnRate = isMobile ? 25 : 25;
     const maxMeteorites = isMobile ? 20 : 15;
 
