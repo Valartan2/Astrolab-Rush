@@ -341,7 +341,7 @@ closeObjectifs.onclick = () => {
 
     bubbles.forEach((b, i) => {
       b.x -= b.speed;
-      b.y += b.direction * b.floatSpeed;
+   
       if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
       if (b.x + b.radius < 0) bubbles.splice(i, 1);
     });
