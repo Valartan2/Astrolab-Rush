@@ -44,7 +44,7 @@ function updateObjectifDisplay() {
 
   /* -------------------- Assets -------------------- */
   const rocketImg = new Image();
-  rocketImg.src = 'FuséeBase.png';
+  rocketImg.src = 'rocket2.png';
 
   const meteoriteImages = [];
   const meteoriteImageSources = [
