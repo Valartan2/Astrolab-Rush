@@ -82,7 +82,7 @@ function updateObjectifDisplay() {
   const player = {
     x: 150,
     y: height / 2,
-    radius: 100,
+    radius: 200,
     velocityY: 0,
     gravityUp: -0.8,
     gravityDown: 0.9,
