@@ -248,30 +248,39 @@ function updateObjectifDisplay() {
 
 
   /* -------------------- Reset -------------------- */
-  function resetGame() {
-    // Adapter les vitesses selon le device
+function resetGame() {
+
+  // Adapter les vitesses selon le device
+  if (isMobile) {
+    player.gravityDown = 1.5;
+    player.gravityUp = -1.5;
+    player.maxSpeed = 12;
+  } else {
     player.gravityDown = 0.9;
     player.gravityUp = -0.8;
     player.maxSpeed = 6;
-    player.radius = isMobile ? 18 : 25;
-
-    bubbles = [];
-    particles = [];
-    frameCount = 0;
-    gameOver = false;
-    distance = 0;
-    hasReached1km = false;
-    startTime = performance.now();
-    player.y = height / 2;
-    player.velocityY = 0;
-    player.x = isMobile ? 75 : 150;
-
-    [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
-    objectifsBtn.style.display = "none";
-objectifList.style.display = "none"; // (au cas où la fenêtre reste ouverte)
-
-    scoreBoard.style.display = "none"; // 🆕 hide scoreboard
   }
+
+  player.radius = isMobile ? 18 : 25;
+
+  bubbles = [];
+  particles = [];
+  frameCount = 0;
+  gameOver = false;
+  distance = 0;
+  hasReached1km = false;
+  startTime = performance.now();
+
+  player.y = height / 2;
+  player.velocityY = 0;
+  player.x = isMobile ? 75 : 150;
+
+  [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
+  objectifsBtn.style.display = "none";
+  objectifList.style.display = "none";
+
+  scoreBoard.style.display = "none";
+}
 
   
 
