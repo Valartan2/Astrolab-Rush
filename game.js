@@ -82,7 +82,7 @@ function updateObjectifDisplay() {
   const player = {
     x: 150,
     y: height / 2,
-    radius: 200,
+    radius: 50,
     velocityY: 0,
     gravityUp: -0.8,
     gravityDown: 0.9,
@@ -261,7 +261,7 @@ function resetGame() {
     player.maxSpeed = 6;
   }
 
-  player.radius = isMobile ? 18 : 25;
+  player.radius = isMobile ? 35 : 50;
 
   bubbles = [];
   particles = [];
