@@ -324,6 +324,7 @@ closeObjectifs.onclick = () => {
     const meteorSpeedFactor = 0.70;
     const speedLevel = Math.floor(distance / 100);
     const baseSpeed = (CONSTANT_SPEED + speedLevel * 2) * speedFactor;
+    const rocketSpeedFactor = 1 + speedLevel * 0.05;
     const spawnRate = isMobile ? 25 : 25;
     const maxMeteorites = isMobile ? 20 : 15;
 
@@ -339,8 +340,14 @@ closeObjectifs.onclick = () => {
     });
 
     if (!gameOver) {
-      player.velocityY += pressing ? player.gravityDown : player.gravityUp;
-      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
+      player.velocityY += pressing
+  ? player.gravityDown * rocketSpeedFactor
+  : player.gravityUp * rocketSpeedFactor;
+
+player.velocityY = Math.max(
+  -player.maxSpeed * rocketSpeedFactor,
+  Math.min(player.velocityY, player.maxSpeed * rocketSpeedFactor)
+);
       player.y += player.velocityY;
       player.velocityY *= 0.87;
 
