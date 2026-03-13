@@ -18,9 +18,9 @@ const closeObjectifs = document.getElementById("closeObjectifs");
 
 const gradeObjectifs = [
   { threshold: 0, label:    " Lord of the Multiverse" },
-  { threshold: 5000, label: " Master of Infinity" },
-  { threshold: 6000, label: " Eternal Voyager" },
-  { threshold: 7000, label: " Champion of the Cosmos" },
+  { threshold: 500, label: " Master of Infinity" },
+  { threshold: 8000, label: " Eternal Voyager" },
+  { threshold: 1000, label: " Champion of the Cosmos" },
   { threshold: 8000, label: " Supreme Navigator" },
   { threshold: 9000, label: " Celestial Overlord" },
   { threshold: 10000, label: "Galaxy Architect" },
