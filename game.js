@@ -349,7 +349,8 @@ player.velocityY = Math.max(
   Math.min(player.velocityY, player.maxSpeed * rocketSpeedFactor)
 );
       player.y += player.velocityY;
-      player.velocityY *= 0.87;
+      const inertia = Math.max(0.87 - speedLevel * 0.01, 0.65);
+      player.velocityY *= inertia;
 
       if (player.y < player.radius) {
         player.y = player.radius;
