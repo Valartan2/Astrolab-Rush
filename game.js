@@ -15,13 +15,13 @@
 const objectifList = document.getElementById("objectifList");
 const objectifItems = document.getElementById("objectifItems");
 const closeObjectifs = document.getElementById("closeObjectifs");
-const clickSound = document.getElementById("clickSound");
+const clickSound = new Audio("click-151673.mp3");
 
-function playClick() {
-  if (!clickSound) return;
+function playClick(){
   clickSound.currentTime = 0;
-  clickSound.play().catch(()=>{});
+  clickSound.play();
 }
+
 
   
   
