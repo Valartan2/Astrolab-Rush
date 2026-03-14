@@ -303,11 +303,7 @@
         width: auto;
       }
 
-      #gameOverText {
-        font-size: 32px;
-      }
-
-      #milestoneMessage{
+    #milestoneMessage{
 position:absolute;
 top:40%;
 left:50%;
@@ -319,9 +315,13 @@ text-shadow:0 0 10px cyan;
 opacity:0;
 transition:opacity 0.4s;
 pointer-events:none;
-}
+z-index:999;
+}  
 
       
+      #gameOverText {
+        font-size: 32px;
+      }      
     }
   </style>
 </head>
