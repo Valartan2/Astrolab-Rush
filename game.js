@@ -157,8 +157,7 @@ let explosionFrame = 0;
   }
 
  
-  let explosion = null;
-let explosionFrame = 0;
+ 
 
 function createExplosion(x, y) {
   explosion = {
