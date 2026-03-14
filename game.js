@@ -434,7 +434,7 @@ closeObjectifs.onclick = () => {
 
   const grade = gradeObjectifs[nextGradeIndex];
 
-  showMilestone("🚀 " + grade.label);
+  showMilestone("" + grade.label);
 
   nextGradeIndex++;
 }
