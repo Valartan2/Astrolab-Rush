@@ -296,13 +296,6 @@
       background: #001122;
     }
 
-    @media (max-width: 768px) {
-      #playButton, #rejouer, #shareScore {
-        font-size: 20px;
-        padding: 10px 25px;
-        width: auto;
-      }
-
     #milestoneMessage{
 position:absolute;
 top:40%;
@@ -316,7 +309,16 @@ opacity:0;
 transition:opacity 0.4s;
 pointer-events:none;
 z-index:999;
-}  
+}
+
+    @media (max-width: 768px) {
+      #playButton, #rejouer, #shareScore {
+        font-size: 20px;
+        padding: 10px 25px;
+        width: auto;
+      }
+
+    
 
       
       #gameOverText {
