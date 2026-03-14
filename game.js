@@ -121,7 +121,7 @@ function updateObjectifDisplay() {
   let hasReached1km = false;
 
   let lastMilestone = 0;
-  let nextGradeIndex = 0;
+  let nextGradeIndex = 1;
 
   
   const distanceSpeedFactor = 2.5;
@@ -301,7 +301,7 @@ function resetGame() {
   }
 
   lastMilestone = 0;
-  nextGradeIndex = 0;
+  nextGradeIndex = 1;
 
   player.radius = 30;
 
