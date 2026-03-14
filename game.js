@@ -430,7 +430,7 @@ closeObjectifs.onclick = () => {
   lastMilestone++;
 
   try {
-    showMilestone("🚀 " + (lastMilestone * 500) + " m !");
+    showMilestone("🚀 " + (lastMilestone * 500) + " m");
   } catch(e) {
     console.log("Milestone error:", e);
   }
