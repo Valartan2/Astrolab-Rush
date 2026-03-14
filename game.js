@@ -317,6 +317,8 @@ function resetGame() {
 
   rejouerBtn.onclick = () => {
 
+    playClick();
+    
     if (music) {
     music.pause();
     music.currentTime = 0;
