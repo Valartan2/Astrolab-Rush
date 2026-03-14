@@ -255,6 +255,8 @@ function resetGame() {
   player.radius = 30;
 
   bubbles = [];
+  explosion = null;
+  explosionFrame = 0;
  
   frameCount = 0;
   gameOver = false;
@@ -373,20 +375,12 @@ closeObjectifs.onclick = () => {
       for (let i = 0; i < bubbles.length; i++) {
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
-          gameOver = true;
-          if (music) music.pause();
-          gameOverText.style.display = "block";
+gameOver = true;
+if (music) music.pause();
 
-          afficherTableauScore(distance); // 🆕 show score board
+distanceDisplay.style.display = "none";
 
-          distanceDisplay.style.display = "none"; // <--- cacher la distance
-
-          
-
-          rejouerBtn.style.display = "block";
-          shareBtn.style.display = "block";
-          objectifsBtn.style.display = "block";
-          break;
+break;
         }
       }
     }
@@ -418,7 +412,16 @@ closeObjectifs.onclick = () => {
   }
 
   if (explosionFrame >= explosionFrames.length) {
-    explosion = null;
+
+  explosion = null;
+
+  gameOverText.style.display = "block";
+
+  afficherTableauScore(distance);
+
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+  objectifsBtn.style.display = "block";
   }
 }
 
