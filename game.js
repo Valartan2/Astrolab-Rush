@@ -65,6 +65,17 @@ function updateObjectifDisplay() {
     meteoriteImages.push(img);
   });
 
+  const explosionFrames = [];
+
+["explosion1.png","explosion2.png","explosion3.png","explosion4.png","explosion5.png","explosion6.png","explosion7.png","explosion8.png"].forEach(src => {
+  const img = new Image();
+  img.src = src;
+  explosionFrames.push(img);
+});
+
+let explosion = null;
+let explosionFrame = 0;
+
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -145,39 +156,17 @@ function updateObjectifDisplay() {
     return Math.sqrt(dx * dx + dy * dy) < c.radius + b.radius;
   }
 
-  /* -------------------- Particles -------------------- */
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.radius = Math.random() * 3 + 2;
-      this.color = 'orange';
-      this.speedX = (Math.random() - 0.5) * 5;
-      this.speedY = (Math.random() - 0.5) * 5;
-      this.alpha = 1;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.alpha -= 0.02;
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-  let particles = [];
-  function createExplosion(x, y) {
-    for (let i = 0; i < 30; i++) {
-      particles.push(new Particle(x, y));
-    }
-  }
+ 
+  let explosion = null;
+let explosionFrame = 0;
 
+function createExplosion(x, y) {
+  explosion = {
+    x: x,
+    y: y
+  };
+  explosionFrame = 0;
+}
   /* -------------------- Flame & Draw -------------------- */
   function drawFlame(x, y) {
     const pulse = Math.sin(flamePulse) * 0.5 + 0.5;
@@ -267,7 +256,7 @@ function resetGame() {
   player.radius = 30;
 
   bubbles = [];
-  particles = [];
+ 
   frameCount = 0;
   gameOver = false;
   distance = 0;
@@ -403,9 +392,7 @@ closeObjectifs.onclick = () => {
       }
     }
 
-    particles.forEach(p => { p.update(); p.draw(); });
-    particles = particles.filter(p => p.alpha > 0);
-
+    
     if (!gameOver) {
       
       drawRocket(player.x, player.y, player.radius);
@@ -413,10 +400,33 @@ closeObjectifs.onclick = () => {
 
     bubbles.forEach(drawMeteorite);
 
+    if (explosion) {
+
+  const img = explosionFrames[explosionFrame];
+
+  if (img) {
+    ctx.drawImage(
+      img,
+      explosion.x - 120,
+      explosion.y - 120,
+      240,
+      240
+    );
+  }
+
+  if (frameCount % 5 === 0) {
+    explosionFrame++;
+  }
+
+  if (explosionFrame >= explosionFrames.length) {
+    explosion = null;
+  }
+}
+
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver || particles.length > 0) {
+    if (!gameOver || explosion) {
       requestAnimationFrame(gameLoop);
     }
   }
