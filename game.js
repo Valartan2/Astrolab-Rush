@@ -121,6 +121,7 @@ function updateObjectifDisplay() {
   let hasReached1km = false;
 
   let lastMilestone = 0;
+  let nextGradeIndex = 0;
 
   
   const distanceSpeedFactor = 2.5;
@@ -300,6 +301,7 @@ function resetGame() {
   }
 
   lastMilestone = 0;
+  nextGradeIndex = 0;
 
   player.radius = 30;
 
@@ -425,17 +427,18 @@ closeObjectifs.onclick = () => {
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
 
-      if (distance >= (lastMilestone + 1) * 500) {
+      if (
+  nextGradeIndex < gradeObjectifs.length &&
+  distance >= gradeObjectifs[nextGradeIndex].threshold
+) {
 
-  lastMilestone++;
+  const grade = gradeObjectifs[nextGradeIndex];
 
-  try {
-    showMilestone("🚀 " + (lastMilestone * 500) + " m");
-  } catch(e) {
-    console.log("Milestone error:", e);
-  }
+  showMilestone("🚀 " + grade.label);
 
+  nextGradeIndex++;
 }
+
 
 
 
