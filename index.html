@@ -306,6 +306,22 @@
       #gameOverText {
         font-size: 32px;
       }
+
+      #milestoneMessage{
+position:absolute;
+top:40%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:42px;
+color:white;
+font-weight:bold;
+text-shadow:0 0 10px cyan;
+opacity:0;
+transition:opacity 0.4s;
+pointer-events:none;
+}
+
+      
     }
   </style>
 </head>
@@ -367,6 +383,6 @@
       });
     }
   </script>
-  
+ <div id="milestoneMessage"></div> 
 </body>
 </html>
