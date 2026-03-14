@@ -120,6 +120,9 @@ function updateObjectifDisplay() {
   let startTime = 0;
   let hasReached1km = false;
 
+  let lastMilestone = 0;
+
+  
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
 
@@ -248,6 +251,26 @@ function updateObjectifDisplay() {
     if (score >= 500) return " Master of Infinity";
     return " Lord of the Multiverse";
   }
+
+  /* ---------- milestone message ---------- */
+
+const milestoneMessage = document.getElementById("milestoneMessage");
+
+function showMilestone(text){
+
+  milestoneMessage.textContent = text;
+  milestoneMessage.style.opacity = 1;
+
+  levelUpSound.currentTime = 0;
+  levelUpSound.play().catch(()=>{});
+
+  setTimeout(()=>{
+    milestoneMessage.style.opacity = 0;
+  },1500);
+
+}
+
+/* ---------- score board ---------- */
 
   function afficherTableauScore(score) {
   const bestScore = Math.max(Math.floor(score), parseInt(localStorage.getItem("bestScore") || "0"));
@@ -399,6 +422,14 @@ closeObjectifs.onclick = () => {
 
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
+
+      const milestone = Math.floor(distance / 500);
+
+if (milestone > lastMilestone){
+  lastMilestone = milestone;
+  showMilestone("🚀 " + (milestone*500) + " m !");
+}
+
 
       /* Collision */
       for (let i = 0; i < bubbles.length; i++) {
