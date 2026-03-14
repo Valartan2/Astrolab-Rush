@@ -299,6 +299,8 @@ function resetGame() {
     player.maxSpeed = 6;
   }
 
+  lastMilestone = 0;
+
   player.radius = 30;
 
   bubbles = [];
@@ -425,10 +427,18 @@ closeObjectifs.onclick = () => {
 
       const milestone = Math.floor(distance / 500);
 
-if (milestone > lastMilestone){
+if (milestone > lastMilestone) {
+
   lastMilestone = milestone;
-  showMilestone("🚀 " + (milestone*500) + " m !");
+
+  try {
+    showMilestone("🚀 " + (milestone * 500) + " m !");
+  } catch(e) {
+    console.log("Milestone error:", e);
+  }
+
 }
+
 
 
       /* Collision */
