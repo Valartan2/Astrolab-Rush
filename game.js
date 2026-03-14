@@ -22,6 +22,9 @@ function playClick(){
   clickSound.play();
 }
 
+const levelUpSound = new Audio("arcade-ui-21-229492.mp3");
+levelUpSound.volume = 0.6;
+
 
   
   
