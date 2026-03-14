@@ -425,19 +425,18 @@ closeObjectifs.onclick = () => {
       distance += (baseSpeed / 60) * distanceSpeedFactor;
       distanceDisplay.textContent = `Distance: ${Math.floor(distance)} m`;
 
-      const milestone = Math.floor(distance / 500);
+      if (distance >= (lastMilestone + 1) * 500) {
 
-if (milestone > lastMilestone) {
-
-  lastMilestone = milestone;
+  lastMilestone++;
 
   try {
-    showMilestone("🚀 " + (milestone * 500) + " m !");
+    showMilestone("🚀 " + (lastMilestone * 500) + " m !");
   } catch(e) {
     console.log("Milestone error:", e);
   }
 
 }
+
 
 
 
