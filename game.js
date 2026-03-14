@@ -34,12 +34,12 @@ if (music) music.volume = 0.3;
 const gradeObjectifs = [
   { threshold: 0, label:    " Lord of the Multiverse" },
   { threshold: 500, label: " Master of Infinity" },
-  { threshold: 800, label: " Eternal Voyager" },
-  { threshold: 1000, label: " Champion of the Cosmos" },
-  { threshold: 8000, label: " Supreme Navigator" },
-  { threshold: 9000, label: " Celestial Overlord" },
-  { threshold: 10000, label: "Galaxy Architect" },
-  { threshold: 10000, label: "Legend of the Universe" }
+  { threshold: 1000, label: " Eternal Voyager" },
+  { threshold: 1500, label: " Champion of the Cosmos" },
+  { threshold: 2000, label: " Supreme Navigator" },
+  { threshold: 2500, label: " Celestial Overlord" },
+  { threshold: 3000, label: "Galaxy Architect" },
+  { threshold: 3500, label: "Legend of the Universe" }
 ];
 
 function updateObjectifDisplay() {
