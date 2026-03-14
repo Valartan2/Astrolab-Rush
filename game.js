@@ -428,7 +428,7 @@ break;
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver || explosion) {
+   
       requestAnimationFrame(gameLoop);
     }
   }
