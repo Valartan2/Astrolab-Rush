@@ -15,7 +15,16 @@
 const objectifList = document.getElementById("objectifList");
 const objectifItems = document.getElementById("objectifItems");
 const closeObjectifs = document.getElementById("closeObjectifs");
+const clickSound = document.getElementById("clickSound");
 
+function playClick() {
+  if (!clickSound) return;
+  clickSound.currentTime = 0;
+  clickSound.play().catch(()=>{});
+}
+
+  
+  
 const music = document.getElementById("gameMusic");
 if (music) music.volume = 0.3;
   
@@ -290,6 +299,8 @@ function resetGame() {
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
 
+    playClick();
+    
     if (music) {
     music.pause();
     music.currentTime = 0;
@@ -317,16 +328,19 @@ function resetGame() {
     requestAnimationFrame(gameLoop);
   };
   objectifsBtn.onclick = () => {
+  playClick();
   updateObjectifDisplay();
   objectifList.style.display = "flex";
 };
 
 closeObjectifs.onclick = () => {
+  playClick();
   objectifList.style.display = "none";
 };
 
 
   shareBtn.onclick = () => {
+    playClick();
     const text = `J'ai fait ${Math.floor(distance)} m dans Astrolab Rush ! Peux-tu faire mieux ? 🚀🎮`;
     const url = window.location.href;
     if (navigator.share) {
