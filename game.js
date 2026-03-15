@@ -125,6 +125,7 @@ function updateObjectifDisplay() {
   let lastMilestone = 0;
   let nextGradeIndex = 1;
 
+  let animationId = null;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -295,6 +296,10 @@ function showMilestone(text){
   /* -------------------- Reset -------------------- */
 function resetGame() {
 
+  if (animationId) {
+  cancelAnimationFrame(animationId);
+  }
+  
   // Adapter les vitesses selon le device
   if (isMobile) {
     player.gravityDown = 1.5;
@@ -318,7 +323,8 @@ function resetGame() {
   distance = 0;
   hasReached1km = false;
   startTime = performance.now();
-
+  frameCount = 0;
+  
   player.y = height / 2;
   player.velocityY = 0;
   player.x = isMobile ? 75 : 150;
@@ -485,8 +491,8 @@ closeObjectifs.onclick = () => {
     flamePulse += 0.15;
 
     if (!gameOver || particles.length > 0) {
-      requestAnimationFrame(gameLoop);
-    }
+  animationId = requestAnimationFrame(gameLoop);
+}
   }
 
   /* -------------------- Service Worker (outside loop) -------------------- */
