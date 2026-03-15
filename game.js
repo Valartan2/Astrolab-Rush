@@ -110,8 +110,16 @@ function updateObjectifDisplay() {
   let pressing = false;
   window.addEventListener("keydown", e => { if (e.code === "Space") pressing = true; });
   window.addEventListener("keyup", e => { if (e.code === "Space") pressing = false; });
-  window.addEventListener("touchstart", () => { pressing = true; }, { passive: true });
-  window.addEventListener("touchend", () => { pressing = false; }, { passive: true });
+
+  canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  pressing = true;
+}, { passive: false });
+
+canvas.addEventListener("touchend", (e) => {
+  e.preventDefault();
+  pressing = false;
+}, { passive: false });
 
   /* -------------------- Game State -------------------- */
   let bubbles = [];
