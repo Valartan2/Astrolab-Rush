@@ -446,6 +446,12 @@ closeObjectifs.onclick = () => {
 
   const grade = gradeObjectifs[nextGradeIndex];
 
+  distanceDisplay.classList.add("distancePulse");
+
+  setTimeout(()=>{
+    distanceDisplay.classList.remove("distancePulse");
+  },400);      
+
   showMilestone("" + grade.label);
 
   nextGradeIndex++;
