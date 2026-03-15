@@ -242,18 +242,38 @@ canvas.addEventListener("touchend", (e) => {
     ctx.restore();
   }
 
-  function drawStars() {
-    ctx.fillStyle = "#001122";
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = "white";
-    stars.forEach(s => {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-      ctx.fill();
-      s.x -= s.speed;
-      if (s.x < 0) Object.assign(s, { x: width, y: Math.random() * height });
-    });
-  }
+  function getSpaceColor(){
+
+if(distance < 500) return "#001122";        // bleu spatial
+if(distance < 1000) return "#1a0033";       // violet
+if(distance < 1500) return "#330000";       // rouge profond
+if(distance < 2000) return "#000000";       // espace noir
+return "#000814";                           // espace profond
+
+}
+
+function drawStars(){
+
+ctx.fillStyle = getSpaceColor();
+ctx.fillRect(0,0,width,height);
+
+ctx.fillStyle="white";
+
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.radius,0,Math.PI*2);
+ctx.fill();
+
+s.x -= s.speed;
+
+if(s.x < 0){
+s.x = width;
+s.y = Math.random()*height;
+}
+
+});
+
+}
 
   /* -------------------- Score Board Helpers -------------------- */
   function getGrade(score) {
@@ -285,6 +305,18 @@ function showMilestone(text){
   },1500);
 
 }
+
+ function flashScreen(){
+
+const flash = document.getElementById("levelFlash");
+
+flash.style.opacity = 0.8;
+
+setTimeout(()=>{
+flash.style.opacity = 0;
+},120);
+
+} 
 
 /* ---------- score board ---------- */
 
@@ -461,6 +493,8 @@ closeObjectifs.onclick = () => {
   },400);      
 
   showMilestone("" + grade.label);
+
+  flashScreen();      
 
   nextGradeIndex++;
 }
