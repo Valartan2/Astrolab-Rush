@@ -297,7 +297,7 @@
     }
 
     #milestoneMessage{
-position:absolute;
+position:fixed;
 top:40%;
 left:50%;
 transform:translate(-50%,-50%);
@@ -309,6 +309,10 @@ opacity:0;
 transition:opacity 0.4s;
 pointer-events:none;
 z-index:999;
+
+white-space:nowrap;
+text-align:center;
+max-width:95vw;
 }
 
     @media (max-width: 768px) {
@@ -316,8 +320,11 @@ z-index:999;
         font-size: 20px;
         padding: 10px 25px;
         width: auto;
+      } 
+      #milestoneMessage{
+        font-size:22px;
       }
-
+    }
     
 
       
