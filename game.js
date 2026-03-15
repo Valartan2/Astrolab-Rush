@@ -25,6 +25,8 @@ function playClick(){
 const levelUpSound = new Audio("LevelUp.mp3");
 levelUpSound.volume = 0.6;
 
+levelUpSound.preload = "auto";
+levelUpSound.load();
 
   
   
@@ -260,10 +262,14 @@ const milestoneMessage = document.getElementById("milestoneMessage");
 function showMilestone(text){
 
   milestoneMessage.textContent = text;
-  milestoneMessage.style.opacity = 1;
 
-  levelUpSound.currentTime = 0;
-  levelUpSound.play().catch(()=>{});
+  requestAnimationFrame(()=>{
+    milestoneMessage.style.opacity = 1;
+  });
+
+  const sound = levelUpSound.cloneNode();
+  sound.volume = 0.6;
+  sound.play().catch(()=>{});
 
   setTimeout(()=>{
     milestoneMessage.style.opacity = 0;
