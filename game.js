@@ -67,14 +67,17 @@ objectifList.style.display="flex";
 
   /* -------------------- Grades -------------------- */
   const gradeObjectifs = [
-    { threshold: 0, label: "Lord of the Multiverse" },
-    { threshold: 500, label: "Master of Infinity" },
-    { threshold: 1000, label: "Eternal Voyager" },
-    { threshold: 1500, label: "Champion of the Cosmos" },
-    { threshold: 2000, label: "Supreme Navigator" },
-    { threshold: 2500, label: "Celestial Overlord" },
-    { threshold: 3000, label: "Galaxy Architect" },
-    { threshold: 3500, label: "Legend of the Universe" }
+    { threshold: 0, label: "Interstellar Recruit" },
+    { threshold: 500, label: "Space Adventurer" },
+    { threshold: 1000, label: "Meteorite Hunter" },
+    { threshold: 1500, label: "Cosmic Explorer" },
+    { threshold: 2000, label: "Legendary  Pilot" },
+    { threshold: 2500, label: "Stellar Commander" },
+    { threshold: 3000, label: "Galactic Hero" },
+    { threshold: 3500, label: "Astral Veteran" },
+    { threshold: 4000, label: "Space Ace" },
+    { threshold: 4500, label: "Star Guardian" },
+    { threshold: 5000, label: "Legend of the Universe" }
   ];
 
   /* -------------------- Rockets -------------------- */
