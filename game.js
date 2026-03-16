@@ -119,7 +119,7 @@ objectifList.style.display="flex";
   let unlockedRocketKeys = getSavedUnlockedRockets();
   let selectedRocketKey = getSelectedRocketKey();
 
-  let rocketScrollIndex = 0;
+  let rocketScrollIndex = rocketDefinitions.findIndex(r => r.key === "classic");
   const rocketSpacing = 220;
 
   if (!unlockedRocketKeys.includes("classic")) {
