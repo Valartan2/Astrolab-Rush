@@ -547,6 +547,42 @@ background:#ffaa00;
 cursor:pointer;
 font-weight:bold;
 }
+
+.menuBtn {
+  font-family: 'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
+  font-weight: bold;
+  font-size: 22px;
+  padding: 12px 30px;
+
+  background: #ffaa00;
+  color: black;
+
+  border: 4px solid black;
+  border-radius: 15px;
+
+  cursor: pointer;
+
+  box-shadow: 4px 4px 0 black;
+
+  display: block;
+  margin: 15px auto;
+  width: 200px;
+
+  text-transform: uppercase;
+
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menuBtn:hover {
+  background: #ff8800;
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0 black;
+}
+
+.menuBtn:active {
+  transform: translateY(2px);
+  box-shadow: 2px 2px 0 black;
+}    
     
   </style>
 </head>
@@ -568,10 +604,9 @@ font-weight:bold;
 
 </div>
 
-  <button id="playButton">Play</button>
-  
-  <button id="menuObjectivesBtn">Objectives</button>
-  <button id="settingsBtn">Settings</button>
+  <button id="playButton" class="menuBtn">Play</button>
+<button id="menuObjectivesBtn" class="menuBtn">Objectives</button>
+<button id="settingsBtn" class="menuBtn">⚙️ Settings</button>
 
 </div>
 
