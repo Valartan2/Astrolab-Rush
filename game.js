@@ -829,9 +829,6 @@ objectifList.style.display="flex";
 
     menuRocketCtx.drawImage(img, x-35, y-35, 70, 70);
 
-    if(rocket.key === selectedRocketKey){
-      menuRocketCtx.strokeStyle = "cyan";
-      menuRocketCtx.lineWidth = 4;
       menuRocketCtx.strokeRect(x-40, y-40, 80, 80);
     }
 
