@@ -73,6 +73,7 @@ closeSettingsBtn.onclick = () => {
 
 playClick();
 settingsPanel.style.display = "none";
+menu.style.display = "block";
 
 };
 
