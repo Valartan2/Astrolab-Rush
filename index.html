@@ -98,40 +98,26 @@ background:transparent;
 display:flex;
 align-items:center;
 justify-content:center;
-gap:20px;
-margin:20px auto;
-   
+gap:12px;
+margin:10px auto 25px auto;
 }
 
 #arrowLeft,
 #arrowRight{
-width:60px;
-height:60px;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-font-size:32px;
-font-weight:bold;
-
-background:#ffaa00;
-color:black;
-
-border:4px solid black;
-border-radius:14px;
-
-box-shadow:4px 4px 0 black;
+font-size:46px;
+color:white;
 
 cursor:pointer;
 user-select:none;
+
+opacity:0.6;
+transition:opacity 0.2s, transform 0.2s;
 }
 
 #arrowLeft:hover,
 #arrowRight:hover{
-background:#ff8800;
-transform:translateY(-2px);
-box-shadow:6px 6px 0 black;
+opacity:1;
+transform:scale(1.2);
 }  
 
  #menuObjectivesBtn{
@@ -498,11 +484,11 @@ max-width:95vw;
 
  <div id="rocketSelector">
 
-  <div id="arrowLeft">◀</div>
+ <div id="arrowLeft">‹</div>
 
   <canvas id="menuRocket"></canvas>
 
-  <div id="arrowRight">▶</div>
+  <div id="arrowRight">›</div>
 
 </div>
 
