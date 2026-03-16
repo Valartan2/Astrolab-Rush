@@ -369,26 +369,30 @@ gradeObjectifs.forEach(obj => {
 });
 
     rocketItems.innerHTML = "";
-    rocketDefinitions.forEach(rocket => {
-      const li = document.createElement("li");
-      const unlocked = unlockedRocketKeys.includes(rocket.key);
-    
 
-      li.className = "rocket-item";
-      if (unlocked) li.classList.add("rocket-unlocked");
-      else li.classList.add("rocket-locked");
-    
+rocketDefinitions.forEach(rocket => {
 
-      const status = unlocked
-        ? (selected ? " — selected" : " — unlocked")
-        : ` — locked (${formatNumber(rocket.unlockAt)} m total)`;
+  const li = document.createElement("li");
 
-      li.textContent = `${rocket.label}${status}`;
+  const unlocked = unlockedRocketKeys.includes(rocket.key);
 
-      
+  li.className = "rocket-item";
 
-      rocketItems.appendChild(li);
-    });
+  if(unlocked){
+    li.classList.add("rocket-unlocked");
+  } else {
+    li.classList.add("rocket-locked");
+  }
+
+  const status = unlocked
+    ? " — unlocked"
+    : ` — locked (${formatNumber(rocket.unlockAt)} m total)`;
+
+  li.textContent = `${rocket.label}${status}`;
+
+  rocketItems.appendChild(li);
+
+});
   }
 
   function unlockRocketsIfNeeded(totalDistanceAfterRun) {
