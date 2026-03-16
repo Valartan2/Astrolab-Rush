@@ -866,15 +866,31 @@ const arrowRight = document.getElementById("arrowRight");
 
 arrowLeft.onclick = () => {
 
-rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
-drawMenuRocket();
+  rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
+
+  const rocket = rocketDefinitions[rocketScrollIndex];
+
+  if(unlockedRocketKeys.includes(rocket.key)){
+    selectedRocketKey = rocket.key;
+    setSelectedRocketKey(rocket.key);
+  }
+
+  drawMenuRocket();
 
 };
 
 arrowRight.onclick = () => {
 
-rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
-drawMenuRocket();
+  rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
+
+  const rocket = rocketDefinitions[rocketScrollIndex];
+
+  if(unlockedRocketKeys.includes(rocket.key)){
+    selectedRocketKey = rocket.key;
+    setSelectedRocketKey(rocket.key);
+  }
+
+  drawMenuRocket();
 
 };
   
