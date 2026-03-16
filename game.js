@@ -57,8 +57,6 @@ menuObjectivesBtn.onclick = () => {
 
 playClick();
 
-menu.style.display = "none";
-
 updateObjectifDisplay();
 objectifList.style.display = "flex";
 
@@ -67,7 +65,6 @@ objectifList.style.display = "flex";
 settingsBtn.onclick = () => {
 
 playClick();
-menu.style.display = "none";
 settingsPanel.style.display = "flex";
 
 };
@@ -77,7 +74,12 @@ closeObjectifs.onclick = () => {
 playClick();
 
 objectifList.style.display = "none";
-menu.style.display = "block";
+};
+  
+closeSettingsBtn.onclick = () => {
+
+playClick();
+settingsPanel.style.display = "none";
 
 };
   
