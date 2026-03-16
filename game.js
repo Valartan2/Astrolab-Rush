@@ -844,13 +844,15 @@ menuRocketCanvas.addEventListener("click", e => {
 
   const center = rect.width / 2;
 
-  if(x < center){
-    rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
-  } else {
-    rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
-  }
+ if(x < center){
+  rocketScrollIndex--;
+} else {
+  rocketScrollIndex++;
+}
 
-  const rocket = rocketDefinitions[rocketScrollIndex];
+rocketScrollIndex = Math.max(0, Math.min(rocketDefinitions.length - 1, rocketScrollIndex));
+
+const rocket = rocketDefinitions[rocketScrollIndex];
 
   if(unlockedRocketKeys.includes(rocket.key)){
     selectedRocketKey = rocket.key;
