@@ -63,9 +63,11 @@ objectifList.style.display = "flex";
 
 if(settingsBtn){
 settingsBtn.onclick = () => {
-playClick();
-settingsPanel.style.display = "flex";
-settingsPanel.style.zIndex = "5000";  
+
+ playClick();
+
+ settingsMenu.style.display = "block";
+
 };
 }
 
@@ -76,10 +78,11 @@ playClick();
 objectifList.style.display = "none";
 };
   
-closeSettingsBtn.onclick = () => {
+closeSettings.onclick = () => {
 
-playClick();
-settingsPanel.style.display = "none";
+ playClick();
+
+ settingsMenu.style.display = "none";
 
 };
   
