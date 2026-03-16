@@ -105,17 +105,34 @@ margin:20px auto;
 
 #arrowLeft,
 #arrowRight{
-font-size:40px;
-color:white;
+width:60px;
+height:60px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:32px;
+font-weight:bold;
+
+background:#ffaa00;
+color:black;
+
+border:4px solid black;
+border-radius:14px;
+
+box-shadow:4px 4px 0 black;
+
 cursor:pointer;
 user-select:none;
-padding:10px;
 }
 
 #arrowLeft:hover,
 #arrowRight:hover{
-transform:scale(1.2);
-}   
+background:#ff8800;
+transform:translateY(-2px);
+box-shadow:6px 6px 0 black;
+}  
 
  #menuObjectivesBtn{
 font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
