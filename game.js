@@ -58,37 +58,6 @@ objectifList.style.display="flex";
 
 
 
-let musicEnabled = true;
-
-toggleMusicBtn.onclick = () => {
-
-musicEnabled = !musicEnabled;
-
-if(musicEnabled){
-
-toggleMusicBtn.textContent = "Music: ON";
-
-}else{
-
-toggleMusicBtn.textContent = "Music: OFF";
-
-if(music) music.pause();
-
-}
-
-};
-
-resetProgressBtn.onclick = () => {
-
-if(confirm("Reset all progress?")){
-
-localStorage.clear();
-location.reload();
-
-}
-
-};  
-
   /* -------------------- Storage Keys -------------------- */
   const STORAGE_KEYS = {
     BEST_SCORE: "bestScore",
