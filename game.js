@@ -345,25 +345,39 @@ objectifList.style.display="flex";
     totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
 
     objectifItems.innerHTML = "";
-    gradeObjectifs.forEach(obj => {
-      const li = document.createElement("li");
-      li.textContent = `${obj.label} (${formatNumber(obj.threshold)} m)`;
-      if (bestScore >= obj.threshold) {
-        li.classList.add("objectif-achieved");
-      }
-      objectifItems.appendChild(li);
-    });
+
+gradeObjectifs.forEach(obj => {
+
+  const li = document.createElement("li");
+
+  const unlocked = bestScore >= obj.threshold;
+
+  li.className = "rocket-item";
+
+  if(unlocked){
+    li.classList.add("rocket-unlocked");
+  } else {
+    li.classList.add("rocket-locked");
+  }
+
+  const status = unlocked ? " — unlocked" : ` — locked (${formatNumber(obj.threshold)} m)`;
+
+  li.textContent = `${obj.label}${status}`;
+
+  objectifItems.appendChild(li);
+
+});
 
     rocketItems.innerHTML = "";
     rocketDefinitions.forEach(rocket => {
       const li = document.createElement("li");
       const unlocked = unlockedRocketKeys.includes(rocket.key);
-      const selected = selectedRocketKey === rocket.key;
+    
 
       li.className = "rocket-item";
       if (unlocked) li.classList.add("rocket-unlocked");
       else li.classList.add("rocket-locked");
-      if (selected) li.classList.add("rocket-selected");
+    
 
       const status = unlocked
         ? (selected ? " — selected" : " — unlocked")
