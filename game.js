@@ -120,7 +120,7 @@ objectifList.style.display="flex";
   let selectedRocketKey = getSelectedRocketKey();
 
   let rocketScrollIndex = 0;
-  const rocketSpacing = 200;
+  const rocketSpacing = 220;
 
   if (!unlockedRocketKeys.includes("classic")) {
     unlockedRocketKeys.unshift("classic");
@@ -793,7 +793,7 @@ objectifList.style.display="flex";
 
   if(!menuRocketCanvas) return;
 
-  const size = 460;
+  const size = menuRocketCanvas.clientWidth;
 
   menuRocketCanvas.width = size;
   menuRocketCanvas.height = 160;
@@ -801,7 +801,7 @@ objectifList.style.display="flex";
   menuRocketCtx.clearRect(0,0,size,160);
 
   const centerX = size/2;
-  const centerY = 80;
+  const centerY = menuRocketCanvas.height / 2;
 
   rocketDefinitions.forEach((rocket, i) => {
 
