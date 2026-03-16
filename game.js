@@ -47,11 +47,6 @@
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
-const settingsBtn = document.getElementById("settingsBtn");
-const settingsPanel = document.getElementById("settingsPanel");
-const toggleMusicBtn = document.getElementById("toggleMusic");
-const resetProgressBtn = document.getElementById("resetProgress");
-const closeSettingsBtn = document.getElementById("closeSettings");
 
 menuObjectivesBtn.onclick = () => {
 
@@ -61,19 +56,7 @@ objectifList.style.display="flex";
 
 };
 
-settingsBtn.onclick = () => {
 
-playClick();
-settingsPanel.style.display = "block";
-
-};
-
-closeSettingsBtn.onclick = () => {
-
-playClick();
-settingsPanel.style.display = "none";
-
-};
 
 let musicEnabled = true;
 
