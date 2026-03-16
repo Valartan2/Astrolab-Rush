@@ -44,16 +44,10 @@
 
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-  const menuRocketsBtn = document.getElementById("menuRocketsBtn");
+ 
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
-menuRocketsBtn.onclick = () => {
 
-playClick();
-updateObjectifDisplay();
-objectifList.style.display="flex";
-
-};
 
 menuObjectivesBtn.onclick = () => {
 
