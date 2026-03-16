@@ -14,6 +14,9 @@
   const totalScoreSpan = document.getElementById("totalScore");
   const gradeSpan = document.getElementById("grade");
 
+  const menuRocketCanvas = document.getElementById("menuRocket");
+  const menuRocketCtx = menuRocketCanvas.getContext("2d");
+
   const objectifsBtn = document.getElementById("objectifsBtn");
   const objectifList = document.getElementById("objectifList");
   const objectifItems = document.getElementById("objectifItems");
@@ -789,4 +792,26 @@ objectifList.style.display="flex";
 
     animateMenuStars();
   }
+  function drawMenuRocket(){
+
+  if(!menuRocketCanvas) return;
+
+  const size = 120;
+
+  menuRocketCanvas.width = size;
+  menuRocketCanvas.height = size;
+
+  menuRocketCtx.clearRect(0,0,size,size);
+
+  const rocket = getCurrentRocketImage();
+
+  menuRocketCtx.drawImage(
+    rocket,
+    size/2 - 40,
+    size/2 - 40,
+    80,
+    80
+  );
+
+}
 })();
