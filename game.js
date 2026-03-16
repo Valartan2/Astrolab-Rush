@@ -1,120 +1,110 @@
 (() => {
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
 
-const canvas = document.getElementById("game")
-const ctx = canvas.getContext("2d")
+  const rejouerBtn = document.getElementById("rejouer");
+  const gameOverText = document.getElementById("gameOverText");
+  const distanceDisplay = document.getElementById("distance");
+  const menu = document.getElementById("menu");
+  const playButton = document.getElementById("playButton");
+  const shareBtn = document.getElementById("shareScore");
+  const scoreBoard = document.getElementById("scoreBoard");
+  const currentScoreSpan = document.getElementById("currentScore");
+  const bestScoreSpan = document.getElementById("bestScore");
+  const totalScoreSpan = document.getElementById("totalScore");
+  const gradeSpan = document.getElementById("grade");
 
-const rejouerBtn = document.getElementById("rejouer")
-const gameOverText = document.getElementById("gameOverText")
-const distanceDisplay = document.getElementById("distance")
-const menu = document.getElementById("menu")
-const playButton = document.getElementById("playButton")
-const shareBtn = document.getElementById("shareScore")
-const scoreBoard = document.getElementById("scoreBoard")
+  const menuRocketCanvas = document.getElementById("menuRocket");
+  const menuRocketCtx = menuRocketCanvas.getContext("2d");
 
-const currentScoreSpan = document.getElementById("currentScore")
-const bestScoreSpan = document.getElementById("bestScore")
-const totalScoreSpan = document.getElementById("totalScore")
-const gradeSpan = document.getElementById("grade")
+  const objectifsBtn = document.getElementById("objectifsBtn");
+  const objectifList = document.getElementById("objectifList");
+  const objectifItems = document.getElementById("objectifItems");
+  const rocketItems = document.getElementById("rocketItems");
+  const totalDistanceDisplay = document.getElementById("totalDistanceDisplay");
+  const closeObjectifs = document.getElementById("closeObjectifs");
 
-const menuRocketCanvas = document.getElementById("menuRocket")
-const menuRocketCtx = menuRocketCanvas.getContext("2d")
+  const milestoneMessage = document.getElementById("milestoneMessage");
+  const levelFlash = document.getElementById("levelFlash");
+  const successBanner = document.getElementById("success-banner");
 
-const objectifsBtn = document.getElementById("objectifsBtn")
-const objectifList = document.getElementById("objectifList")
-const objectifItems = document.getElementById("objectifItems")
-const rocketItems = document.getElementById("rocketItems")
-const totalDistanceDisplay = document.getElementById("totalDistanceDisplay")
-const closeObjectifs = document.getElementById("closeObjectifs")
+  const clickSound = new Audio("click-151673.mp3");
+  function playClick() {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+  }
 
-const milestoneMessage = document.getElementById("milestoneMessage")
-const levelFlash = document.getElementById("levelFlash")
-const successBanner = document.getElementById("success-banner")
+  const levelUpSound = new Audio("LevelUp.mp3");
+  levelUpSound.volume = 0.6;
+  levelUpSound.preload = "auto";
+  levelUpSound.load();
 
+  const music = document.getElementById("gameMusic");
+  if (music) music.volume = 0.3;
+
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+ 
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const settingsBtn = document.getElementById("settingsBtn");
-const settingsMenu = document.getElementById("settingsPanel");
+const settingsPanel = document.getElementById("settingsPanel");
 const toggleMusicBtn = document.getElementById("toggleMusic");
 const resetProgressBtn = document.getElementById("resetProgress");
 const closeSettingsBtn = document.getElementById("closeSettings");
 
+menuObjectivesBtn.onclick = () => {
+
+playClick();
+updateObjectifDisplay();
+objectifList.style.display="flex";
+
+};
+
+settingsBtn.onclick = () => {
+
+playClick();
+settingsPanel.style.display = "block";
+
+};
+
+closeSettingsBtn.onclick = () => {
+
+playClick();
+settingsPanel.style.display = "none";
+
+};
+
 let musicEnabled = true;
 
-function openSettingsMenu() {
-  playClick();
+toggleMusicBtn.onclick = () => {
 
-  // On reste dans le menu principal, on n'essaie plus de cacher #menu
-  settingsMenu.style.display = "block";
+musicEnabled = !musicEnabled;
 
-  // On masque juste les boutons principaux du menu
-  playButton.style.display = "none";
-  menuObjectivesBtn.style.display = "none";
-  settingsBtn.style.display = "none";
+if(musicEnabled){
+
+toggleMusicBtn.textContent = "Music: ON";
+
+}else{
+
+toggleMusicBtn.textContent = "Music: OFF";
+
+if(music) music.pause();
+
 }
 
-function closeSettingsMenu() {
-  playClick();
+};
 
-  settingsMenu.style.display = "none";
+resetProgressBtn.onclick = () => {
 
-  // On remet les boutons du menu principal
-  playButton.style.display = "block";
-  menuObjectivesBtn.style.display = "block";
-  settingsBtn.style.display = "block";
+if(confirm("Reset all progress?")){
+
+localStorage.clear();
+location.reload();
+
 }
 
-if (menuObjectivesBtn) {
-  menuObjectivesBtn.onclick = () => {
-    playClick();
-    updateObjectifDisplay();
-    objectifList.style.display = "flex";
-  };
-}
-
-if (closeObjectifs) {
-  closeObjectifs.onclick = () => {
-    playClick();
-    objectifList.style.display = "none";
-  };
-}
-
-if (settingsBtn) {
-  settingsBtn.onclick = () => {
-    openSettingsMenu();
-  };
-}
-
-if (closeSettingsBtn) {
-  closeSettingsBtn.onclick = () => {
-    closeSettingsMenu();
-  };
-}
-
-if (toggleMusicBtn) {
-  toggleMusicBtn.onclick = () => {
-    musicEnabled = !musicEnabled;
-
-    if (musicEnabled) {
-      toggleMusicBtn.textContent = "Music: ON";
-      if (music) {
-        music.currentTime = 0;
-        music.play().catch(() => {});
-      }
-    } else {
-      toggleMusicBtn.textContent = "Music: OFF";
-      if (music) music.pause();
-    }
-  };
-}
-
-if (resetProgressBtn) {
-  resetProgressBtn.onclick = () => {
-    if (confirm("Reset all progress?")) {
-      localStorage.clear();
-      location.reload();
-    }
-  };
-}
+};  
 
   /* -------------------- Storage Keys -------------------- */
   const STORAGE_KEYS = {
@@ -674,42 +664,30 @@ rocketDefinitions.forEach(rocket => {
     pressing = false;
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
-objectifsBtn.style.display = "none";
-objectifList.style.display = "none";
-scoreBoard.style.display = "none";
-distanceDisplay.style.display = "block";
-
-// sécurité : le sous-menu settings ne doit jamais survivre au lancement d'une partie
-settingsMenu.style.display = "none";
-playButton.style.display = "block";
-menuObjectivesBtn.style.display = "block";
-settingsBtn.style.display = "block";
+    objectifsBtn.style.display = "none";
+    objectifList.style.display = "none";
+    scoreBoard.style.display = "none";
+    distanceDisplay.style.display = "block";
   }
 
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
-  playClick();
+    playClick();
 
-  // On ferme le sous-menu settings si jamais il était ouvert
-  settingsMenu.style.display = "none";
-  playButton.style.display = "block";
-  menuObjectivesBtn.style.display = "block";
-  settingsBtn.style.display = "block";
+    if (music) {
+      music.pause();
+      music.currentTime = 0;
+      music.play().catch(() => {});
+    }
 
-  if (music) {
-    music.pause();
-    music.currentTime = 0;
-    music.play().catch(() => {});
-  }
+    menu.style.display = "none";
+    resetGame();
 
-  menu.style.display = "none";
-  resetGame();
+    const menuCanvas = document.getElementById("menuStars");
+    if (menuCanvas) menuCanvas.style.display = "none";
 
-  const menuCanvas = document.getElementById("menuStars");
-  if (menuCanvas) menuCanvas.style.display = "none";
-
-  animationId = requestAnimationFrame(gameLoop);
-};
+    animationId = requestAnimationFrame(gameLoop);
+  };
 
   rejouerBtn.onclick = () => {
     playClick();
@@ -822,13 +800,7 @@ settingsBtn.style.display = "block";
           gameOver = true;
 
           if (music) music.pause();
-         hideAllUI()
-
-gameOverText.style.display = "block"
-scoreBoard.style.display = "block"
-rejouerBtn.style.display = "block"
-shareBtn.style.display = "block"
-objectifsBtn.style.display = "block"
+          gameOverText.style.display = "block";
           distanceDisplay.style.display = "none";
 
           afficherTableauScore(distance);
