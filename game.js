@@ -41,6 +41,25 @@
 
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
+  const menuRocketsBtn = document.getElementById("menuRocketsBtn");
+const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
+
+menuRocketsBtn.onclick = () => {
+
+playClick();
+updateObjectifDisplay();
+objectifList.style.display="flex";
+
+};
+
+menuObjectivesBtn.onclick = () => {
+
+playClick();
+updateObjectifDisplay();
+objectifList.style.display="flex";
+
+};
+
   /* -------------------- Storage Keys -------------------- */
   const STORAGE_KEYS = {
     BEST_SCORE: "bestScore",
@@ -634,6 +653,8 @@
   menu.style.display = "block";
   distanceDisplay.style.display = "none";
   updateObjectifDisplay();
+
+  drawMenuRocket();
 
   /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
