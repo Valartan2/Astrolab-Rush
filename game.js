@@ -793,10 +793,10 @@ objectifList.style.display="flex";
 
   if(!menuRocketCanvas) return;
 
-  const size = 220;
+  const size = 320;
 
   menuRocketCanvas.width = size;
-  menuRocketCanvas.height = 120;
+  menuRocketCanvas.height = 160;
 
   menuRocketCtx.clearRect(0,0,size,120);
 
@@ -822,12 +822,12 @@ objectifList.style.display="flex";
       menuRocketCtx.filter = "grayscale(100%)";
     }
 
-    menuRocketCtx.drawImage(img, x-40, y-40, 80, 80);
+    menuRocketCtx.drawImage(img, x-50, y-50, 100, 100);
 
     if(rocket.key === selectedRocketKey){
       menuRocketCtx.strokeStyle = "cyan";
       menuRocketCtx.lineWidth = 4;
-      menuRocketCtx.strokeRect(x-45, y-45, 90, 90);
+      menuRocketCtx.strokeRect(x-55, y-55, 110, 110);
     }
 
     menuRocketCtx.restore();
