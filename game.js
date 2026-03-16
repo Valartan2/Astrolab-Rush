@@ -64,6 +64,7 @@ objectifList.style.display="flex";
 settingsBtn.onclick = () => {
 
 playClick();
+menu.style.display = "none";
 settingsPanel.style.display = "flex";
 
 };
