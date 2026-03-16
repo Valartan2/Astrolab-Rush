@@ -805,33 +805,24 @@ objectifList.style.display="flex";
 
   menuRocketCtx.clearRect(0,0,size,160);
 
+  const rocket = rocketDefinitions[rocketScrollIndex];
+  const img = rocketImages[rocket.key];
+
   const centerX = size/2;
-  const centerY = menuRocketCanvas.height / 2;
+  const centerY = menuRocketCanvas.height/2;
 
-  rocketDefinitions.forEach((rocket, i) => {
+  const unlocked = unlockedRocketKeys.includes(rocket.key);
 
-    const img = rocketImages[rocket.key];
+  menuRocketCtx.save();
 
-    const offset = (i - rocketScrollIndex) * rocketSpacing;
-    const x = centerX + offset;
-    const y = centerY;
+  if(!unlocked){
+    menuRocketCtx.globalAlpha = 0.35;
+    menuRocketCtx.filter = "grayscale(100%)";
+  }
 
-    if(x < -80 || x > size + 80) return;
+  menuRocketCtx.drawImage(img, centerX-40, centerY-40, 80, 80);
 
-    const unlocked = unlockedRocketKeys.includes(rocket.key);
-
-    menuRocketCtx.save();
-
-    if(!unlocked){
-      menuRocketCtx.globalAlpha = 0.35;
-      menuRocketCtx.filter = "grayscale(100%)";
-    }
-
-    menuRocketCtx.drawImage(img, x-35, y-35, 70, 70);
-
-    menuRocketCtx.restore();
-
-  });
+  menuRocketCtx.restore();
 
 }
 menuRocketCanvas.addEventListener("click", e => {
