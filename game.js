@@ -28,6 +28,14 @@
   const levelFlash = document.getElementById("levelFlash");
   const successBanner = document.getElementById("success-banner");
 
+  const settingsBtn = document.getElementById("settingsBtn");
+const settingsPanel = document.getElementById("settingsPanel");
+const toggleMusicBtn = document.getElementById("toggleMusic");
+const resetGameBtn = document.getElementById("resetGameBtn");
+const closeSettings = document.getElementById("closeSettings");
+
+
+  
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
     clickSound.currentTime = 0;
@@ -901,5 +909,54 @@ arrowRight.onclick = () => {
   drawMenuRocket();
 
 };
+
+settingsBtn.onclick = () => {
+
+  playClick();
+  settingsPanel.style.display = "flex";
+
+};
+
+closeSettings.onclick = () => {
+
+  playClick();
+  settingsPanel.style.display = "none";
+
+};
+
+let musicEnabled = true;
+
+toggleMusicBtn.onclick = () => {
+
+  playClick();
+
+  musicEnabled = !musicEnabled;
+
+  if(musicEnabled){
+    toggleMusicBtn.textContent = "Music: ON";
+    if(music) music.play().catch(()=>{});
+  }else{
+    toggleMusicBtn.textContent = "Music: OFF";
+    if(music) music.pause();
+  }
+
+};
+
+ resetGameBtn.onclick = () => {
+
+  playClick();
+
+  const confirmReset = confirm("Reset all progress ?");
+
+  if(!confirmReset) return;
+
+  localStorage.removeItem(STORAGE_KEYS.BEST_SCORE);
+  localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
+  localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
+  localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
+
+  location.reload();
+
+}; 
   
 })();
