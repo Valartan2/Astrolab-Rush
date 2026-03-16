@@ -65,6 +65,7 @@ if(settingsBtn){
 settingsBtn.onclick = () => {
 playClick();
 settingsPanel.style.display = "flex";
+settingsPanel.style.zIndex = "5000";  
 };
 }
 
