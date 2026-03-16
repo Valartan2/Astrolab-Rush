@@ -371,15 +371,7 @@ objectifList.style.display="flex";
 
       li.textContent = `${rocket.label}${status}`;
 
-      if (unlocked) {
-        li.style.cursor = "pointer";
-        li.addEventListener("click", () => {
-          selectedRocketKey = rocket.key;
-          setSelectedRocketKey(rocket.key);
-          updateObjectifDisplay();
-          showSuccessBanner(`🚀 ${rocket.label} selected`);
-        });
-      }
+      
 
       rocketItems.appendChild(li);
     });
