@@ -119,6 +119,9 @@ objectifList.style.display="flex";
   let unlockedRocketKeys = getSavedUnlockedRockets();
   let selectedRocketKey = getSelectedRocketKey();
 
+  let rocketScrollIndex = 0;
+  const rocketSpacing = 110;
+
   if (!unlockedRocketKeys.includes("classic")) {
     unlockedRocketKeys.unshift("classic");
     saveUnlockedRockets(unlockedRocketKeys);
@@ -790,22 +793,71 @@ objectifList.style.display="flex";
 
   if(!menuRocketCanvas) return;
 
-  const size = 120;
+  const size = 220;
 
   menuRocketCanvas.width = size;
-  menuRocketCanvas.height = size;
+  menuRocketCanvas.height = 120;
 
-  menuRocketCtx.clearRect(0,0,size,size);
+  menuRocketCtx.clearRect(0,0,size,120);
 
-  const rocket = getCurrentRocketImage();
+  const centerX = size/2;
+  const centerY = 60;
 
-  menuRocketCtx.drawImage(
-    rocket,
-    size/2 - 40,
-    size/2 - 40,
-    80,
-    80
-  );
+  rocketDefinitions.forEach((rocket, i) => {
+
+    const img = rocketImages[rocket.key];
+
+    const offset = (i - rocketScrollIndex) * rocketSpacing;
+    const x = centerX + offset;
+    const y = centerY;
+
+    if(x < -80 || x > size + 80) return;
+
+    const unlocked = unlockedRocketKeys.includes(rocket.key);
+
+    menuRocketCtx.save();
+
+    if(!unlocked){
+      menuRocketCtx.globalAlpha = 0.35;
+      menuRocketCtx.filter = "grayscale(100%)";
+    }
+
+    menuRocketCtx.drawImage(img, x-40, y-40, 80, 80);
+
+    if(rocket.key === selectedRocketKey){
+      menuRocketCtx.strokeStyle = "cyan";
+      menuRocketCtx.lineWidth = 4;
+      menuRocketCtx.strokeRect(x-45, y-45, 90, 90);
+    }
+
+    menuRocketCtx.restore();
+
+  });
 
 }
+menuRocketCanvas.addEventListener("click", e => {
+
+  const rect = menuRocketCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+
+  const center = rect.width / 2;
+
+  if(x < center){
+    rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
+  } else {
+    rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
+  }
+
+  const rocket = rocketDefinitions[rocketScrollIndex];
+
+  if(unlockedRocketKeys.includes(rocket.key)){
+    selectedRocketKey = rocket.key;
+    setSelectedRocketKey(rocket.key);
+    showSuccessBanner(`🚀 ${rocket.label} selected`);
+  }
+
+  drawMenuRocket();
+
+});
+  
 })();
