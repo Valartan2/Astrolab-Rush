@@ -74,7 +74,11 @@ objectifsBtn.style.display = "none"
 function showMenu(){
 
 hideAllUI()
+
 menu.style.display = "block"
+
+const menuCanvas = document.getElementById("menuStars")
+if(menuCanvas) menuCanvas.style.display = "block"
 
 }
 
