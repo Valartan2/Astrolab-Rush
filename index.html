@@ -1,661 +1,342 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>AstroLab Rush</title>
+<meta charset="UTF-8">
+<title>AstroLab Rush</title>
 
-  <!-- 🔗 Lien vers le manifest -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#001122" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#001122">
+<link rel="apple-touch-icon" href="/icon-180.png">  
 
-  <style>
-    /* ✅ Styles iOS : suppression pastille et sélection */
-    html, body {
-      margin: 0; padding: 0; overflow: hidden;
-      background: linear-gradient(to top, #001122, #002233);
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#001122">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: none;
-    }
+<style>
 
-    * {
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-
-    canvas {
-      display: block;
-      background: linear-gradient(to top, #000000, #222222);
-      outline: none;
-      touch-action: none;
-    }
-    
-    #gameTitle {
-      font-size: 48px;
-      color: white;
-      text-shadow: 2px 2px 4px black;
-      margin-bottom: 20px;
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      user-select: none;
-    }
-
-    #playButton, #rejouer, #shareScore {
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-      font-weight: bold;
-      font-size: 28px;
-      padding: 12px 30px;
-      color: black;
-      background: #ffaa00;
-      border: 4px solid black;
-      border-radius: 15px;
-      cursor: pointer;
-      box-shadow: 4px 4px 0 black;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-transform: uppercase;
-    }
-
-    #playButton:hover,
-    #rejouer:hover,
-    #shareScore:hover {
-      background: #ff8800;
-      transform: translateY(-2px);
-      box-shadow: 6px 6px 0 black;
-    }
-
-    #menu {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
-      text-align: center;
-    }
-
-    #menuImage {
-      display: block;
-      margin: 0 auto 50px auto;
-      max-width: 200px;
-      width: 50vw;
-      height: auto;
-      max-height: 150px;
-      object-fit: contain;
-    }
-
-    #menuRocket{
-width:220px;
-height:160px;
-margin:20px auto;
-display:block;
-background:transparent;
+html,body{
+margin:0;
+padding:0;
+overflow:hidden;
+background:#001122;
+font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
+-webkit-user-select:none;
+-webkit-touch-callout:none;
+-webkit-tap-highlight-color:transparent;
+touch-action:none;
 }
 
- #rocketSelector{
+canvas{
+display:block;
+background:linear-gradient(to top,#000,#222);
+}
+
+#menuStars{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+#menu{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:2000;
+text-align:center;
+}
+
+#gameTitle{
+font-size:48px;
+color:white;
+margin-bottom:20px;
+text-shadow:2px 2px 4px black;
+}
+
+#menuImage{
+display:block;
+margin:0 auto 40px auto;
+max-width:200px;
+}
+
+#rocketSelector{
 display:flex;
 align-items:center;
 justify-content:center;
 gap:12px;
-margin:10px auto 25px auto;
+margin-bottom:20px;
 }
 
-#arrowLeft,
-#arrowRight{
+#arrowLeft,#arrowRight{
 font-size:46px;
 color:white;
-
 cursor:pointer;
-user-select:none;
-
 opacity:0.6;
-transition:opacity 0.2s, transform 0.2s;
 }
 
-#arrowLeft:hover,
-#arrowRight:hover{
+#arrowLeft:hover,#arrowRight:hover{
 opacity:1;
-transform:scale(1.2);
-}  
+}
 
- #menuObjectivesBtn{
+#menuRocket{
+width:220px;
+height:160px;
+}
+
+button{
 font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
 font-weight:bold;
 font-size:22px;
 padding:12px 30px;
-margin-top:12px;
-
 background:#ffaa00;
-color:black;
-
 border:4px solid black;
 border-radius:15px;
-
 cursor:pointer;
-
 box-shadow:4px 4px 0 black;
-
+margin:10px auto;
 display:block;
-margin:15px auto;   
 width:200px;
-
-text-transform:uppercase;
 }
 
-
-#menuObjectivesBtn:hover{
+button:hover{
 background:#ff8800;
 transform:translateY(-2px);
 box-shadow:6px 6px 0 black;
 }
-    
-    #distance {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      color: #003300;
-      font-size: 24px;
-      background: #b6fcb6;
-      padding: 10px 20px;
-      border-radius: 15px;
-      border: 3px solid black;
-      box-shadow: 3px 3px 0 black;
-      z-index: 10;
-      font-weight: bold;
-    }
 
-    #levelFlash{
+#distance{
+position:absolute;
+top:10px;
+left:20px;
+background:#b6fcb6;
+padding:10px 20px;
+border-radius:15px;
+border:3px solid black;
+z-index:10;
+font-weight:bold;
+}
+
+#gameOverText{
+position:absolute;
+top:15%;
+left:50%;
+transform:translateX(-50%);
+font-size:48px;
+color:#ff3b3b;
+display:none;
+z-index:3000;
+}
+
+#rejouer{
+position:absolute;
+top:60%;
+left:50%;
+transform:translateX(-50%);
+display:none;
+z-index:3000;
+}
+
+#objectifsBtn{
+position:absolute;
+top:70%;
+left:50%;
+transform:translateX(-50%);
+display:none;
+z-index:3000;
+}
+
+#shareScore{
+position:absolute;
+top:80%;
+left:50%;
+transform:translateX(-50%);
+display:none;
+z-index:3000;
+}
+
+/* OBJECTIVES */
+
+#objectifList{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:cyan;
-opacity:0;
-pointer-events:none;
-z-index:998;
-transition:opacity 0.15s;
+background:rgba(0,0,0,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:4000;
 }
 
-
-    #gameOverText {
-      position: absolute;
-      top: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 48px;
-      color: #ff3b3b;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-      display: none;
-      z-index: 16;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.05); }
-    }
-
-    @keyframes scorePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+#objectifPanel{
+background:linear-gradient(#fffbe6,#f3edd6);
+padding:25px;
+border-radius:25px;
+border:4px solid black;
+width:340px;
+max-width:90vw;
+max-height:80vh;
+overflow:auto;
 }
 
-.distancePulse {
-  animation: scorePulse 0.4s ease;
-}
-
-    /* 🆕 Tableau de score */
-    #scoreBoard {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%);
-  background: #fffbe6;
-  padding: 18px 20px;
-  border-radius: 20px;
-  border: 5px solid black;
-  text-align: center;
-  z-index: 17;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  font-size: 20px;
-  font-weight: bold;
-  color: #222;
-  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-  display: none;
-  width: 340px;
-  max-width: 90vw;
-}
-
-    #scoreBoard h2 {
-      margin: 0 0 10px 0;
-      font-size: 28px;
-      color: #444;
-    }
-
-    #scoreBoard p {
-      margin: 8px 0;
-      font-size: 22px;
-    }
-
-    #shareScore {
-      position: absolute;
-      top: 80%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      padding: 10px 20px;
-      border-radius: 12px;
-      border: 3px solid black;
-      background: #00cfcf;
-      color: black;
-      cursor: pointer;
-      display: none;
-      box-shadow: 3px 3px 0 black;
-    }
-
-    #shareScore:hover {
-      background: #00cfcf;
-      transform: translateX(-50%) translateY(-2px);
-      box-shadow: 6px 6px 0 black;
-    }
-
-   #objectifsBtn {
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: 3px solid black;
-  background: #fff04f;
-  color: black;
-  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-  cursor: pointer;
-  display: none;
-  box-shadow: 3px 3px 0 black;
-  z-index: 18;
- text-transform: uppercase;
-}
-    #objectifList {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#objectifPanel {
-
-background: linear-gradient(180deg,#fffbe6,#f3edd6);
-
-padding: 25px;
-
-border-radius: 25px;
-
-border: 4px solid black;
-
-box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-
-width: 340px;
-max-width: 90vw;
-
-max-height: 80vh;
-overflow-y: auto;
-
-font-size: 18px;
-
-}
-
-#objectifPanel ul {
-  list-style: none;
-  padding: 0;
-}
-
-#objectifPanel li {
-  font-size: 18px;
-  padding: 6px 0;
-}
-
-#objectifPanel h3 {
-  margin: 16px 0 8px;
-  font-size: 20px;
-}
-
-#closeObjectifs{
-margin-top:15px;
-font-size:20px;
-padding:8px 15px;
-border-radius:10px;
-border:3px solid black;
-background:#ffaa00;
-font-weight:bold;
-cursor:pointer;
-}    
-
-#totalDistanceDisplay {
-  margin: 10px 0 14px;
-  font-size: 18px;
-  color: #333;
+#objectifPanel ul{
+list-style:none;
+padding:0;
 }
 
 .rocket-item{
-
-font-size:17px;
-
-padding:10px 14px;
-
-border-radius:12px;
-
-margin-bottom:10px;
-
+padding:10px;
 border:3px solid black;
-
-background:white;
-
+border-radius:12px;
+margin-bottom:8px;
 font-weight:bold;
-
 }
 
 .rocket-unlocked{
-
-background:linear-gradient(90deg,#c8ffd8,#a9f0c0);
-
+background:#c8ffd8;
 }
 
 .rocket-locked{
-
-background:#e5e5e5;
-color:#777;
-
+background:#ddd;
 opacity:0.7;
-
 }
 
-.rocket-selected {
-  outline: 3px solid #00cfcf;
-  background: #cfffff;
-}    
+/* SETTINGS */
 
-.objectif-achieved::before {
-  content: "✅ ";
-  color: green;
+#settingsPanel{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:5000;
 }
 
-
-#objectifsBtn:hover {
-  background: #fdd835;
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 6px 6px 0 black;
+#settingsPanelContent{
+background:linear-gradient(#fffbe6,#f3edd6);
+padding:25px;
+border-radius:25px;
+border:4px solid black;
+width:320px;
+text-align:center;
 }
 
+#settingsPanelContent button{
+width:100%;
+margin-top:12px;
+}
 
-    #success-banner {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.85);
-      color: #00ffcc;
-      padding: 12px 24px;
-      border-radius: 16px;
-      font-size: 20px;
-      font-weight: bold;
-      display: none;
-      z-index: 999;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
-      text-align: center;
-    }
+#scoreBoard{
+position:absolute;
+top:25%;
+left:50%;
+transform:translateX(-50%);
+background:#fffbe6;
+padding:20px;
+border-radius:20px;
+border:5px solid black;
+display:none;
+z-index:3000;
+}
 
+#success-banner{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:black;
+color:#00ffcc;
+padding:12px 20px;
+border-radius:15px;
+display:none;
+z-index:6000;
+}
 
-    #rejouer {
-      position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      padding: 10px 20px;
-      color: black;
-      background: #ffaa00;
-      border: 3px solid black;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 3px 3px 0 black;
-      text-transform: uppercase;
-      display: none;
-      z-index: 18;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    #rejouer:hover {
-      background: #ff8800;
-      transform: translateX(-50%) translateY(-2px);
-      box-shadow: 6px 6px 0 black;
-    }
-
-    #menuStars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-      background: #001122;
-    }
-
-    #milestoneMessage{
+#milestoneMessage{
 position:fixed;
 top:40%;
 left:50%;
 transform:translate(-50%,-50%);
-font-size:42px;
 color:white;
-font-weight:bold;
-text-shadow:0 0 10px cyan;
+font-size:42px;
 opacity:0;
-transition:opacity 0.4s;
-will-change: opacity;
-pointer-events:none;
-z-index:999;
-
-white-space:nowrap;
-text-align:center;
-max-width:95vw;
+z-index:6000;
 }
 
-    @media (max-width: 768px) {
-      #playButton, #rejouer, #shareScore {
-        font-size: 20px;
-        padding: 10px 25px;
-        width: auto;
-      } 
-      #milestoneMessage{
-        font-size:22px;
-      }
-    }
-    
-
-      
-      #gameOverText {
-        font-size: 32px;
-      }      
-    }
-
-  #settingsPanel{
-
+#levelFlash{
 position:fixed;
-
 top:0;
 left:0;
-
 width:100%;
 height:100%;
-
-background:rgba(0,0,0,0.8);
-
-display:none;
-
-align-items:center;
-justify-content:center;
-
-z-index:5000;
-
+opacity:0;
+z-index:500;
 }
 
-#settingsPanelContent{
-
-background:linear-gradient(180deg,#fffbe6,#f3edd6);
-
-padding:25px;
-
-border-radius:25px;
-
-border:4px solid black;
-
-box-shadow:0 12px 30px rgba(0,0,0,0.45);
-
-width:320px;
-max-width:90vw;
-
-text-align:center;
-
-}
-
-#settingsPanelContent button{
-
-font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
-font-weight:bold;
-
-font-size:20px;
-
-padding:10px 20px;
-margin-top:12px;
-
-background:#ffaa00;
-
-border:3px solid black;
-
-border-radius:12px;
-
-cursor:pointer;
-
-}
-
-    #settingsBtn{
-
-font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
-font-weight:bold;
-
-font-size:22px;
-
-padding:12px 30px;
-margin-top:12px;
-
-background:#ffaa00;
-color:black;
-
-border:4px solid black;
-border-radius:15px;
-
-cursor:pointer;
-
-box-shadow:4px 4px 0 black;
-
-display:block;
-margin:15px auto;
-width:200px;
-
-text-transform:uppercase;
-
-}
-
-#settingsBtn:hover{
-
-background:#ff8800;
-transform:translateY(-2px);
-box-shadow:6px 6px 0 black;
-
-}
-  </style>
+</style>
 </head>
+
 <body>
-  <canvas id="menuStars"></canvas>
 
-  <div id="menu">
-  <h1 id="gameTitle">AstroLab Rush</h1>
+<canvas id="menuStars"></canvas>
 
-  <img id="menuImage" src="menu.png" alt="Image menu" />
+<div id="menu">
 
- <div id="rocketSelector">
+<h1 id="gameTitle">AstroLab Rush</h1>
 
- <div id="arrowLeft">‹</div>
+<img id="menuImage" src="menu.png">
 
-  <canvas id="menuRocket"></canvas>
+<div id="rocketSelector">
+<div id="arrowLeft">‹</div>
+<canvas id="menuRocket"></canvas>
+<div id="arrowRight">›</div>
+</div>
 
-  <div id="arrowRight">›</div>
+<button id="playButton">Play</button>
+<button id="menuObjectivesBtn">Objectives</button>
+<button id="settingsBtn">Settings</button>
 
 </div>
 
-  <button id="playButton">Play</button>
-  
-  <button id="menuObjectivesBtn">Objectives</button>
+<canvas id="game"></canvas>
 
-  <button id="settingsBtn">Settings</button>  
+<div id="distance">Distance: 0 m</div>
+
+<div id="scoreBoard">
+<h2>ScoreBoard</h2>
+<p>Current Distance: <span id="currentScore">0</span> m</p>
+<p>Best Score: <span id="bestScore">0</span> m</p>
+<p>Total Distance: <span id="totalScore">0</span> m</p>
+<p>Grade: <span id="grade">-</span></p>
 </div>
 
-  <canvas id="game"></canvas>
+<div id="objectifList">
 
-  <div id="distance">Distance: 0 m</div>
+<div id="objectifPanel">
 
-  <!-- 🆕 Tableau de score -->
-  <div id="scoreBoard">
-  <h2>ScoreBoard</h2>
-  <p><strong>Current Distance:</strong> <span id="currentScore">0</span> m</p>
-  <p><strong>Best Score:</strong> <span id="bestScore">0</span> m</p>
-  <p><strong>Total Distance:</strong> <span id="totalScore">0</span> m</p>
-  <p><strong>Grade:</strong> <span id="grade">-</span></p>
-</div>
-   
+<h2>Objectives</h2>
 
- 
-<div id="objectifList" style="display: none;">
-  <div id="objectifPanel">
-    <h2>Objectives</h2>
-    <p id="totalDistanceDisplay">Total distance: 0 m</p>
+<p id="totalDistanceDisplay"></p>
 
-    <h3>Grades</h3>
-    <ul id="objectifItems"></ul>
+<h3>Grades</h3>
+<ul id="objectifItems"></ul>
 
-    <h3>Rockets</h3>
-    <ul id="rocketItems"></ul>
+<h3>Rockets</h3>
+<ul id="rocketItems"></ul>
 
-    <button id="closeObjectifs">Fermer</button>
-  </div>
+<button id="closeObjectifs">Close</button>
+
 </div>
 
-  <div id="gameOverText">GAME OVER</div>
-
-  <button id="rejouer">Replay</button>
-  <button id="objectifsBtn">Objectives</button>
-  <button id="shareScore">Share Score</button>
-
-  <div id="success-banner"></div>
-  
-  <audio id="gameMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-<div id="milestoneMessage"></div> 
-<div id="levelFlash"></div>
+</div>
 
 <div id="settingsPanel">
 
@@ -672,23 +353,38 @@ box-shadow:6px 6px 0 black;
 </div>
 
 </div>
-  
-  <script src="game.js"></script>
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").then(
-          function (registration) {
-            console.log("✅ Service Worker enregistré :", registration);
-          },
-          function (err) {
-            console.error("❌ Erreur d'enregistrement du Service Worker :", err);
-          }
-        );
-      });
-    }
-  </script>
- 
+<div id="gameOverText">GAME OVER</div>
+
+<button id="rejouer">Replay</button>
+<button id="objectifsBtn">Objectives</button>
+<button id="shareScore">Share Score</button>
+
+<div id="success-banner"></div>
+
+<div id="milestoneMessage"></div>
+<div id="levelFlash"></div>
+
+<audio id="gameMusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script src="game.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").then(
+      function (registration) {
+        console.log("Service Worker enregistré", registration);
+      },
+      function (err) {
+        console.log("Erreur Service Worker", err);
+      }
+    );
+  });
+}
+</script>  
+
 </body>
 </html>
