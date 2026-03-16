@@ -48,7 +48,7 @@
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const settingsBtn = document.getElementById("settingsBtn");
-const settingsPanel = document.getElementById("settingsPanel");
+const settingsMenu = document.getElementById("settingsMenu");
 const toggleMusicBtn = document.getElementById("toggleMusic");
 const resetProgressBtn = document.getElementById("resetProgress");
 const closeSettingsBtn = document.getElementById("closeSettings");
