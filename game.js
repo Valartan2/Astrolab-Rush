@@ -488,7 +488,7 @@ objectifList.style.display="flex";
 
   function drawRocket(x, y, radius) {
     const currentRocket = getCurrentRocketImage();
-    drawFlame(x - radius + 5, y);
+  
     ctx.save();
     ctx.translate(x, y);
     ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
