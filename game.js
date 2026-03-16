@@ -825,22 +825,9 @@ objectifList.style.display="flex";
   menuRocketCtx.restore();
 
 }
-menuRocketCanvas.addEventListener("click", e => {
+menuRocketCanvas.addEventListener("click", () => {
 
-  const rect = menuRocketCanvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-
-  const center = rect.width / 2;
-
- if(x < center){
-  rocketScrollIndex--;
-} else {
-  rocketScrollIndex++;
-}
-
-rocketScrollIndex = Math.max(0, Math.min(rocketDefinitions.length - 1, rocketScrollIndex));
-
-const rocket = rocketDefinitions[rocketScrollIndex];
+  const rocket = rocketDefinitions[rocketScrollIndex];
 
   if(unlockedRocketKeys.includes(rocket.key)){
     selectedRocketKey = rocket.key;
@@ -848,7 +835,7 @@ const rocket = rocketDefinitions[rocketScrollIndex];
     showSuccessBanner(`🚀 ${rocket.label} selected`);
   }
 
-  drawMenuRocket();
+
 
 });
 
