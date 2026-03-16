@@ -33,7 +33,7 @@ const successBanner = document.getElementById("success-banner")
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const settingsBtn = document.getElementById("settingsBtn");
-const settingsMenu = document.getElementById("settingsMenu");
+const settingsMenu = document.getElementById("settingsPanel");
 const toggleMusicBtn = document.getElementById("toggleMusic");
 const resetProgressBtn = document.getElementById("resetProgress");
 const closeSettingsBtn = document.getElementById("closeSettings");
