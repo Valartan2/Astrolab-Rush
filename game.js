@@ -56,8 +56,11 @@ const closeSettingsBtn = document.getElementById("closeSettings");
 menuObjectivesBtn.onclick = () => {
 
 playClick();
+
+menu.style.display = "none";
+
 updateObjectifDisplay();
-objectifList.style.display="flex";
+objectifList.style.display = "flex";
 
 };
 
@@ -69,14 +72,15 @@ settingsPanel.style.display = "flex";
 
 };
 
-closeSettingsBtn.onclick = () => {
+closeObjectifs.onclick = () => {
 
 playClick();
-settingsPanel.style.display = "none";
+
+objectifList.style.display = "none";
 menu.style.display = "block";
 
 };
-
+  
 let musicEnabled = true;
 
 toggleMusicBtn.onclick = () => {
