@@ -805,7 +805,7 @@ objectifList.style.display="flex";
 
   rocketDefinitions.forEach((rocket, i) => {
 
-    const img = rocketImages["classic"];
+    const img = rocketImages[rocket.key];
 
     const offset = (i - rocketScrollIndex) * rocketSpacing;
     const x = centerX + offset;
