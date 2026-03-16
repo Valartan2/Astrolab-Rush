@@ -30,147 +30,90 @@ const milestoneMessage = document.getElementById("milestoneMessage")
 const levelFlash = document.getElementById("levelFlash")
 const successBanner = document.getElementById("success-banner")
 
-const menuObjectivesBtn = document.getElementById("menuObjectivesBtn")
+const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
-const settingsBtn = document.getElementById("settingsBtn")
-const settingsMenu = document.getElementById("settingsMenu")
-const toggleMusicBtn = document.getElementById("toggleMusic")
-const resetProgressBtn = document.getElementById("resetProgress")
-const closeSettingsBtn = document.getElementById("closeSettings")
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsMenu = document.getElementById("settingsMenu");
+const toggleMusicBtn = document.getElementById("toggleMusic");
+const resetProgressBtn = document.getElementById("resetProgress");
+const closeSettingsBtn = document.getElementById("closeSettings");
 
-const clickSound = new Audio("click-151673.mp3")
+let musicEnabled = true;
 
-function playClick(){
-clickSound.currentTime = 0
-clickSound.play().catch(()=>{})
+function openSettingsMenu() {
+  playClick();
+
+  // On reste dans le menu principal, on n'essaie plus de cacher #menu
+  settingsMenu.style.display = "block";
+
+  // On masque juste les boutons principaux du menu
+  playButton.style.display = "none";
+  menuObjectivesBtn.style.display = "none";
+  settingsBtn.style.display = "none";
 }
 
-const levelUpSound = new Audio("LevelUp.mp3")
-levelUpSound.volume = 0.6
+function closeSettingsMenu() {
+  playClick();
 
-const music = document.getElementById("gameMusic")
-if(music) music.volume = 0.3
+  settingsMenu.style.display = "none";
 
-const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
-
-
-
-/* -------------------- UI CONTROL -------------------- */
-
-function hideAllUI(){
-
-menu.style.display = "none"
-objectifList.style.display = "none"
-settingsMenu.style.display = "none"
-
-gameOverText.style.display = "none"
-scoreBoard.style.display = "none"
-rejouerBtn.style.display = "none"
-shareBtn.style.display = "none"
-objectifsBtn.style.display = "none"
-
+  // On remet les boutons du menu principal
+  playButton.style.display = "block";
+  menuObjectivesBtn.style.display = "block";
+  settingsBtn.style.display = "block";
 }
 
-function showMenu(){
-
-hideAllUI()
-
-menu.style.display = "block"
-
-const menuCanvas = document.getElementById("menuStars")
-if(menuCanvas) menuCanvas.style.display = "block"
-
+if (menuObjectivesBtn) {
+  menuObjectivesBtn.onclick = () => {
+    playClick();
+    updateObjectifDisplay();
+    objectifList.style.display = "flex";
+  };
 }
 
-
-/* -------------------- MENU BUTTONS -------------------- */
-
-if(menuObjectivesBtn){
-
-menuObjectivesBtn.onclick = () => {
-
-playClick()
-
-updateObjectifDisplay()
-
-hideAllUI()
-objectifList.style.display = "flex"
-
+if (closeObjectifs) {
+  closeObjectifs.onclick = () => {
+    playClick();
+    objectifList.style.display = "none";
+  };
 }
 
+if (settingsBtn) {
+  settingsBtn.onclick = () => {
+    openSettingsMenu();
+  };
 }
 
-closeObjectifs.onclick = () => {
-
-playClick()
-
-showMenu()
-
+if (closeSettingsBtn) {
+  closeSettingsBtn.onclick = () => {
+    closeSettingsMenu();
+  };
 }
 
+if (toggleMusicBtn) {
+  toggleMusicBtn.onclick = () => {
+    musicEnabled = !musicEnabled;
 
-
-if(settingsBtn){
-
-settingsBtn.onclick = () => {
-
-playClick()
-
-hideAllUI()
-settingsMenu.style.display = "block"
-
+    if (musicEnabled) {
+      toggleMusicBtn.textContent = "Music: ON";
+      if (music) {
+        music.currentTime = 0;
+        music.play().catch(() => {});
+      }
+    } else {
+      toggleMusicBtn.textContent = "Music: OFF";
+      if (music) music.pause();
+    }
+  };
 }
 
-}
-
-if(closeSettingsBtn){
-
-closeSettingsBtn.onclick = () => {
-
-playClick()
-
-showMenu()
-
-}
-
-}
-
-
-
-/* -------------------- SETTINGS -------------------- */
-
-let musicEnabled = true
-
-toggleMusicBtn.onclick = () => {
-
-musicEnabled = !musicEnabled
-
-if(musicEnabled){
-
-toggleMusicBtn.textContent = "Music: ON"
-
-if(music) music.play().catch(()=>{})
-
-}else{
-
-toggleMusicBtn.textContent = "Music: OFF"
-
-if(music) music.pause()
-
-}
-
-}
-
-
-resetProgressBtn.onclick = () => {
-
-if(confirm("Reset all progress?")){
-
-localStorage.clear()
-location.reload()
-
-}
-
+if (resetProgressBtn) {
+  resetProgressBtn.onclick = () => {
+    if (confirm("Reset all progress?")) {
+      localStorage.clear();
+      location.reload();
+    }
+  };
 }
 
   /* -------------------- Storage Keys -------------------- */
@@ -731,33 +674,42 @@ rocketDefinitions.forEach(rocket => {
     pressing = false;
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
-    objectifsBtn.style.display = "none";
-    objectifList.style.display = "none";
-    scoreBoard.style.display = "none";
-    distanceDisplay.style.display = "block";
+objectifsBtn.style.display = "none";
+objectifList.style.display = "none";
+scoreBoard.style.display = "none";
+distanceDisplay.style.display = "block";
+
+// sécurité : le sous-menu settings ne doit jamais survivre au lancement d'une partie
+settingsMenu.style.display = "none";
+playButton.style.display = "block";
+menuObjectivesBtn.style.display = "block";
+settingsBtn.style.display = "block";
   }
 
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
+  playClick();
 
-playClick()
+  // On ferme le sous-menu settings si jamais il était ouvert
+  settingsMenu.style.display = "none";
+  playButton.style.display = "block";
+  menuObjectivesBtn.style.display = "block";
+  settingsBtn.style.display = "block";
 
-hideAllUI()
+  if (music) {
+    music.pause();
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
 
-if(music){
-music.pause()
-music.currentTime = 0
-music.play().catch(()=>{})
-}
+  menu.style.display = "none";
+  resetGame();
 
-resetGame()
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "none";
 
-const menuCanvas = document.getElementById("menuStars")
-if(menuCanvas) menuCanvas.style.display = "none"
-
-animationId = requestAnimationFrame(gameLoop)
-
-}
+  animationId = requestAnimationFrame(gameLoop);
+};
 
   rejouerBtn.onclick = () => {
     playClick();
