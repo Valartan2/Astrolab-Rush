@@ -53,21 +53,20 @@ const toggleMusicBtn = document.getElementById("toggleMusic");
 const resetProgressBtn = document.getElementById("resetProgress");
 const closeSettingsBtn = document.getElementById("closeSettings");
 
+if(menuObjectivesBtn){
 menuObjectivesBtn.onclick = () => {
-
 playClick();
-
 updateObjectifDisplay();
 objectifList.style.display = "flex";
-
 };
+}
 
+if(settingsBtn){
 settingsBtn.onclick = () => {
-
 playClick();
 settingsPanel.style.display = "flex";
-
 };
+}
 
 closeObjectifs.onclick = () => {
 
