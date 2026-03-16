@@ -119,7 +119,7 @@ objectifList.style.display="flex";
   let unlockedRocketKeys = getSavedUnlockedRockets();
   let selectedRocketKey = getSelectedRocketKey();
 
-  let rocketScrollIndex = rocketDefinitions.findIndex(r => r.key === "classic");
+  let rocketScrollIndex = 0
   const rocketSpacing = 220;
 
   if (!unlockedRocketKeys.includes("classic")) {
@@ -135,8 +135,13 @@ objectifList.style.display="flex";
   /* -------------------- Assets -------------------- */
   const rocketImages = {};
   rocketDefinitions.forEach(rocket => {
-    const img = new Image();
-    img.src = rocket.file;
+  const img = new Image();
+
+  img.onload = () => {
+    drawMenuRocket();
+  };
+
+  img.src = rocket.file;
     img.onerror = () => {
       if (rocket.file !== "rocket2.png") {
         img.src = "rocket2.png";
