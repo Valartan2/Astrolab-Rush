@@ -859,5 +859,22 @@ menuRocketCanvas.addEventListener("click", e => {
   drawMenuRocket();
 
 });
+
+const arrowLeft = document.getElementById("arrowLeft");
+const arrowRight = document.getElementById("arrowRight");
+
+arrowLeft.onclick = () => {
+
+rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
+drawMenuRocket();
+
+};
+
+arrowRight.onclick = () => {
+
+rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
+drawMenuRocket();
+
+};
   
 })();
