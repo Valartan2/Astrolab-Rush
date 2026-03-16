@@ -492,65 +492,11 @@ max-width:95vw;
       }      
     }
 
- #settingsPanel{
+ 
 
-position:fixed;
 
-top:0;
-left:0;
 
-width:100vw;
-height:100vh;
 
-background:rgba(0,0,0,0.8);
-
-display:none;
-
-align-items:center;
-justify-content:center;
-
-z-index:9999;
-
-}
-
-#settingsPanelContent{
-
-background:linear-gradient(180deg,#fffbe6,#f3edd6);
-
-padding:25px;
-
-border-radius:25px;
-
-border:4px solid black;
-
-box-shadow:0 12px 30px rgba(0,0,0,0.45); 
-
-width:320px;
-max-width:90vw;
-
-text-align:center;
-
-}
-
-#settingsPanelContent button{
-
-font-family:'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
-font-weight:bold;
-
-font-size:20px;
-
-padding:10px 20px;
-margin-top:12px;
-
-background:#ffaa00;
-
-border:3px solid black;
-
-border-radius:12px;
-
-cursor:pointer;
-
-}
 
     #settingsBtn{
 
@@ -658,9 +604,9 @@ box-shadow:6px 6px 0 black;
 <div id="milestoneMessage"></div> 
 <div id="levelFlash"></div>
 
-<div id="settingsPanel">
+<button id="settingsBtn">Settings</button>
 
-<div id="settingsPanelContent">
+<div id="settingsMenu" style="display:none; margin-top:20px;">
 
 <h2>Settings</h2>
 
@@ -668,7 +614,7 @@ box-shadow:6px 6px 0 black;
 
 <button id="resetProgress">Reset Progress</button>
 
-<button id="closeSettings">Close</button>
+<button id="closeSettings">Back</button>
 
 </div>
 
