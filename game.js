@@ -829,9 +829,6 @@ objectifList.style.display="flex";
 
     menuRocketCtx.drawImage(img, x-35, y-35, 70, 70);
 
-      menuRocketCtx.strokeRect(x-40, y-40, 80, 80);
-    }
-
     menuRocketCtx.restore();
 
   });
