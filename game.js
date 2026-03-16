@@ -957,17 +957,5 @@ arrowRight.onclick = () => {
   drawMenuRocket();
 
 };
-
-const settingsBtn = document.getElementById("settingsBtn");
-const settingsPanel = document.getElementById("settingsPanel");
-const closeSettings = document.getElementById("closeSettings");
-
-settingsBtn.addEventListener("click", () => {
-  settingsPanel.style.display = "flex";
-});
-
-closeSettings.addEventListener("click", () => {
-  settingsPanel.style.display = "none";
-});  
   
 })();
