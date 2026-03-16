@@ -82,12 +82,28 @@ objectifList.style.display="flex";
 
   /* -------------------- Rockets -------------------- */
   const rocketDefinitions = [
-    { key: "classic", label: "Classic Rocket", file: "rocket2.png", unlockAt: 0 },
-    { key: "blue", label: "Blue Rocket", file: "rocket3.png", unlockAt: 1000 },
-    { key: "red", label: "Red Rocket", file: "rocket4.png", unlockAt: 5000 },
-    { key: "plasma", label: "Plasma Rocket", file: "rocket5.png", unlockAt: 25000 },
-    { key: "gold", label: "Golden Rocket", file: "rocket6.png", unlockAt: 1000000 }
-  ];
+
+{ key:"classic", label:"Classic Rocket", file:"rocket2.png", unlockAt:0 },
+
+{ key:"white", label:"White Rocket", file:"rocket3.png", unlockAt:500 },
+
+{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlockAt:1000 },
+
+{ key:"red", label:"Red Rocket", file:"rocket5.png", unlockAt:2500 },
+
+{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlockAt:5000 },
+
+{ key:"blue", label:"Blue Rocket", file:"rocket7.png", unlockAt:10000 },
+
+{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlockAt:20000 },
+
+{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlockAt:40000 },
+
+{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlockAt:80000 },
+
+{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlockAt:150000 }
+
+];
 
   function getSavedUnlockedRockets() {
     try {
