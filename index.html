@@ -255,6 +255,40 @@ transition:opacity 0.15s;
   padding: 6px 0;
 }
 
+#objectifPanel h3 {
+  margin: 16px 0 8px;
+  font-size: 20px;
+}
+
+#totalDistanceDisplay {
+  margin: 10px 0 14px;
+  font-size: 18px;
+  color: #333;
+}
+
+.rocket-item {
+  font-size: 17px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  border: 2px solid black;
+  background: #fff;
+}
+
+.rocket-unlocked {
+  background: #d9ffd9;
+}
+
+.rocket-locked {
+  background: #ececec;
+  color: #666;
+}
+
+.rocket-selected {
+  outline: 3px solid #00cfcf;
+  background: #cfffff;
+}    
+
 .objectif-achieved::before {
   content: "✅ ";
   color: green;
@@ -375,17 +409,26 @@ max-width:95vw;
 
   <!-- 🆕 Tableau de score -->
   <div id="scoreBoard">
-    <h2>ScoreBoard</h2>
-    <p><strong>Current Distance :</strong> <span id="currentScore">0</span> m</p>
-    <p><strong>Best score :</strong> <span id="bestScore">0</span> m</p>
-    <p><strong>Grade :</strong> <span id="grade">-</span></p>
+  <h2>ScoreBoard</h2>
+  <p><strong>Current Distance:</strong> <span id="currentScore">0</span> m</p>
+  <p><strong>Best Score:</strong> <span id="bestScore">0</span> m</p>
+  <p><strong>Total Distance:</strong> <span id="totalScore">0</span> m</p>
+  <p><strong>Grade:</strong> <span id="grade">-</span></p>
+</div>
    
 
-  </div>
+ 
 <div id="objectifList" style="display: none;">
   <div id="objectifPanel">
     <h2>Objectives</h2>
+    <p id="totalDistanceDisplay">Total distance: 0 m</p>
+
+    <h3>Grades</h3>
     <ul id="objectifItems"></ul>
+
+    <h3>Rockets</h3>
+    <ul id="rocketItems"></ul>
+
     <button id="closeObjectifs">Fermer</button>
   </div>
 </div>
