@@ -35,6 +35,7 @@ const resetGameBtn = document.getElementById("resetGameBtn");
 const closeSettings = document.getElementById("closeSettings");
 
 const backToMenuBtn = document.getElementById("backToMenu");
+ 
   
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
@@ -837,6 +838,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
       animationId = requestAnimationFrame(gameLoop);
     }
   }
+
 
   /* -------------------- Menu Stars Background -------------------- */
   const menuCanvas = document.getElementById("menuStars");
