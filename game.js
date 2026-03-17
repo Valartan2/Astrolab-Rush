@@ -34,7 +34,7 @@ const toggleMusicBtn = document.getElementById("toggleMusic");
 const resetGameBtn = document.getElementById("resetGameBtn");
 const closeSettings = document.getElementById("closeSettings");
 
-
+const backToMenuBtn = document.getElementById("backToMenu");
   
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
@@ -628,6 +628,7 @@ rocketDefinitions.forEach(rocket => {
     objectifList.style.display = "none";
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
+    backToMenuBtn.style.display = "none";
   }
 
   /* -------------------- Buttons -------------------- */
@@ -689,6 +690,41 @@ rocketDefinitions.forEach(rocket => {
       );
     }
   };
+
+  backToMenuBtn.onclick = () => {
+
+  playClick();
+
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  // reset visuel
+  gameOver = false;
+  bubbles = [];
+  particles = [];
+
+  // cacher UI game
+  gameOverText.style.display = "none";
+  scoreBoard.style.display = "none";
+  rejouerBtn.style.display = "none";
+  shareBtn.style.display = "none";
+  objectifsBtn.style.display = "none";
+  backToMenuBtn.style.display = "none";
+
+  // remettre menu
+  menu.style.display = "block";
+
+  // remettre background menu
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "block";
+
+  distanceDisplay.style.display = "none";
+
+  drawMenuRocket();
+
+};
 
   /* -------------------- Start Screen -------------------- */
   menu.style.display = "block";
@@ -766,6 +802,7 @@ rocketDefinitions.forEach(rocket => {
           rejouerBtn.style.display = "block";
           shareBtn.style.display = "block";
           objectifsBtn.style.display = "block";
+          backToMenuBtn.style.display = "block";
           break;
         }
       }
