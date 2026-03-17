@@ -203,6 +203,9 @@ objectifList.style.display="flex";
     return new Intl.NumberFormat("fr-FR").format(n);
   }
 
+  const starImage = new Image();
+  starImage.src = "star.png"; 
+
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -557,25 +560,14 @@ function createStar(speed) {
 
   function drawStar(star) {
   ctx.save();
-  ctx.translate(star.x, star.y);
 
-  ctx.beginPath();
-  for (let i = 0; i < 5; i++) {
-    ctx.lineTo(
-      Math.cos((18 + i * 72) * Math.PI / 180) * star.size,
-      -Math.sin((18 + i * 72) * Math.PI / 180) * star.size
-    );
-    ctx.lineTo(
-      Math.cos((54 + i * 72) * Math.PI / 180) * (star.size / 2),
-      -Math.sin((54 + i * 72) * Math.PI / 180) * (star.size / 2)
-    );
-  }
-
-  ctx.closePath();
-  ctx.fillStyle = "#FFD700";
-  ctx.shadowColor = "#FFD700";
-  ctx.shadowBlur = 15;
-  ctx.fill();
+  ctx.drawImage(
+    starImage,
+    star.x - star.size,
+    star.y - star.size,
+    star.size * 2,
+    star.size * 2
+  );
 
   ctx.restore();
 }
