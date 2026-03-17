@@ -559,9 +559,9 @@ function createStar(speed) {
   }
 
   function drawStar(star) {
-  ctx.save();
+  if (!starImage.complete || starImage.naturalWidth === 0) return;
 
-  // 🔥 reset complet
+  ctx.save();
   ctx.shadowBlur = 0;
   ctx.shadowColor = "transparent";
   ctx.globalAlpha = 1;
@@ -577,6 +577,7 @@ function createStar(speed) {
 
   ctx.restore();
 }
+
 
 
   
