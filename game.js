@@ -634,11 +634,10 @@ rocketDefinitions.forEach(rocket => {
   playButton.onclick = () => {
     playClick();
 
-    if (music) {
-      music.pause();
-      music.currentTime = 0;
-      music.play().catch(() => {});
-    }
+    if (music && musicEnabled) {
+  music.currentTime = 0;
+  music.play().catch(() => {});
+}
 
     menu.style.display = "none";
     resetGame();
@@ -652,11 +651,10 @@ rocketDefinitions.forEach(rocket => {
   rejouerBtn.onclick = () => {
     playClick();
 
-    if (music) {
-      music.pause();
-      music.currentTime = 0;
-      music.play().catch(() => {});
-    }
+    if (music && musicEnabled) {
+  music.currentTime = 0;
+  music.play().catch(() => {});
+}
 
     resetGame();
     animationId = requestAnimationFrame(gameLoop);
@@ -932,13 +930,17 @@ toggleMusicBtn.onclick = () => {
 
   musicEnabled = !musicEnabled;
 
-  if(musicEnabled){
-    toggleMusicBtn.textContent = "Music: ON";
-    if(music) music.play().catch(()=>{});
-  }else{
-    toggleMusicBtn.textContent = "Music: OFF";
-    if(music) music.pause();
+  if (musicEnabled) {
+  toggleMusicBtn.textContent = "Music: ON";
+
+  if (music && !gameOver && animationId) {
+    music.play().catch(()=>{});
   }
+
+} else {
+  toggleMusicBtn.textContent = "Music: OFF";
+  if (music) music.pause();
+}
 
 };
 
