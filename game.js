@@ -279,6 +279,9 @@ objectifList.style.display="flex";
   let newlyUnlockedThisRun = [];
 
   let lastTime = 0;
+
+  let starsCollectibles = [];
+  let starScore = 0;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -468,6 +471,17 @@ rocketDefinitions.forEach(rocket => {
     });
   }
 
+function createStar(speed) {
+  const size = 20;
+
+  starsCollectibles.push({
+    x: width + size,
+    y: Math.random() * (height - size * 2) + size,
+    size: size,
+    speed: speed * 0.8
+  });
+}
+
   function isColliding(c, b) {
     const dx = c.x - b.x;
     const dy = c.y - b.y;
@@ -540,6 +554,34 @@ rocketDefinitions.forEach(rocket => {
     ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
     ctx.restore();
   }
+
+  function drawStar(star) {
+  ctx.save();
+  ctx.translate(star.x, star.y);
+
+  ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    ctx.lineTo(
+      Math.cos((18 + i * 72) * Math.PI / 180) * star.size,
+      -Math.sin((18 + i * 72) * Math.PI / 180) * star.size
+    );
+    ctx.lineTo(
+      Math.cos((54 + i * 72) * Math.PI / 180) * (star.size / 2),
+      -Math.sin((54 + i * 72) * Math.PI / 180) * (star.size / 2)
+    );
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = "#FFD700";
+  ctx.shadowColor = "#FFD700";
+  ctx.shadowBlur = 15;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+
+  
 
   function drawMeteorite(b) {
     ctx.save();
@@ -616,6 +658,8 @@ rocketDefinitions.forEach(rocket => {
     player.radius = 30;
     bubbles = [];
     particles = [];
+    starsCollectibles = [];
+    starScore = 0;
     frameCount = 0;
     flamePulse = 0;
     gameOver = false;
@@ -759,11 +803,34 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
     }
 
+    if (Math.random() < 0.02 && !gameOver) {
+  createStar(baseSpeed);
+}
+
     bubbles.forEach((b, i) => {
       b.x -= b.speed * dt;
       if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
       if (b.x + b.radius < 0) bubbles.splice(i, 1);
     });
+
+    // ⭐ étoiles mouvement + collision
+starsCollectibles.forEach((s, i) => {
+  s.x -= s.speed * dt;
+
+  const dx = player.x - s.x;
+  const dy = player.y - s.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + s.size) {
+    starScore += 1;
+    showSuccessBanner("⭐ +1");
+    starsCollectibles.splice(i, 1);
+  }
+
+  if (s.x < -50) {
+    starsCollectibles.splice(i, 1);
+  }
+});
 
     if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
@@ -780,7 +847,8 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
       }
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
-      distanceDisplay.textContent = `Distance: ${formatNumber(Math.floor(distance))} m`;
+      distanceDisplay.textContent =
+  `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore}`;
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
@@ -827,6 +895,11 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 
     bubbles.forEach(drawMeteorite);
 
+    // ⭐ étoiles
+starsCollectibles.forEach(drawStar);
+
+bubbles.forEach(drawMeteorite);
+    
     if (!gameOver) {
       drawRocket(player.x, player.y, player.radius);
     }
