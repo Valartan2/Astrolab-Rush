@@ -603,15 +603,14 @@ rocketDefinitions.forEach(rocket => {
     }
 
     if (isMobile) {
-      player.gravityDown = 1.5;
-      player.gravityUp = -1.5;
-      player.maxSpeed = 12;
-    } else {
-      player.gravityDown = 0.9;
-      player.gravityUp = -0.8;
-      player.maxSpeed = 6;
-    }
-
+  player.gravityDown = 2.5;
+  player.gravityUp = -2.3;
+  player.maxSpeed = 13;
+} else {
+  player.gravityDown = 2.8;
+  player.gravityUp = -2.6;
+  player.maxSpeed = 14;
+}
     nextGradeIndex = 1;
     player.radius = 30;
     bubbles = [];
