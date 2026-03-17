@@ -561,6 +561,12 @@ function createStar(speed) {
   function drawStar(star) {
   ctx.save();
 
+  // 🔥 reset complet
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = "transparent";
+  ctx.globalAlpha = 1;
+  ctx.filter = "none";
+
   ctx.drawImage(
     starImage,
     star.x - star.size,
@@ -885,7 +891,6 @@ starsCollectibles.forEach((s, i) => {
     });
     particles = particles.filter(p => p.alpha > 0);
 
-    bubbles.forEach(drawMeteorite);
 
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
