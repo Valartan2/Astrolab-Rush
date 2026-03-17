@@ -580,7 +580,7 @@ rocketDefinitions.forEach(rocket => {
     currentScoreSpan.textContent = formatNumber(runScore);
     bestScoreSpan.textContent = formatNumber(bestScore);
     totalScoreSpan.textContent = formatNumber(newTotal);
-    gradeSpan.textContent = getGrade(score);
+    gradeSpan.textContent = getGrade(bestScore);
 
     updateObjectifDisplay();
     scoreBoard.style.display = "block";
