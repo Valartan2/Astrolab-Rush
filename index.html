@@ -582,6 +582,32 @@ font-weight:bold;
 .menuBtn:active {
   transform: translateY(2px);
   box-shadow: 2px 2px 0 black;
+}   
+
+#backToMenu {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 3px solid black;
+  background: #ffaa00;
+  color: black;
+  cursor: pointer;
+  display: none;
+  box-shadow: 3px 3px 0 black;
+  z-index: 18;
+  font-family: 'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#backToMenu:hover {
+  background: #ff8800;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 6px 6px 0 black;
 }    
     
   </style>
@@ -646,6 +672,8 @@ font-weight:bold;
   <button id="objectifsBtn">Objectives</button>
   <button id="shareScore">Share Score</button>
 
+  <button id="backToMenu">Menu</button>
+  
   <div id="success-banner"></div>
   
   <audio id="gameMusic" loop>
