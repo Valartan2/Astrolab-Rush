@@ -216,7 +216,7 @@ objectifList.style.display="flex";
     height = canvas.height / dpr;
 
     if (player) {
-      player.x = isMobile ? 75 : 150;
+      player.x = width * 0.15;
     }
   }
   window.addEventListener("resize", resize);
