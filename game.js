@@ -749,7 +749,7 @@ rocketDefinitions.forEach(rocket => {
     const speedLevel = Math.floor(distance / 500);
     const baseSpeed = Math.min(CONSTANT_SPEED + speedLevel * 1.5, 40) * speedFactor;
     const spawnRate = 25;
-    const maxMeteorites = isMobile ? 40 : 30;
+    const maxMeteorites = isMobile ? 25 : 20;
 
     frameCount += dt;
 
