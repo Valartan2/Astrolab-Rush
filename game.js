@@ -298,15 +298,18 @@ objectifList.style.display="flex";
   }
 
   function getGrade(score) {
-    if (score >= 3500) return "Legend of the Universe";
-    if (score >= 3000) return "Galaxy Architect";
-    if (score >= 2500) return "Celestial Overlord";
-    if (score >= 2000) return "Supreme Navigator";
-    if (score >= 1500) return "Champion of the Cosmos";
-    if (score >= 1000) return "Eternal Voyager";
-    if (score >= 500) return "Master of Infinity";
-    return "Lord of the Multiverse";
+  let currentGrade = gradeObjectifs[0].label;
+
+  for (let i = 0; i < gradeObjectifs.length; i++) {
+    if (score >= gradeObjectifs[i].threshold) {
+      currentGrade = gradeObjectifs[i].label;
+    } else {
+      break;
+    }
   }
+
+  return currentGrade;
+}
 
   function showMilestone(text) {
     milestoneMessage.textContent = text;
