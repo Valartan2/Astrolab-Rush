@@ -1,4 +1,8 @@
 (() => {
+  // ✅ FIX iOS fullscreen
+  setTimeout(() => {
+    window.scrollTo(0, 1);
+  }, 100);
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
