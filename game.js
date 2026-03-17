@@ -922,7 +922,9 @@ closeSettings.onclick = () => {
 
 };
 
-let musicEnabled = true;
+let musicEnabled = localStorage.getItem("music") !== "off";
+
+toggleMusicBtn.textContent = musicEnabled ? "Music: ON" : "Music: OFF";
 
 toggleMusicBtn.onclick = () => {
 
@@ -930,17 +932,15 @@ toggleMusicBtn.onclick = () => {
 
   musicEnabled = !musicEnabled;
 
+  localStorage.setItem("music", musicEnabled ? "on" : "off");
+
   if (musicEnabled) {
-  toggleMusicBtn.textContent = "Music: ON";
-
-  if (music && !gameOver && animationId) {
-    music.play().catch(()=>{});
+    toggleMusicBtn.textContent = "Music: ON";
+    if (music) music.play().catch(()=>{});
+  } else {
+    toggleMusicBtn.textContent = "Music: OFF";
+    if (music) music.pause();
   }
-
-} else {
-  toggleMusicBtn.textContent = "Music: OFF";
-  if (music) music.pause();
-}
 
 };
 
