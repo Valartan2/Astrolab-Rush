@@ -277,6 +277,8 @@ objectifList.style.display="flex";
   let particles = [];
   let newlyUnlockedThisRun = [];
 
+  let lastTime = 0;
+  
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
 
@@ -620,7 +622,7 @@ rocketDefinitions.forEach(rocket => {
     distance = 0;
     startTime = performance.now();
     newlyUnlockedThisRun = [];
-
+    lastTime = performance.now();
     player.y = height / 2;
     player.velocityY = 0;
     player.x = isMobile ? 75 : 150;
@@ -738,6 +740,9 @@ rocketDefinitions.forEach(rocket => {
 
   /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
+
+  let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
+  lastTime = timestamp;
     drawStars();
 
     const speedFactor = isMobile ? 0.7 : 1;
@@ -747,12 +752,15 @@ rocketDefinitions.forEach(rocket => {
     const spawnRate = 15;
     const maxMeteorites = isMobile ? 40 : 30;
 
-    if (frameCount % spawnRate === 0 && bubbles.length < maxMeteorites && !gameOver) {
-      createBubble(baseSpeed * meteorSpeedFactor);
+    frameCount += dt;
+
+if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
+  frameCount = 0;
+  createBubble(baseSpeed * meteorSpeedFactor);
     }
 
     bubbles.forEach((b, i) => {
-      b.x -= b.speed;
+      b.x -= b.speed * dt;
       if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
       if (b.x + b.radius < 0) bubbles.splice(i, 1);
     });
@@ -760,8 +768,8 @@ rocketDefinitions.forEach(rocket => {
     if (!gameOver) {
       player.velocityY += pressing ? player.gravityDown : player.gravityUp;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
-      player.y += player.velocityY;
-      player.velocityY *= 0.87;
+      player.y += player.velocityY * dt;
+      player.velocityY *= Math.pow(0.87, dt);
 
       if (player.y < player.radius) {
         player.y = player.radius;
@@ -771,7 +779,7 @@ rocketDefinitions.forEach(rocket => {
         player.velocityY = 0;
       }
 
-      distance += (baseSpeed / 60) * distanceSpeedFactor;
+      distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent = `Distance: ${formatNumber(Math.floor(distance))} m`;
 
       if (
