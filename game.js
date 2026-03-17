@@ -205,21 +205,46 @@ objectifList.style.display="flex";
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
 function resize() {
-  const scale = Math.min(
-    window.innerWidth / 800,
-    window.innerHeight / 450
-  );
+  const dpr = window.devicePixelRatio || 1;
 
-  const container = document.getElementById("gameContainer");
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-  container.style.transform =
-    `translate(-50%, -50%) scale(${scale})`;
-}
+  // 🎯 résolution de base (comme un jeu)
+  const baseWidth = 800;
+  const baseHeight = 450;
 
-window.addEventListener("resize", resize);
-resize();
-    
-  
+  // ratio écran
+  const scale = Math.min(vw / baseWidth, vh / baseHeight);
+
+  const displayWidth = baseWidth * scale;
+  const displayHeight = baseHeight * scale;
+
+  // canvas interne (logique)
+  canvas.width = baseWidth * dpr;
+  canvas.height = baseHeight * dpr;
+
+  // canvas affiché
+  canvas.style.width = displayWidth + "px";
+  canvas.style.height = displayHeight + "px";
+
+  // centrer
+  canvas.style.position = "absolute";
+  canvas.style.left = (vw - displayWidth) / 2 + "px";
+  canvas.style.top = (vh - displayHeight) / 2 + "px";
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  width = baseWidth;
+  height = baseHeight;
+
+  if (player) {
+    player.x = width * 0.15;
+    if (player.y > height - player.radius) {
+      player.y = height - player.radius;
+    }
+  }
 }
 
   /* -------------------- Player -------------------- */
