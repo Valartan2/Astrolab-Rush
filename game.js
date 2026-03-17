@@ -204,22 +204,32 @@ objectifList.style.display="flex";
 
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
-  function resize() {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    width = canvas.width / dpr;
-    height = canvas.height / dpr;
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
 
-    if (player) {
-      player.x = width * 0.15;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  canvas.width = vw * dpr;
+  canvas.height = vh * dpr;
+
+  canvas.style.width = vw + "px";
+  canvas.style.height = vh + "px";
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  width = vw;
+  height = vh;
+
+  if (player) {
+    player.x = vw * 0.15;
+
+    if (player.y > vh - player.radius) {
+      player.y = vh - player.radius;
     }
   }
-  window.addEventListener("resize", resize);
+}
 
   /* -------------------- Player -------------------- */
   const player = {
