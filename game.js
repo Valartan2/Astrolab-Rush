@@ -767,7 +767,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 
     if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
-      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
+      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed * dt));
       player.y += player.velocityY * dt;
       player.velocityY *= Math.pow(0.87, dt);
 
