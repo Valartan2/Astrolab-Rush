@@ -648,7 +648,10 @@ rocketDefinitions.forEach(rocket => {
   music.play().catch(() => {});
 }
 
-    menu.style.display = "none";
+    menu.style.visibility = "hidden";
+menu.style.pointerEvents = "none";
+    menu.style.visibility = "visible";
+menu.style.pointerEvents = "auto";
     resetGame();
 
     const menuCanvas = document.getElementById("menuStars");
