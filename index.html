@@ -640,7 +640,65 @@ font-weight:bold;
     display: none !important;
   }
 }   
-    
+  @media (max-height: 500px) {
+
+  /* Scoreboard plus compact */
+  #scoreBoard {
+    top: 20%;
+    font-size: 16px;
+    padding: 12px;
+    width: 260px;
+  }
+
+  /* GAME OVER TEXTE */
+  #gameOverText {
+    top: 8%;
+    font-size: 28px;
+  }
+
+  /* BOUTONS → HORIZONTAL */
+  #rejouer,
+  #objectifsBtn,
+  #shareScore,
+  #backToMenu {
+    position: static !important;
+    transform: none !important;
+  }
+
+  /* CONTAINER FAKE (hack simple sans HTML modif) */
+  body::after {
+    content: "";
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 20;
+  }
+
+  /* on regroupe visuellement */
+  #rejouer,
+  #objectifsBtn,
+  #shareScore,
+  #backToMenu {
+    display: inline-block !important;
+    font-size: 14px;
+    padding: 8px 10px;
+    margin: 2px;
+  }
+
+  /* on force leur position */
+  #rejouer,
+  #objectifsBtn,
+  #shareScore,
+  #backToMenu {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+}
   </style>
 </head>
 <body>
