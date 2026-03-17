@@ -607,8 +607,8 @@ rocketDefinitions.forEach(rocket => {
   player.gravityUp = -2.3;
   player.maxSpeed = 13;
 } else {
-  player.gravityDown = 2.5;
-  player.gravityUp = -2.3;
+  player.gravityDown = 2.0;
+  player.gravityUp = -1.8;
   player.maxSpeed = 13;
 }
     nextGradeIndex = 1;
