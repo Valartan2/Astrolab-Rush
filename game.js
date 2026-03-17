@@ -1,8 +1,5 @@
 (() => {
-  // ✅ FIX iOS fullscreen
-  setTimeout(() => {
-    window.scrollTo(0, 1);
-  }, 100);
+  
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
@@ -648,6 +645,11 @@ rocketDefinitions.forEach(rocket => {
   music.play().catch(() => {});
 }
 
+   setTimeout(() => {
+  window.scrollTo(0, 1);
+}, 50);
+
+    
     menu.style.visibility = "hidden";
 menu.style.pointerEvents = "none";
     menu.style.visibility = "visible";
