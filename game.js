@@ -204,7 +204,7 @@ objectifList.style.display="flex";
   }
 
   const starImage = new Image();
-  starImage.src = "star.png"; 
+  starImage.src = "Star.png"; 
 
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
