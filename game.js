@@ -878,7 +878,9 @@ function createStar(speed) {
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
     const speedLevel = Math.floor(distance / 500);
-    const baseSpeed = Math.min(CONSTANT_SPEED + speedLevel * 1.5, 40) * speedFactor;
+    const timeSinceStart = (performance.now() - startTime) / 1000; // secondes
+const ramp = Math.min(timeSinceStart / 10, 1); // 10 secondes pour atteindre vitesse normale
+    const baseSpeed = (CONSTANT_SPEED * ramp + speedLevel * 1.5) * speedFactor;
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
 
