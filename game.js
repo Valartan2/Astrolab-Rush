@@ -36,7 +36,8 @@ const closeSettings = document.getElementById("closeSettings");
 
 const backToMenuBtn = document.getElementById("backToMenu");
 
-const progressBar = document.getElementById("progressBar");  
+const progressBar = document.getElementById("progressBar");
+const progressLabel = document.getElementById("progressLabel");  
   
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
@@ -770,11 +771,15 @@ function createStar(speed) {
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
+    progressBar.parentElement.style.display = "block";
+    progressLabel.style.display = "block";
   }
 
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
     playClick();
+
+   
 
     if (music && musicEnabled) {
   music.currentTime = 0;
@@ -783,6 +788,9 @@ function createStar(speed) {
 
     menu.style.display = "none";
     resetGame();
+
+    progressBar.parentElement.style.display = "block";
+progressLabel.style.display = "block";
 
     const menuCanvas = document.getElementById("menuStars");
     if (menuCanvas) menuCanvas.style.display = "none";
@@ -862,6 +870,8 @@ function createStar(speed) {
   if (menuCanvas) menuCanvas.style.display = "block";
 
   distanceDisplay.style.display = "none";
+  progressBar.parentElement.style.display = "none";
+progressLabel.style.display = "none";  
 
   drawMenuRocket();
 
@@ -1088,6 +1098,11 @@ const percent = Math.max(0, Math.min(progress, 1)) * 100;
 
 progressBar.style.width = percent + "%";
 
+const remaining = Math.floor(nextThreshold - distance);
+progressLabel.textContent = `Next: ${remaining} m`;
+
+progressBar.style.background = getFlashColor();      
+
       if (
         nextGradeIndex < gradeObjectifs.length &&
         distance >= gradeObjectifs[nextGradeIndex].threshold
@@ -1114,6 +1129,10 @@ progressBar.style.width = percent + "%";
           gameOverText.style.display = "block";
           distanceDisplay.style.display = "none";
 
+          progressBar.parentElement.style.display = "none";
+progressLabel.style.display = "none";
+          
+          
           afficherTableauScore(distance);
 
           rejouerBtn.style.display = "block";
