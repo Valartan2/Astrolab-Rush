@@ -219,6 +219,26 @@ magnetImage.src = "magnet.png";
   const shieldImage = new Image();
 shieldImage.src = "shield.png";
 
+
+  // 💥 EXPLOSION SPRITE
+const explosionFrames = [];
+
+const explosionPaths = [
+  "explosion/Explosion1.png",
+  "explosion/Explosion2.png",
+  "explosion/Explosion3.png",
+  "explosion/Explosion4.png",
+  "explosion/Explosion3.png",
+  "explosion/Explosion2.png",
+  "explosion/Explosion1.png"
+];
+
+explosionPaths.forEach(path => {
+  const img = new Image();
+  img.src = path;
+  explosionFrames.push(img);
+});
+
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -291,7 +311,7 @@ shieldImage.src = "shield.png";
   let startTime = 0;
   let nextGradeIndex = 1;
   let animationId = null;
-  let particles = [];
+  let explosions = [];
   let newlyUnlockedThisRun = [];
 
   let lastTime = 0;
@@ -542,41 +562,17 @@ function createStar(speed) {
     return Math.sqrt(dx * dx + dy * dy) < c.radius + b.radius;
   }
 
-  /* -------------------- Particles -------------------- */
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.radius = Math.random() * 3 + 2;
-      this.color = "orange";
-      this.speedX = (Math.random() - 0.5) * 5;
-      this.speedY = (Math.random() - 0.5) * 5;
-      this.alpha = 1;
-    }
+  // 💥 EXPLOSION SYSTEM
+function createExplosion(x, y) {
+  explosions.push({
+    x: x,
+    y: y,
+    frame: 0,
+    timer: 0
+  });
+}
 
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.alpha -= 0.02;
-    }
-
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  function createExplosion(x, y) {
-    for (let i = 0; i < 30; i++) {
-      particles.push(new Particle(x, y));
-    }
-  }
-
+  
   /* -------------------- Drawing -------------------- */
   function drawFlame(x, y) {
     const pulse = Math.sin(flamePulse) * 0.5 + 0.5;
@@ -639,6 +635,22 @@ function createStar(speed) {
     ctx.drawImage(b.image, -b.radius, -b.radius, b.radius * 2, b.radius * 2);
     ctx.restore();
   }
+
+  function drawExplosions() {
+  explosions.forEach(e => {
+    const img = explosionFrames[e.frame];
+
+    const size = 100;
+
+    ctx.drawImage(
+      img,
+      e.x - size / 2,
+      e.y - size / 2,
+      size,
+      size
+    );
+  });
+}
 
    function drawMagnet(m) {
   if (!magnetImage.complete || magnetImage.naturalWidth === 0) return;
@@ -891,6 +903,22 @@ progressLabel.style.display = "none";
   dt = Math.min(dt, 1.5);  
   lastTime = timestamp;
     drawStars();
+
+    // 💥 UPDATE EXPLOSIONS
+for (let i = explosions.length - 1; i >= 0; i--) {
+  const e = explosions[i];
+
+  e.timer++;
+
+  if (e.timer > 2) {
+    e.frame++;
+    e.timer = 0;
+  }
+
+  if (e.frame >= explosionFrames.length) {
+    explosions.splice(i, 1);
+  }
+}
 
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
@@ -1150,11 +1178,7 @@ progressLabel.style.display = "none";
       }
     }
 
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    particles = particles.filter(p => p.alpha > 0);
+   
 
     if (magnetActive) {
   if (performance.now() - magnetTimer > magnetDuration) {
@@ -1227,7 +1251,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver || particles.length > 0) {
+    if (!gameOver || explosions.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
