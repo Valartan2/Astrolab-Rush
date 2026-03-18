@@ -54,7 +54,7 @@ const backToMenuBtn = document.getElementById("backToMenu");
   if (dist < player.radius + s.size) {
   starScore += 1;
 
-  const starSound = new Audio("star.mp3");
+  const starSound = new Audio("starsound.mp3");
 starSound.volume = 0.4;
 
   showSuccessBanner("⭐ +1");
