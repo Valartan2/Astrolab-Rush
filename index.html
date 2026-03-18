@@ -615,33 +615,47 @@ font-weight:bold;
   box-shadow: 6px 6px 0 black;
 }   
 
-
-
 #progressLabel {
   position: absolute;
-  top: 45px;
+  top: 40px;
   left: 20px;
   font-size: 14px;
   color: white;
   font-weight: bold;
   text-shadow: 2px 2px 0 black;
   z-index: 10;
+  display: none;
 }
 
+/* 🔥 LE PLUS IMPORTANT */
 #progressContainer {
-  display: none; /* 👈 important */
+  position: absolute;
+  top: 65px;
+  left: 20px;
+  width: 220px;
+  height: 20px;
+
+  background: rgba(255,255,255,0.2);
+  border: 3px solid black;
+  border-radius: 12px;
+
+  overflow: hidden;
+  box-shadow: 3px 3px 0 black;
+
+  z-index: 10;
+  display: none;
 }
 
-#progressLabel {
-  display: none; /* 👈 important */
-}
-    
 #progressBar {
   height: 100%;
   width: 0%;
+
   background: linear-gradient(to right, #00ffcc, #00ccff);
-  transition: width 0.1s linear;
-}   
+
+  transition: width 0.1s linear, background 0.3s ease;
+}
+
+  
     
   </style>
 </head>
