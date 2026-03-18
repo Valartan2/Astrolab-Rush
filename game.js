@@ -726,6 +726,8 @@ function createStar(speed) {
       animationId = null;
     }
 
+    if (!lastTime) lastTime = timestamp;
+
     if (isMobile) {
   player.gravityDown = 2.5;
   player.gravityUp = -2.3;
