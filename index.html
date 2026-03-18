@@ -615,24 +615,27 @@ font-weight:bold;
   box-shadow: 6px 6px 0 black;
 }   
 
- #progressContainer {
+
+
+#progressLabel {
   position: absolute;
-  top: 70px;
+  top: 45px;
   left: 20px;
-  width: 220px;
-  height: 18px;
-  background: #222;
-  border: 3px solid black;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 3px 3px 0 black;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 black;
   z-index: 10;
 }
-    #progressContainer,
-#progressLabel {
-  display: none;
+
+#progressContainer {
+  display: none; /* 👈 important */
 }
 
+#progressLabel {
+  display: none; /* 👈 important */
+}
+    
 #progressBar {
   height: 100%;
   width: 0%;
@@ -670,6 +673,7 @@ font-weight:bold;
 
   <div id="distance">Distance: 0 m</div>
 
+  <div id="progressLabel">Next Grade</div>
   <div id="progressContainer">
   <div id="progressBar"></div>
 </div>
