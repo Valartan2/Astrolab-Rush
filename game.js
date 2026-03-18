@@ -1174,7 +1174,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver) {
+    if (!gameOver || particles.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
    }
   }
