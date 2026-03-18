@@ -314,6 +314,8 @@ let shieldRemaining = 0;
 
   let lastShieldSpawn = 0;
 let shieldCooldown = 20000;
+
+ let meteorDestroyed = 0;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -758,6 +760,7 @@ function createStar(speed) {
     pressing = false;
     lastMagnetSpawn = performance.now();
     lastShieldSpawn = performance.now();
+    meteorDestroyed = 0;
 
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
@@ -928,10 +931,15 @@ if (
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (shieldActive && dist < player.radius + 80) {
-    createExplosion(b.x, b.y);
-    bubbles.splice(i, 1);
-    continue;
-  }
+  createExplosion(b.x, b.y);
+
+  meteorDestroyed++; // ✅ AJOUT
+
+  showSuccessBanner("💥 +1"); // optionnel (feedback visuel)
+
+  bubbles.splice(i, 1);
+  continue;
+}
 
   if (b.y > height - b.radius || b.y < b.radius) {
     b.direction *= -1;
@@ -1058,7 +1066,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
-  `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore}`;
+  ``Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
