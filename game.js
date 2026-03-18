@@ -54,10 +54,8 @@ const backToMenuBtn = document.getElementById("backToMenu");
   if (dist < player.radius + s.size) {
   starScore += 1;
 
-  const sound = starSound.cloneNode();
-sound.volume = 0.4;
-sound.playbackRate = 0.9 + Math.random() * 0.2;
-sound.play().catch(()=>{});
+  const starSound = new Audio("star.mp3");
+starSound.volume = 0.4;
 
   showSuccessBanner("⭐ +1");
   starsCollectibles.splice(i, 1);
