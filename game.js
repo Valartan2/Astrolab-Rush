@@ -208,7 +208,11 @@ objectifList.style.display="flex";
   }
 
   const starImage = new Image();
-  starImage.src = "star.png"; 
+starImage.src = "star.png";
+
+// 🧲 AIMANT IMAGE
+const magnetImage = new Image();
+magnetImage.src = "magnet.png";
 
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
