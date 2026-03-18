@@ -54,14 +54,6 @@ starSound.volume = 0.4;
   const music = document.getElementById("gameMusic");
   if (music) music.volume = 0.3;
 
-  if (dist < player.radius + s.size) {
-  starScore += 1;
-
-  
-
-  showSuccessBanner("⭐ +1");
-  starsCollectibles.splice(i, 1);
-}
   
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
