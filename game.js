@@ -1177,34 +1177,10 @@ progressBar.style.background = getFlashColor();
 
     }, 300);
 
-    return; // 🔥 TRÈS IMPORTANT (remplace break)
+    break;
   }
 }
 
-          if (music) music.pause();
-          gameOverText.style.display = "block";
-          distanceDisplay.style.display = "none";
-
-          progressBar.parentElement.style.display = "none";
-progressLabel.style.display = "none";
-          
-         if (percent > 85) {
-  progressBar.style.boxShadow = "0 0 10px white";
-} else {
-  progressBar.style.boxShadow = "none";
-}
-
-          
-          afficherTableauScore(distance);
-
-          rejouerBtn.style.display = "block";
-          shareBtn.style.display = "block";
-          objectifsBtn.style.display = "block";
-          backToMenuBtn.style.display = "block";
-          break;
-        }
-      }
-    }
 
    
 
