@@ -1132,6 +1132,12 @@ progressBar.style.background = getFlashColor();
           progressBar.parentElement.style.display = "none";
 progressLabel.style.display = "none";
           
+         if (percent > 85) {
+  progressBar.style.boxShadow = "0 0 10px white";
+} else {
+  progressBar.style.boxShadow = "none";
+}
+
           
           afficherTableauScore(distance);
 
