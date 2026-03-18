@@ -935,7 +935,7 @@ if (
 
   meteorDestroyed++; // ✅ AJOUT
 
-  showSuccessBanner("💥 +1"); // optionnel (feedback visuel)
+  
 
   bubbles.splice(i, 1);
   continue;
