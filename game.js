@@ -756,7 +756,7 @@ function createExplosion(x, y) {
     nextGradeIndex = 1;
     player.radius = 30;
     bubbles = [];
-    particles = [];
+    explosions = [];
     starsCollectibles = [];
     starScore = 0;
     magnets = [];
@@ -864,7 +864,7 @@ progressLabel.style.display = "block";
   // reset visuel
   gameOver = false;
   bubbles = [];
-  particles = [];
+  explosions = [];
 
   // cacher UI game
   gameOverText.style.display = "none";
@@ -1203,6 +1203,13 @@ starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
+
+
+    // 💥 DRAW EXPLOSIONS
+ctx.save();
+ctx.globalCompositeOperation = "lighter";
+drawExplosions();
+ctx.restore();
 
     // 🛡️ SHIELD (visuel + clignotement)
 if (shieldActive) {
