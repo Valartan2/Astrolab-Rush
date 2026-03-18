@@ -872,13 +872,14 @@ function createStar(speed) {
   function gameLoop(timestamp) {
 
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
+  dt = Math.min(dt, 1.5);  
   lastTime = timestamp;
     drawStars();
 
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
     const speedLevel = Math.floor(distance / 500);
-    const baseSpeed = Math.min(CONSTANT_SPEED + speedLevel * 1.5, 40) * speedFactor;
+    const baseSpeed = Math.min(CONSTANT_SPEED + speedLevel * 1.2, 28) * speedFactor;
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
 
@@ -1041,7 +1042,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
       
     if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
-      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed * dt));
+      player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
       player.velocityY *= Math.pow(0.87, dt);
 
