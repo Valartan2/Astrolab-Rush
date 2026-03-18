@@ -853,8 +853,14 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   createStar(baseSpeed);
 }
 
-    if (Math.random() < 0.005 && !gameOver && !magnetActive) {
+if (
+  !gameOver &&
+  !magnetActive &&
+  performance.now() - lastMagnetSpawn > magnetCooldown &&
+  Math.random() < 0.02
+) {
   createMagnet(baseSpeed);
+  lastMagnetSpawn = performance.now();
 }
     bubbles.forEach((b, i) => {
       b.x -= b.speed * dt;
