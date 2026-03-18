@@ -302,6 +302,12 @@ magnetImage.src = "magnet.png";
   let lastMagnetSpawn = 0;
   let magnetCooldown = 15000; // 15 secondes minimum
 
+  let shieldActive = false;
+let shieldTimer = 0;
+let shieldDuration = 6000;
+let shields = [];
+
+
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -510,6 +516,15 @@ function createStar(speed) {
     speed: speed * 0.8
   });
 }
+
+  function createShield(speed) {
+  shields.push({
+    x: width + 40,
+    y: Math.random() * (height - 80) + 40,
+    size: 25,
+    speed: speed * 0.8
+  });
+}
   
   function isColliding(c, b) {
     const dx = c.x - b.x;
@@ -630,6 +645,21 @@ function createStar(speed) {
     m.size * 2,
     m.size * 2
   );
+
+  ctx.restore();
+}
+
+ function drawShield(s) {
+  ctx.save();
+
+  ctx.fillStyle = "#00ffcc";
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("🛡️", s.x, s.y + 5);
 
   ctx.restore();
 }
@@ -863,11 +893,40 @@ if (
   createMagnet(baseSpeed);
   lastMagnetSpawn = performance.now();
 }
-    bubbles.forEach((b, i) => {
-      b.x -= b.speed * dt;
-      if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
-      if (b.x + b.radius < 0) bubbles.splice(i, 1);
-    });
+  if (
+  !gameOver &&
+  !shieldActive &&
+  shields.length === 0 &&
+  Math.random() < 0.002
+) {
+  createShield(baseSpeed);
+}
+
+    
+    for (let i = bubbles.length - 1; i >= 0; i--) {
+  const b = bubbles[i];
+
+  b.x -= b.speed * dt;
+
+  // 🛡️ SHIELD destruction
+  const dx = player.x - b.x;
+  const dy = player.y - b.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (shieldActive && dist < player.radius + 80) {
+    createExplosion(b.x, b.y);
+    bubbles.splice(i, 1);
+    continue;
+  }
+
+  if (b.y > height - b.radius || b.y < b.radius) {
+    b.direction *= -1;
+  }
+
+  if (b.x + b.radius < 0) {
+    bubbles.splice(i, 1);
+  }
+}
 
     // ⭐ étoiles mouvement + collision
 for (let i = starsCollectibles.length - 1; i >= 0; i--) {
@@ -883,6 +942,22 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x -= s.speed * dt;
   }
 
+if (shieldActive) {
+  ctx.save();
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = "#00ffcc";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+  if (shieldActive) {
+  if (performance.now() - shieldTimer > shieldDuration) {
+    shieldActive = false;
+  }
+}
+  
   const dx = player.x - s.x;
   const dy = player.y - s.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
@@ -926,6 +1001,31 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 
   if (m.x < -50) {
     magnets.splice(i, 1);
+  }
+}
+
+    // 🛡️ SHIELD
+for (let i = shields.length - 1; i >= 0; i--) {
+  const s = shields[i];
+
+  s.x -= s.speed * dt;
+
+  const dx = player.x - s.x;
+  const dy = player.y - s.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + s.size) {
+    shieldActive = true;
+    shieldTimer = performance.now();
+
+    showSuccessBanner("🛡️ SHIELD!");
+
+    shields.splice(i, 1);
+    continue;
+  }
+
+  if (s.x < -50) {
+    shields.splice(i, 1);
   }
 }
 
@@ -1010,6 +1110,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
+shields.forEach(drawShield);
     
     if (!gameOver) {
       drawRocket(player.x, player.y, player.radius);
