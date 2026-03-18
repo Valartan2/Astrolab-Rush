@@ -310,7 +310,7 @@ let shieldTimer = 0;
 let shieldDuration = 6000;
 let shields = [];
 
-
+let shieldRemaining = 0;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -946,19 +946,16 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x -= s.speed * dt;
   }
 
-if (shieldActive) {
-  ctx.save();
-  ctx.globalAlpha = 0.2;
-  ctx.fillStyle = "#00ffcc";
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
+
 
   if (shieldActive) {
-  if (performance.now() - shieldTimer > shieldDuration) {
+  shieldRemaining = shieldDuration - (performance.now() - shieldTimer);
+
+  if (shieldRemaining <= 0) {
     shieldActive = false;
+    shieldRemaining = 0;
+
+    showSuccessBanner("⚠️ SHIELD OFF");
   }
 }
   
@@ -1120,6 +1117,17 @@ shields.forEach(drawShield);
       drawRocket(player.x, player.y, player.radius);
     }
 
+    // 🛡️ SHIELD VISUEL (UN SEUL DRAW PROPRE)
+if (shieldActive) {
+  ctx.save();
+  ctx.globalAlpha = 0.25;
+  ctx.fillStyle = "#00ffcc";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+    
     frameCount++;
     flamePulse += 0.15;
 
