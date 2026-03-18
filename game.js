@@ -909,17 +909,6 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 
     showSuccessBanner("🧲 MAGNET!");
 
-    for (let j = 0; j < bubbles.length; j++) {
-      const b = bubbles[j];
-      starsCollectibles.push({
-        x: b.x,
-        y: b.y,
-        size: 20,
-        speed: 0
-      });
-    }
-
-    bubbles = [];
 
     magnets.splice(i, 1);
     continue;
