@@ -931,10 +931,10 @@ for (let i = explosions.length - 1; i >= 0; i--) {
 
     frameCount += dt;
 
-if (frameCount >= spawnRate && bubbles.length < maxMeteorites && gameOver !== true)
+if (frameCount >= spawnRate && bubbles.length < maxMeteorites && gameOver !== true) {
   frameCount = 0;
   createBubble(baseSpeed * meteorSpeedFactor);
-    }
+}
 
     if (Math.random() < 0.02 && gameOver !== true) {
   createStar(baseSpeed);
