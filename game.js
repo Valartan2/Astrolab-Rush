@@ -856,6 +856,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 if (
   !gameOver &&
   !magnetActive &&
+  magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > magnetCooldown &&
   Math.random() < 0.02
 ) {
