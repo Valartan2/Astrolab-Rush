@@ -48,7 +48,7 @@ const backToMenuBtn = document.getElementById("backToMenu");
   levelUpSound.preload = "auto";
   levelUpSound.load();
 
-  const starSound = new Audio("starsound.mp3");
+  const starSound = new Audio("starSound.mp3");
 starSound.volume = 0.4;
   
   const music = document.getElementById("gameMusic");
