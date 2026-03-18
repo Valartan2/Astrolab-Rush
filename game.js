@@ -931,17 +931,17 @@ for (let i = explosions.length - 1; i >= 0; i--) {
 
     frameCount += dt;
 
-if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
+if (frameCount >= spawnRate && bubbles.length < maxMeteorites && gameOver !== true)
   frameCount = 0;
   createBubble(baseSpeed * meteorSpeedFactor);
     }
 
-    if (Math.random() < 0.02 && !gameOver) {
+    if (Math.random() < 0.02 && gameOver !== true) {
   createStar(baseSpeed);
 }
 
 if (
-  !gameOver &&
+  gameOver !== true &&
   !magnetActive &&
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > magnetCooldown &&
@@ -951,7 +951,7 @@ if (
   lastMagnetSpawn = performance.now();
 }
   if (
-  !gameOver &&
+  gameOver !== true &&
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > shieldCooldown &&
@@ -1091,7 +1091,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
   ctx.restore();
 }
       
-    if (gameOver === false) {
+    if (gameOver !== true) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
@@ -1233,7 +1233,7 @@ if (shieldActive) {
   ctx.restore();
 }
 
-if (!gameOver) {
+if (gameOver !== true) {
   drawRocket(player.x, player.y, player.radius);
 }
    
