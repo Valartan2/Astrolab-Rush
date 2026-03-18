@@ -214,6 +214,9 @@ starImage.src = "star.png";
 const magnetImage = new Image();
 magnetImage.src = "magnet.png";
 
+  const shieldImage = new Image();
+shieldImage.src = "shield.png";
+
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -650,16 +653,17 @@ function createStar(speed) {
 }
 
  function drawShield(s) {
+  if (!shieldImage.complete || shieldImage.naturalWidth === 0) return;
+
   ctx.save();
 
-  ctx.fillStyle = "#00ffcc";
-  ctx.beginPath();
-  ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText("🛡️", s.x, s.y + 5);
+  ctx.drawImage(
+    shieldImage,
+    s.x - s.size,
+    s.y - s.size,
+    s.size * 2,
+    s.size * 2
+  );
 
   ctx.restore();
 }
