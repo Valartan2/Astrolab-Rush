@@ -918,7 +918,7 @@ if (
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
 
-  b.x -= b.speed * dt;
+  b.x -= b.speed * Math.min(dt, 1.2);
 
   // 🛡️ SHIELD destruction
   const dx = player.x - b.x;
