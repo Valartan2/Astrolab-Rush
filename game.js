@@ -640,6 +640,8 @@ function createExplosion(x, y) {
   explosions.forEach(e => {
     const img = explosionFrames[e.frame];
 
+    if (!img || !img.complete) return; // 🔥 FIX CRITIQUE
+
     const size = 100;
 
     ctx.drawImage(
@@ -1149,32 +1151,34 @@ progressBar.style.background = getFlashColor();
       }
 
       for (let i = 0; i < bubbles.length; i++) {
-       if (isColliding(player, bubbles[i])) {
 
-  createExplosion(player.x, player.y);
+  if (isColliding(player, bubbles[i])) {
 
-  gameOver = "exploding"; // 👈 IMPORTANT
+    createExplosion(player.x, player.y);
 
-  setTimeout(() => {
-    gameOver = true;
+    gameOver = "exploding";
 
-    if (music) music.pause();
-    gameOverText.style.display = "block";
-    distanceDisplay.style.display = "none";
+    setTimeout(() => {
+      gameOver = true;
 
-    progressBar.parentElement.style.display = "none";
-    progressLabel.style.display = "none";
+      if (music) music.pause();
+      gameOverText.style.display = "block";
+      distanceDisplay.style.display = "none";
 
-    afficherTableauScore(distance);
+      progressBar.parentElement.style.display = "none";
+      progressLabel.style.display = "none";
 
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-    objectifsBtn.style.display = "block";
-    backToMenuBtn.style.display = "block";
+      afficherTableauScore(distance);
 
-  }, 300); // durée explosion
+      rejouerBtn.style.display = "block";
+      shareBtn.style.display = "block";
+      objectifsBtn.style.display = "block";
+      backToMenuBtn.style.display = "block";
 
-  break;
+    }, 300);
+
+    return; // 🔥 TRÈS IMPORTANT (remplace break)
+  }
 }
 
           if (music) music.pause();
@@ -1229,13 +1233,12 @@ bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
 
 
-    // 💥 DRAW EXPLOSIONS
-  if (!img.complete) return;
+   
+  // 💥 DRAW EXPLOSIONS
 ctx.save();
-ctx.globalCompositeOperation = "lighter";
 drawExplosions();
 ctx.restore();
-
+  
     // 🛡️ SHIELD (visuel + clignotement)
 if (shieldActive) {
 
