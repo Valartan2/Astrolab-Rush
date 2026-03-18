@@ -613,17 +613,20 @@ function createStar(speed) {
   }
 
    function drawMagnet(m) {
+  if (!magnetImage.complete || magnetImage.naturalWidth === 0) return;
+
   ctx.save();
 
-  ctx.fillStyle = "#00cfff";
-  ctx.beginPath();
-  ctx.arc(m.x, m.y, m.size, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#ffd700"; // glow gold
 
-  ctx.fillStyle = "white";
-  ctx.font = "20px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("🧲", m.x, m.y + 6);
+  ctx.drawImage(
+    magnetImage,
+    m.x - m.size,
+    m.y - m.size,
+    m.size * 2,
+    m.size * 2
+  );
 
   ctx.restore();
 }
@@ -920,6 +923,16 @@ magnets.forEach((m, i) => {
   if (m.x < -50) magnets.splice(i, 1);
 });
 
+  if (magnetActive) {
+  ctx.save();
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = "#00cfff";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 120, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+      
     if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed * dt));
