@@ -751,6 +751,8 @@ function createStar(speed) {
     player.velocityY = 0;
     player.x = isMobile ? 75 : 150;
     pressing = false;
+    lastMagnetSpawn = performance.now();
+
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
@@ -982,6 +984,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
   if (dist < player.radius + m.size) {
     magnetActive = true;
     magnetTimer = performance.now();
+    lastMagnetSpawn = performance.now();
 
     showSuccessBanner("🧲 MAGNET!");
 
