@@ -1066,7 +1066,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
-  ``Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+  `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
