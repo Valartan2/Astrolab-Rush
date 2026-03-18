@@ -51,6 +51,18 @@ const backToMenuBtn = document.getElementById("backToMenu");
   const music = document.getElementById("gameMusic");
   if (music) music.volume = 0.3;
 
+  if (dist < player.radius + s.size) {
+  starScore += 1;
+
+  const sound = starSound.cloneNode();
+sound.volume = 0.4;
+sound.playbackRate = 0.9 + Math.random() * 0.2;
+sound.play().catch(()=>{});
+
+  showSuccessBanner("⭐ +1");
+  starsCollectibles.splice(i, 1);
+}
+  
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
  
@@ -821,10 +833,15 @@ starsCollectibles.forEach((s, i) => {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < player.radius + s.size) {
-    starScore += 1;
-    showSuccessBanner("⭐ +1");
-    starsCollectibles.splice(i, 1);
-  }
+  starScore += 1;
+
+  // 🔊 son
+  starSound.currentTime = 0;
+  starSound.play().catch(()=>{});
+
+  showSuccessBanner("⭐ +1");
+  starsCollectibles.splice(i, 1);
+}
 
   if (s.x < -50) {
     starsCollectibles.splice(i, 1);
