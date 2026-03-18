@@ -48,14 +48,16 @@ const backToMenuBtn = document.getElementById("backToMenu");
   levelUpSound.preload = "auto";
   levelUpSound.load();
 
+  const starSound = new Audio("starsound.mp3");
+starSound.volume = 0.4;
+  
   const music = document.getElementById("gameMusic");
   if (music) music.volume = 0.3;
 
   if (dist < player.radius + s.size) {
   starScore += 1;
 
-  const starSound = new Audio("starsound.mp3");
-starSound.volume = 0.4;
+  
 
   showSuccessBanner("⭐ +1");
   starsCollectibles.splice(i, 1);
