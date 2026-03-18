@@ -613,7 +613,28 @@ font-weight:bold;
   background: #ff8800;
   transform: translateX(-50%) translateY(-2px);
   box-shadow: 6px 6px 0 black;
-}    
+}   
+
+ #progressContainer {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  width: 220px;
+  height: 18px;
+  background: #222;
+  border: 3px solid black;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 black;
+  z-index: 10;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #00ffcc, #00ccff);
+  transition: width 0.1s linear;
+}   
     
   </style>
 </head>
@@ -644,6 +665,10 @@ font-weight:bold;
   <canvas id="game"></canvas>
 
   <div id="distance">Distance: 0 m</div>
+
+  <div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
 
   <!-- 🆕 Tableau de score -->
   <div id="scoreBoard">
