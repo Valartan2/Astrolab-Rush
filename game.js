@@ -949,13 +949,8 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
 
 
   if (shieldActive) {
-  shieldRemaining = shieldDuration - (performance.now() - shieldTimer);
-
-  if (shieldRemaining <= 0) {
+  if (performance.now() - shieldTimer > shieldDuration) {
     shieldActive = false;
-    shieldRemaining = 0;
-
-    showSuccessBanner("⚠️ SHIELD OFF");
   }
 }
   
