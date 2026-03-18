@@ -932,6 +932,7 @@ if (
   }
 }
 
+    
     // ⭐ étoiles mouvement + collision
 for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const s = starsCollectibles[i];
@@ -947,12 +948,6 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   }
 
 
-
-  if (shieldActive) {
-  if (performance.now() - shieldTimer > shieldDuration) {
-    shieldActive = false;
-  }
-}
   
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1102,15 +1097,46 @@ for (let i = shields.length - 1; i >= 0; i--) {
   }
 }
 
+    // 🛡️ UPDATE SHIELD TIMER (MANQUANT)
+if (shieldActive) {
+  shieldRemaining = shieldDuration - (performance.now() - shieldTimer);
+
+  if (shieldRemaining <= 0) {
+    shieldActive = false;
+    shieldRemaining = 0;
+
+    showSuccessBanner("⚠️ SHIELD OFF");
+  }
+}
+
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
-    
-    if (!gameOver) {
-      drawRocket(player.x, player.y, player.radius);
-    }
+
+    // 🛡️ SHIELD (visuel + clignotement)
+if (shieldActive) {
+
+  let alpha = 0.25;
+
+  if (shieldRemaining < 1000) {
+    alpha = Math.sin(performance.now() / 80) * 0.5 + 0.5;
+  }
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = "#00ffcc";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+if (!gameOver) {
+  drawRocket(player.x, player.y, player.radius);
+}
+   
 
     // 🛡️ SHIELD VISUEL (UN SEUL DRAW PROPRE)
 if (shieldActive) {
