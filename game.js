@@ -852,7 +852,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 
     if (Math.random() < 0.005 && !gameOver && !magnetActive) {
   createMagnet(baseSpeed);
-
+}
     bubbles.forEach((b, i) => {
       b.x -= b.speed * dt;
       if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
@@ -994,6 +994,11 @@ magnets.forEach((m, i) => {
     });
     particles = particles.filter(p => p.alpha > 0);
 
+    if (magnetActive) {
+  if (performance.now() - magnetTimer > magnetDuration) {
+    magnetActive = false;
+  }
+}
 
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
@@ -1012,11 +1017,7 @@ bubbles.forEach(drawMeteorite);
     }
   }
 
-   if (magnetActive) {
-  if (performance.now() - magnetTimer > magnetDuration) {
-    magnetActive = false;
-  }
-}
+ 
 
 
   /* -------------------- Menu Stars Background -------------------- */
