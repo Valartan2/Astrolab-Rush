@@ -35,7 +35,8 @@ const resetGameBtn = document.getElementById("resetGameBtn");
 const closeSettings = document.getElementById("closeSettings");
 
 const backToMenuBtn = document.getElementById("backToMenu");
- 
+
+const progressBar = document.getElementById("progressBar");  
   
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
@@ -1067,6 +1068,25 @@ for (let i = shields.length - 1; i >= 0; i--) {
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+
+      // 🔥 PROGRESSION VERS PROCHAIN PALIER
+let currentThreshold = 0;
+let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
+
+for (let i = 0; i < gradeObjectifs.length; i++) {
+  if (distance >= gradeObjectifs[i].threshold) {
+    currentThreshold = gradeObjectifs[i].threshold;
+
+    if (i + 1 < gradeObjectifs.length) {
+      nextThreshold = gradeObjectifs[i + 1].threshold;
+    }
+  }
+}
+
+const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
+const percent = Math.max(0, Math.min(progress, 1)) * 100;
+
+progressBar.style.width = percent + "%";
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
