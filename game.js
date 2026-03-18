@@ -293,6 +293,12 @@ magnetImage.src = "magnet.png";
 
   let starsCollectibles = [];
   let starScore = 0;
+
+  let magnetActive = false;
+  let magnetTimer = 0;
+  let magnetDuration = 15000;
+  let magnets = [];
+
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -492,7 +498,16 @@ function createStar(speed) {
     speed: speed * 0.8
   });
 }
-
+  
+  function createMagnet(speed) {
+  magnets.push({
+    x: width + 40,
+    y: Math.random() * (height - 80) + 40,
+    size: 25,
+    speed: speed * 0.8
+  });
+}
+  
   function isColliding(c, b) {
     const dx = c.x - b.x;
     const dy = c.y - b.y;
@@ -597,6 +612,22 @@ function createStar(speed) {
     ctx.restore();
   }
 
+   function drawMagnet(m) {
+  ctx.save();
+
+  ctx.fillStyle = "#00cfff";
+  ctx.beginPath();
+  ctx.arc(m.x, m.y, m.size, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("🧲", m.x, m.y + 6);
+
+  ctx.restore();
+}
+
   function drawStars() {
     ctx.fillStyle = getSpaceColor();
     ctx.fillRect(0, 0, width, height);
@@ -667,6 +698,8 @@ function createStar(speed) {
     particles = [];
     starsCollectibles = [];
     starScore = 0;
+    magnets = [];
+    magnetActive = false;
     frameCount = 0;
     flamePulse = 0;
     gameOver = false;
@@ -814,6 +847,9 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   createStar(baseSpeed);
 }
 
+    if (Math.random() < 0.005 && !gameOver && !magnetActive) {
+  createMagnet(baseSpeed);
+
     bubbles.forEach((b, i) => {
       b.x -= b.speed * dt;
       if (b.y > height - b.radius || b.y < b.radius) b.direction *= -1;
@@ -822,7 +858,15 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 
     // ⭐ étoiles mouvement + collision
 starsCollectibles.forEach((s, i) => {
+  if (magnetActive) {
+  const dx = player.x - s.x;
+  const dy = player.y - s.y;
+
+  s.x += dx * 0.08;
+  s.y += dy * 0.08;
+} else {
   s.x -= s.speed * dt;
+}
 
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -842,6 +886,38 @@ starsCollectibles.forEach((s, i) => {
   if (s.x < -50) {
     starsCollectibles.splice(i, 1);
   }
+});
+
+   // 🧲 AIMANT
+magnets.forEach((m, i) => {
+  m.x -= m.speed * dt;
+
+  const dx = player.x - m.x;
+  const dy = player.y - m.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + m.size) {
+    magnetActive = true;
+    magnetTimer = performance.now();
+
+    showSuccessBanner("🧲 MAGNET!");
+
+    // transforme météorites en étoiles
+    bubbles.forEach(b => {
+      starsCollectibles.push({
+        x: b.x,
+        y: b.y,
+        size: 20,
+        speed: 0
+      });
+    });
+
+    bubbles = [];
+
+    magnets.splice(i, 1);
+  }
+
+  if (m.x < -50) magnets.splice(i, 1);
 });
 
     if (!gameOver) {
@@ -908,7 +984,7 @@ starsCollectibles.forEach((s, i) => {
 
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
-
+magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
     
     if (!gameOver) {
@@ -922,6 +998,12 @@ bubbles.forEach(drawMeteorite);
       animationId = requestAnimationFrame(gameLoop);
     }
   }
+
+   if (magnetActive) {
+  if (performance.now() - magnetTimer > magnetDuration) {
+    magnetActive = false;
+  }
+}
 
 
   /* -------------------- Menu Stars Background -------------------- */
