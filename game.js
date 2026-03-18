@@ -1099,7 +1099,7 @@ const percent = Math.max(0, Math.min(progress, 1)) * 100;
 progressBar.style.width = percent + "%";
 
 const remaining = Math.floor(nextThreshold - distance);
-progressLabel.textContent = `Next: ${remaining} m`;
+progressLabel.textContent = `Next Grade : ${remaining} m`;
 
 progressBar.style.background = getFlashColor();      
 
