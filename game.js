@@ -1089,7 +1089,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
   ctx.restore();
 }
       
-    if (!gameOver) {
+    if (gameOver === false) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
@@ -1149,9 +1149,33 @@ progressBar.style.background = getFlashColor();
       }
 
       for (let i = 0; i < bubbles.length; i++) {
-        if (isColliding(player, bubbles[i])) {
-          createExplosion(player.x, player.y);
-          gameOver = true;
+       if (isColliding(player, bubbles[i])) {
+
+  createExplosion(player.x, player.y);
+
+  gameOver = "exploding"; // 👈 IMPORTANT
+
+  setTimeout(() => {
+    gameOver = true;
+
+    if (music) music.pause();
+    gameOverText.style.display = "block";
+    distanceDisplay.style.display = "none";
+
+    progressBar.parentElement.style.display = "none";
+    progressLabel.style.display = "none";
+
+    afficherTableauScore(distance);
+
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+    objectifsBtn.style.display = "block";
+    backToMenuBtn.style.display = "block";
+
+  }, 300); // durée explosion
+
+  break;
+}
 
           if (music) music.pause();
           gameOverText.style.display = "block";
@@ -1206,6 +1230,7 @@ shields.forEach(drawShield);
 
 
     // 💥 DRAW EXPLOSIONS
+  if (!img.complete) return;
 ctx.save();
 ctx.globalCompositeOperation = "lighter";
 drawExplosions();
@@ -1258,7 +1283,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver || explosions.length > 0) {
+   if (gameOver !== true || explosions.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
