@@ -307,10 +307,13 @@ shieldImage.src = "shield.png";
 
   let shieldActive = false;
 let shieldTimer = 0;
-let shieldDuration = 6000;
+let shieldDuration = 15000;
 let shields = [];
 
 let shieldRemaining = 0;
+
+  let lastShieldSpawn = 0;
+let shieldCooldown = 20000;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -752,6 +755,7 @@ function createStar(speed) {
     player.x = isMobile ? 75 : 150;
     pressing = false;
     lastMagnetSpawn = performance.now();
+    lastShieldSpawn = performance.now();
 
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
@@ -903,7 +907,8 @@ if (
   !gameOver &&
   !shieldActive &&
   shields.length === 0 &&
-  Math.random() < 0.002
+  performance.now() - lastShieldSpawn > shieldCooldown &&
+  Math.random() < 0.02
 ) {
   createShield(baseSpeed);
 }
@@ -985,6 +990,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
     magnetActive = true;
     magnetTimer = performance.now();
     lastMagnetSpawn = performance.now();
+    lastShieldSpawn = performance.now();
 
     showSuccessBanner("🧲 MAGNET!");
 
