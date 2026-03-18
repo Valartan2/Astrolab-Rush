@@ -299,6 +299,9 @@ magnetImage.src = "magnet.png";
   let magnetDuration = 15000;
   let magnets = [];
 
+  let lastMagnetSpawn = 0;
+  let magnetCooldown = 15000; // 15 secondes minimum
+
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
