@@ -1122,6 +1122,16 @@ if (shieldActive) {
   ctx.fill();
   ctx.restore();
 }
+    // ⚠️ SHIELD FIN (clignote)
+if (shieldActive && shieldRemaining < 1000) {
+  ctx.save();
+  ctx.globalAlpha = Math.sin(performance.now() / 50) * 0.5 + 0.5;
+  ctx.fillStyle = "#00ffcc";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
     
     frameCount++;
     flamePulse += 0.15;
