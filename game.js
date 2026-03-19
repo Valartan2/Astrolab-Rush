@@ -1258,7 +1258,7 @@ starSound.play().catch(()=>{});
     currentLetterIndex++;
     letters.splice(i, 1);
 
-    showSuccessBanner(`🔤 ${word[currentLetterIndex - 1]}`);
+    
 
     // 🎉 MOT COMPLET
     if (currentLetterIndex >= word.length) {
