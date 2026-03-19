@@ -384,6 +384,8 @@ let letters = [];
 
   let lastLetterSpawn = 0;
 const letterInterval = 10000; // 10 secondes
+
+  let outOfFuel = false;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -922,6 +924,7 @@ function createLetter(speed) {
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
     boost = maxBoost;
+    outOfFuel = false;
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1321,7 +1324,12 @@ starSound.play().catch(()=>{});
 }
       
     if (!gameOver) {
-      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
+      if (!outOfFuel) {
+  player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
+} else {
+  // chute lourde
+  player.velocityY += 3.5 * dt;
+}
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
       player.velocityY *= Math.pow(0.87, dt);
@@ -1333,6 +1341,25 @@ starSound.play().catch(()=>{});
         player.y = height - player.radius;
         player.velocityY = 0;
       }
+
+      if (outOfFuel) {
+  createExplosion(player.x, player.y);
+  gameOver = true;
+
+  if (music) music.pause();
+
+  gameOverText.style.display = "block";
+  distanceDisplay.style.display = "none";
+
+  afficherTableauScore(distance);
+
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+  objectifsBtn.style.display = "block";
+  backToMenuBtn.style.display = "block";
+
+  return;
+}
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
@@ -1356,27 +1383,11 @@ boostLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
       // 🔋 consommation du boost
 boost -= boostDrain * dt;
 
-// game over si vide
+// 🔋 plus de fuel = chute
 if (boost <= 0) {
   boost = 0;
-  createExplosion(player.x, player.y);
-  gameOver = true;
-
-  if (music) music.pause();
-
-  gameOverText.style.display = "block";
-  distanceDisplay.style.display = "none";
-
-  afficherTableauScore(distance);
-
-  rejouerBtn.style.display = "block";
-  shareBtn.style.display = "block";
-  objectifsBtn.style.display = "block";
-  backToMenuBtn.style.display = "block";
-
-  return;
+  outOfFuel = true;
 }
-
       const displayWord = word.map((letter, index) => {
   return index < currentLetterIndex ? letter : "_";
 }).join(" ");
