@@ -235,7 +235,6 @@ const specialSources = [
   "Soyouz.png",
   "Ovni.png",
   "Starman.png",
-  "Dragon.png",
   "ISS.png"
 ];
 
@@ -587,8 +586,6 @@ function createStar(speed) {
     size = 38;
   } else if (image.src.includes("Starman")) {
     size = 32;
-  } else if (image.src.includes("Dragon")) {
-    size = 38;
   } else {
     size = 35;
   }
