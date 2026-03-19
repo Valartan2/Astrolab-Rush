@@ -894,7 +894,8 @@ function createLetter(speed) {
     lastMagnetSpawn = performance.now();
     lastShieldSpawn = performance.now();
     meteorDestroyed = 0;
-
+    currentLetterIndex = 0;
+    letters = [];
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
@@ -1250,7 +1251,8 @@ for (let i = letters.length - 1; i >= 0; i--) {
   // 🎯 COLLISION
   if (dist < player.radius + l.size) {
 
-    createExplosion(l.x, l.y);
+   starSound.currentTime = 0;
+starSound.play().catch(()=>{});
 
     currentLetterIndex++;
     letters.splice(i, 1);
