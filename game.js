@@ -579,7 +579,7 @@ function createStar(speed) {
 
   // 🎯 taille fixe par type
   if (image.src.includes("ISS")) {
-    size = 50;
+    size = 100;
   } else if (image.src.includes("Ovni")) {
     size = 35;
   } else if (image.src.includes("Soyouz")) {
