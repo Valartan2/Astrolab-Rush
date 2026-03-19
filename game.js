@@ -543,39 +543,96 @@ function createStar(speed) {
   }
 
   /* -------------------- Particles -------------------- */
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.radius = Math.random() * 3 + 2;
-      this.color = "orange";
-      this.speedX = (Math.random() - 0.5) * 5;
-      this.speedY = (Math.random() - 0.5) * 5;
-      this.alpha = 1;
-    }
+  class Explosion {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
 
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.alpha -= 0.02;
-    }
+    this.radius = 10;
+    this.maxRadius = 80;
 
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+    this.alpha = 1;
+    this.life = 0;
+
+    this.shockwave = 0;
+    this.debris = [];
+
+    // 🔥 créer des débris
+    for (let i = 0; i < 20; i++) {
+      this.debris.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        size: Math.random() * 4 + 2,
+        alpha: 1
+      });
     }
   }
+
+  update() {
+    this.life++;
+
+    this.radius += 4;
+    this.shockwave += 6;
+    this.alpha -= 0.03;
+
+    // débris
+    this.debris.forEach(d => {
+      d.x += d.vx;
+      d.y += d.vy;
+      d.alpha -= 0.03;
+    });
+  }
+
+  draw() {
+    ctx.save();
+
+    // 💥 FLASH central
+    ctx.globalAlpha = this.alpha;
+    const gradient = ctx.createRadialGradient(
+      this.x, this.y, 0,
+      this.x, this.y, this.radius
+    );
+
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(0.3, "yellow");
+    gradient.addColorStop(0.6, "orange");
+    gradient.addColorStop(1, "transparent");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 🌊 ONDE DE CHOC (anneau)
+    ctx.globalAlpha = this.alpha * 0.5;
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.shockwave, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // 🔥 DÉBRIS
+    this.debris.forEach(d => {
+      ctx.save();
+      ctx.globalAlpha = d.alpha;
+      ctx.fillStyle = "orange";
+      ctx.fillRect(d.x, d.y, d.size, d.size);
+      ctx.restore();
+    });
+  }
+
+  isDead() {
+    return this.alpha <= 0;
+  }
+}
 
   function createExplosion(x, y) {
-    for (let i = 0; i < 30; i++) {
-      particles.push(new Particle(x, y));
-    }
-  }
+  particles.push(new Explosion(x, y));
+}
 
   /* -------------------- Drawing -------------------- */
   function drawFlame(x, y) {
@@ -1151,10 +1208,11 @@ progressLabel.style.display = "none";
     }
 
     particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    particles = particles.filter(p => p.alpha > 0);
+  p.update();
+  p.draw();
+});
+
+particles = particles.filter(p => !p.isDead());
 
     if (magnetActive) {
   if (performance.now() - magnetTimer > magnetDuration) {
