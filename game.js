@@ -565,7 +565,8 @@ function createStar(speed) {
 
     ctx.beginPath();
     for (let i = 0; i < spikes * 2; i++) {
-      const r = i % 2 === 0 ? radius : innerRadius;
+      const noise = (Math.random() - 0.5) * 4;
+      const r = i % 2 === 0 ? radius + noise : innerRadius + noise;
       const angle = i * step;
 
       const x = this.x + Math.cos(angle) * r;
