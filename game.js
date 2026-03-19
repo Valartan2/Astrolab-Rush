@@ -895,7 +895,7 @@ function createLetter(speed) {
     player.x = isMobile ? 75 : 150;
     pressing = false;
     lastMagnetSpawn = performance.now();
-    lastShieldSpawn = performance.now();
+    lastShieldSpawn = performance.now() + 5000;
     meteorDestroyed = 0;
     currentLetterIndex = 0;
     letters = [];
