@@ -543,95 +543,77 @@ function createStar(speed) {
   }
 
   /* -------------------- Particles -------------------- */
-  class Explosion {
+ 
+  class StarExplosion {
   constructor(x, y) {
     this.x = x;
     this.y = y;
 
-    this.radius = 10;
-    this.maxRadius = 80;
-
-    this.alpha = 1;
     this.life = 0;
+    this.maxLife = 25;
 
-    this.shockwave = 0;
-    this.debris = [];
-
-    // 🔥 créer des débris
-    for (let i = 0; i < 20; i++) {
-      this.debris.push({
-        x: x,
-        y: y,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8,
-        size: Math.random() * 4 + 2,
-        alpha: 1
-      });
-    }
+    this.radius = 10;
   }
 
   update() {
     this.life++;
+    this.radius += 6;
+  }
 
-    this.radius += 4;
-    this.shockwave += 6;
-    this.alpha -= 0.03;
+  drawStar(radius, spikes, innerRadius, color) {
+    const step = Math.PI / spikes;
 
-    // débris
-    this.debris.forEach(d => {
-      d.x += d.vx;
-      d.y += d.vy;
-      d.alpha -= 0.03;
-    });
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++) {
+      const r = i % 2 === 0 ? radius : innerRadius;
+      const angle = i * step;
+
+      const x = this.x + Math.cos(angle) * r;
+      const y = this.y + Math.sin(angle) * r;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+
+    ctx.fillStyle = color;
+    ctx.fill();
   }
 
   draw() {
+    const progress = this.life / this.maxLife;
+
+    // easing (super important pour le rendu smooth)
+    const scale = this.radius * (1 + progress * 2);
+
     ctx.save();
 
-    // 💥 FLASH central
-    ctx.globalAlpha = this.alpha;
-    const gradient = ctx.createRadialGradient(
-      this.x, this.y, 0,
-      this.x, this.y, this.radius
-    );
+    // glow
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = "orange";
 
-    gradient.addColorStop(0, "white");
-    gradient.addColorStop(0.3, "yellow");
-    gradient.addColorStop(0.6, "orange");
-    gradient.addColorStop(1, "transparent");
+    // 🔴 couche externe (rouge)
+    this.drawStar(scale, 8, scale * 0.6, `rgba(255,0,0,${1 - progress})`);
 
-    ctx.fillStyle = gradient;
+    // 🟠 couche intermédiaire
+    this.drawStar(scale * 0.7, 8, scale * 0.4, `rgba(255,120,0,${1 - progress})`);
+
+    // 🟡 coeur
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, scale * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,0,${1 - progress})`;
     ctx.fill();
 
-    // 🌊 ONDE DE CHOC (anneau)
-    ctx.globalAlpha = this.alpha * 0.5;
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.shockwave, 0, Math.PI * 2);
-    ctx.stroke();
-
     ctx.restore();
-
-    // 🔥 DÉBRIS
-    this.debris.forEach(d => {
-      ctx.save();
-      ctx.globalAlpha = d.alpha;
-      ctx.fillStyle = "orange";
-      ctx.fillRect(d.x, d.y, d.size, d.size);
-      ctx.restore();
-    });
   }
 
   isDead() {
-    return this.alpha <= 0;
+    return this.life > this.maxLife;
   }
 }
 
-  function createExplosion(x, y) {
-  particles.push(new Explosion(x, y));
+ function createExplosion(x, y) {
+  particles.push(new StarExplosion(x, y));
 }
 
   /* -------------------- Drawing -------------------- */
