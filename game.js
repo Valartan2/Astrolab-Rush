@@ -63,6 +63,7 @@ starSound.volume = 0.4;
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 
+
   
 
 menuObjectivesBtn.onclick = () => {
@@ -221,7 +222,25 @@ magnetImage.src = "magnet.png";
   const shieldImage = new Image();
 shieldImage.src = "shield.png";
 
+  // 🔤 LETTER IMAGES
+const letterImages = {
+  "G": new Image(),
+  "A": new Image(),
+  "L": new Image(),
+  "A": new Image(),
+  "X": new Image(),
+  "Y": new Image()
+};
+
+letterImages["G"].src = "g.png";
+letterImages["A"].src = "a.png";
+letterImages["L"].src = "l.png";
+letterImages["A"].src = "a.png";  
+letterImages["X"].src = "x.png";
+letterImages["Y"].src = "y.png";
+
   const explosionFrames = [];
+
 
 for (let i = 1; i <= 8; i++) {
   const img = new Image();
@@ -346,6 +365,11 @@ let shieldCooldown = 20000;
  let meteorDestroyed = 0;
 
   let specialObstacles = [];
+
+  // 🔤 WORD SYSTEM
+const word = ["G", "A", "L", "A", "X", "Y"];
+let currentLetterIndex = 0;
+let letters = [];
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -561,6 +585,21 @@ function createStar(speed) {
     y: Math.random() * (height - 80) + 40,
     size: 25,
     speed: speed * 0.8
+  });
+}
+
+// 🔤 SPAWN LETTER
+function createLetter(speed) {
+  if (currentLetterIndex >= word.length) return;
+
+  const letter = word[currentLetterIndex];
+
+  letters.push({
+    x: width + 50,
+    y: Math.random() * (height - 100) + 50,
+    size: 35,
+    speed: speed * 0.7,
+    letter: letter
   });
 }
   
@@ -1027,6 +1066,10 @@ if (
   createShield(baseSpeed);
 }
 
+    // 🔤 SPAWN LETTER (rare)
+if (!gameOver && letters.length === 0 && Math.random() < 0.005) {
+  createLetter(baseSpeed);
+}
     
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
@@ -1188,6 +1231,46 @@ for (let i = shields.length - 1; i >= 0; i--) {
   }
 }
 
+    // 🔤 LETTERS
+for (let i = letters.length - 1; i >= 0; i--) {
+  const l = letters[i];
+
+  l.x -= l.speed * dt;
+
+  const dx = player.x - l.x;
+  const dy = player.y - l.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // 🎯 COLLISION
+  if (dist < player.radius + l.size) {
+
+    createExplosion(l.x, l.y);
+
+    currentLetterIndex++;
+    letters.splice(i, 1);
+
+    showSuccessBanner(`🔤 ${word[currentLetterIndex - 1]}`);
+
+    // 🎉 MOT COMPLET
+    if (currentLetterIndex >= word.length) {
+
+      currentLetterIndex = 0;
+
+      showSuccessBanner("🌌 GALAXY COMPLETE!");
+
+      // BONUS (choisis ton style)
+      shieldActive = true;
+      shieldTimer = performance.now();
+    }
+
+    continue;
+  }
+
+  if (l.x < -50) {
+    letters.splice(i, 1);
+  }
+}
+
   if (magnetActive) {
   ctx.save();
   ctx.globalAlpha = 0.1;
@@ -1215,6 +1298,15 @@ for (let i = shields.length - 1; i >= 0; i--) {
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+
+      // 🔤 WORD DISPLAY
+const displayWord = word.map((letter, index) => {
+  return index < currentLetterIndex ? letter : "_";
+}).join(" ");
+
+ctx.fillStyle = "white";
+ctx.font = "18px Arial";
+ctx.fillText(displayWord, 20, 110);
 
       // 🔥 PROGRESSION VERS PROCHAIN PALIER
 let currentThreshold = 0;
@@ -1322,6 +1414,20 @@ magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
 specialObstacles.forEach(drawSpecialObstacle);
+
+    // 🔤 DRAW LETTERS
+letters.forEach(l => {
+  const img = letterImages[l.letter];
+  if (!img.complete) return;
+
+  ctx.drawImage(
+    img,
+    l.x - l.size,
+    l.y - l.size,
+    l.size * 2,
+    l.size * 2
+  );
+});
 
     // 🛡️ SHIELD (visuel + clignotement)
 if (shieldActive) {
