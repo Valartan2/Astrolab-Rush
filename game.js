@@ -931,17 +931,17 @@ for (let i = explosions.length - 1; i >= 0; i--) {
 
     frameCount += dt;
 
-if (frameCount >= spawnRate && bubbles.length < maxMeteorites && gameOver !== true) {
+if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   frameCount = 0;
   createBubble(baseSpeed * meteorSpeedFactor);
 }
 
-    if (Math.random() < 0.02 && gameOver !== true) {
+    if (Math.random() < 0.02 && !gameOver) {
   createStar(baseSpeed);
 }
 
 if (
-  gameOver !== true &&
+  !gameOver &&
   !magnetActive &&
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > magnetCooldown &&
@@ -951,7 +951,7 @@ if (
   lastMagnetSpawn = performance.now();
 }
   if (
-  gameOver !== true &&
+  !gameOver &&
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > shieldCooldown &&
@@ -1091,7 +1091,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
   ctx.restore();
 }
       
-    if (gameOver !== true) {
+    if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
@@ -1151,32 +1151,23 @@ progressBar.style.background = getFlashColor();
       }
 
       for (let i = 0; i < bubbles.length; i++) {
-
   if (isColliding(player, bubbles[i])) {
-
     createExplosion(player.x, player.y);
+    gameOver = true;
 
-    gameOver = "exploding";
+    if (music) music.pause();
+    gameOverText.style.display = "block";
+    distanceDisplay.style.display = "none";
 
-    setTimeout(() => {
-      gameOver = true;
+    progressBar.parentElement.style.display = "none";
+    progressLabel.style.display = "none";
 
-      if (music) music.pause();
-      gameOverText.style.display = "block";
-      distanceDisplay.style.display = "none";
+    afficherTableauScore(distance);
 
-      progressBar.parentElement.style.display = "none";
-      progressLabel.style.display = "none";
-
-      afficherTableauScore(distance);
-
-      rejouerBtn.style.display = "block";
-      shareBtn.style.display = "block";
-      objectifsBtn.style.display = "block";
-      backToMenuBtn.style.display = "block";
-
-    }, 300);
-
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+    objectifsBtn.style.display = "block";
+    backToMenuBtn.style.display = "block";
     break;
   }
 }
@@ -1233,7 +1224,7 @@ if (shieldActive) {
   ctx.restore();
 }
 
-if (gameOver !== true) {
+if (!gameOver) {
   drawRocket(player.x, player.y, player.radius);
 }
    
@@ -1262,7 +1253,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-   if (gameOver !== true || explosions.length > 0) {
+   if (!gameOver || explosions.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
