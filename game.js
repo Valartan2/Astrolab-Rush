@@ -942,6 +942,7 @@ progressLabel.style.display = "block";
 }
 
     resetGame();
+    wordDisplay.style.display = "block";
     animationId = requestAnimationFrame(gameLoop);
   };
 
