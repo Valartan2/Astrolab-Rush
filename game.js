@@ -1073,7 +1073,7 @@ if (
 }
 
     // 🔤 SPAWN LETTER (rare)
-if (!gameOver && letters.length === 0 && Math.random() < 0.005) {
+if (!gameOver && letters.length === 0 && Math.random() < 0.001) {
   createLetter(baseSpeed);
 }
     
