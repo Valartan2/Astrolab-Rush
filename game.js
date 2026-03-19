@@ -1096,7 +1096,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
   ctx.restore();
 }
       
-    if (!gameOver) {
+    if (!gameOver && !isDying) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
@@ -1192,9 +1192,6 @@ progressBar.style.background = getFlashColor();
     objectifsBtn.style.display = "block";
     backToMenuBtn.style.display = "block";
   }
-
-  
-  return;
 }
 }
 
