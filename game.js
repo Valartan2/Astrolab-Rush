@@ -560,27 +560,28 @@ function createStar(speed) {
     this.y = y;
 
     this.frame = 0;
-    this.timer = 0;
 
-    this.frameDuration = 8; // 🔥 rapide et parfait
+    this.frameDuration = 120; // ms par frame (~1s total)
+    this.lastUpdate = performance.now();
   }
 
   update() {
-    this.timer++;
+    const now = performance.now();
 
-    if (this.timer >= this.frameSpeed) {
+    if (now - this.lastUpdate > this.frameDuration) {
       this.frame++;
-      this.timer = 0;
+      this.lastUpdate = now;
     }
   }
 
   draw() {
     const img = explosionFrames[this.frame];
-
-    // ⚠️ sécurité (évite crash)
     if (!img || !img.complete) return;
 
-    const size = 90 + this.frame * 6;
+    const size = 90 + this.frame * 8;
+
+    const alpha = 1 - this.frame / explosionFrames.length;
+    ctx.globalAlpha = alpha;
 
     ctx.drawImage(
       img,
@@ -589,6 +590,8 @@ function createStar(speed) {
       size,
       size
     );
+
+    ctx.globalAlpha = 1;
   }
 
   isDead() {
