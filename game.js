@@ -370,6 +370,9 @@ let shieldCooldown = 20000;
 const word = ["G", "A", "L", "A", "X", "Y"];
 let currentLetterIndex = 0;
 let letters = [];
+
+  let lastLetterSpawn = 0;
+const letterInterval = 10000; // 10 secondes
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -896,7 +899,7 @@ function createLetter(speed) {
     meteorDestroyed = 0;
     currentLetterIndex = 0;
     letters = [];
-
+    lastLetterSpawn = performance.now();
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
     objectifList.style.display = "none";
@@ -1072,10 +1075,15 @@ if (
   createShield(baseSpeed);
 }
 
-    // 🔤 SPAWN LETTER (rare)
-if (!gameOver && letters.length === 0 && Math.random() < 0.001) {
+   // 🔤 SPAWN LETTER (toutes les 10s)
+if (
+  !gameOver &&
+  letters.length === 0 &&
+  performance.now() - lastLetterSpawn > letterInterval
+) {
   createLetter(baseSpeed);
-}
+  lastLetterSpawn = performance.now();
+} 
     
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
