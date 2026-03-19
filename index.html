@@ -655,7 +655,26 @@ font-weight:bold;
   transition: width 0.1s linear, background 0.3s ease;
 }
 
-  
+#wordDisplay {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+
+  background: rgba(0,0,0,0.6);
+  padding: 6px 14px;
+  border-radius: 12px;
+
+  border: 2px solid white;
+
+  z-index: 10;
+}
+
+    
     
   </style>
 </head>
@@ -686,6 +705,8 @@ font-weight:bold;
   <canvas id="game"></canvas>
 
   <div id="distance">Distance: 0 m</div>
+
+  <div id="wordDisplay">G _ _ _ _ _</div>
 
   <div id="progressLabel">Next Grade</div>
   <div id="progressContainer">
