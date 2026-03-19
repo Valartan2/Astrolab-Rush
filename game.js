@@ -338,6 +338,10 @@ let shieldRemaining = 0;
 let shieldCooldown = 20000;
 
  let meteorDestroyed = 0;
+
+let isDying = false;
+let deathTimer = 0;
+
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -777,7 +781,8 @@ function createExplosion(x, y) {
     lastMagnetSpawn = performance.now();
     lastShieldSpawn = performance.now();
     meteorDestroyed = 0;
-
+    isDying = false;
+    deathTimer = 0;
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
@@ -1150,12 +1155,30 @@ progressBar.style.background = getFlashColor();
         nextGradeIndex++;
       }
 
-      for (let i = 0; i < bubbles.length; i++) {
+     for (let i = bubbles.length - 1; i >= 0; i--) {
   if (isColliding(player, bubbles[i])) {
-    createExplosion(player.x, player.y);
+
+    // 🛡️ si shield actif → ignore collision mortelle
+    if (shieldActive) continue;
+
+    if (!isDying) {
+      isDying = true;
+
+      createExplosion(player.x, player.y);
+
+      if (music) music.pause();
+    }
+
+    break;
+  }
+}
+      if (isDying) {
+  deathTimer++;
+
+  if (deathTimer > 30) {
+
     gameOver = true;
 
-    if (music) music.pause();
     gameOverText.style.display = "block";
     distanceDisplay.style.display = "none";
 
@@ -1168,8 +1191,10 @@ progressBar.style.background = getFlashColor();
     shareBtn.style.display = "block";
     objectifsBtn.style.display = "block";
     backToMenuBtn.style.display = "block";
-    break;
   }
+
+  
+  return;
 }
 }
 
