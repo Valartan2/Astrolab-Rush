@@ -1330,6 +1330,9 @@ const percent = Math.max(0, Math.min(progress, 1)) * 100;
 
 progressBar.style.width = percent + "%";
 
+// 🔥 BONUS VISUEL
+  progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";      
+
 const remaining = Math.floor(nextThreshold - distance);
 progressLabel.textContent = `Next Grade : ${remaining} m`;
 
