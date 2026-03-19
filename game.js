@@ -1755,6 +1755,7 @@ toggleMusicBtn.onclick = () => {
   localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
   localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
   localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
+  localStorage.removeItem(STORAGE_KEYS.STARS_TOTAL); 
 
   location.reload();
 
