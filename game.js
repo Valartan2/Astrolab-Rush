@@ -1127,6 +1127,8 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
     createExplosion(player.x, player.y);
     gameOver = true;
 
+    wordDisplay.style.display = "none";
+    
     if (music) music.pause();
     gameOverText.style.display = "block";
     distanceDisplay.style.display = "none";
@@ -1359,7 +1361,8 @@ progressBar.style.background = getFlashColor();
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
-
+          wordDisplay.style.display = "none";
+          
           if (music) music.pause();
           gameOverText.style.display = "block";
           distanceDisplay.style.display = "none";
