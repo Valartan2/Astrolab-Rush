@@ -1338,6 +1338,23 @@ starSound.play().catch(()=>{});
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
+      // 🔋 BOOST BAR
+const boostPercent = (boost / maxBoost) * 100;
+
+progressBar.style.width = boostPercent + "%";
+
+// couleur dynamique
+if (boostPercent > 60) {
+  progressBar.style.background = "#00ffcc";
+} else if (boostPercent > 30) {
+  progressBar.style.background = "#ffaa00";
+} else {
+  progressBar.style.background = "#ff4444";
+}
+
+// label
+progressLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
+      
       // 🔋 consommation du boost
 boost -= boostDrain * dt;
 
@@ -1431,22 +1448,8 @@ progressLabel.style.display = "none";
   progressBar.style.boxShadow = "none";
 }
 
-          // 🔋 BOOST BAR
-const boostPercent = (boost / maxBoost) * 100;
 
-progressBar.style.width = boostPercent + "%";
 
-// couleur dynamique
-if (boostPercent > 60) {
-  progressBar.style.background = "#00ffcc";
-} else if (boostPercent > 30) {
-  progressBar.style.background = "#ffaa00";
-} else {
-  progressBar.style.background = "#ff4444";
-}
-
-// label
-progressLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
 
           
           afficherTableauScore(distance);
