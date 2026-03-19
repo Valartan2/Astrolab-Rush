@@ -232,12 +232,12 @@ const letterImages = {
   "Y": new Image()
 };
 
-letterImages["G"].src = "g.png";
-letterImages["A"].src = "a.png";
-letterImages["L"].src = "l.png";
+letterImages["G"].src = "G.png";
+letterImages["A"].src = "A.png";
+letterImages["L"].src = "L.png";
 
-letterImages["X"].src = "x.png";
-letterImages["Y"].src = "y.png";
+letterImages["X"].src = "X.png";
+letterImages["Y"].src = "Y.png";
 
   const explosionFrames = [];
 
