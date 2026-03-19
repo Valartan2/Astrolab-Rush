@@ -229,6 +229,22 @@ for (let i = 1; i <= 8; i++) {
   explosionFrames.push(img);
 }
 
+const specialObstacleImages = [];
+
+const specialSources = [
+  "Soyouz.png",
+  "Ovni.png",
+  "Starman.png",
+  "ISS.png"
+];
+
+specialSources.forEach(src => {
+  const img = new Image();
+  img.src = src;
+  specialObstacleImages.push(img);
+});
+
+  
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -328,6 +344,8 @@ let shieldRemaining = 0;
 let shieldCooldown = 20000;
 
  let meteorDestroyed = 0;
+
+  let specialObstacles = [];
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -552,6 +570,22 @@ function createStar(speed) {
     return Math.sqrt(dx * dx + dy * dy) < c.radius + b.radius;
   }
 
+  function createSpecialObstacle(speed) {
+  const size = 50 + Math.random() * 30;
+
+  const image = specialObstacleImages[
+    Math.floor(Math.random() * specialObstacleImages.length)
+  ];
+
+  specialObstacles.push({
+    x: width + size,
+    y: Math.random() * (height - size * 2) + size,
+    size: size,
+    speed: speed * 0.9,
+    image
+  });
+}
+
   /* -------------------- Particles -------------------- */
  
   class SpriteExplosion {
@@ -666,6 +700,20 @@ function createStar(speed) {
     ctx.restore();
   }
 
+  function drawSpecialObstacle(o) {
+  if (!o.image.complete) return;
+
+  ctx.save();
+  ctx.drawImage(
+    o.image,
+    o.x - o.size,
+    o.y - o.size,
+    o.size * 2,
+    o.size * 2
+  );
+  ctx.restore();
+}
+
    function drawMagnet(m) {
   if (!magnetImage.complete || magnetImage.naturalWidth === 0) return;
 
@@ -770,6 +818,7 @@ function createStar(speed) {
     nextGradeIndex = 1;
     player.radius = 30;
     bubbles = [];
+    specialObstacles = [];
     particles = [];
     starsCollectibles = [];
     starScore = 0;
@@ -932,6 +981,11 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   createBubble(baseSpeed * meteorSpeedFactor);
     }
 
+    // 🛰️ SPAWN RARE
+if (!gameOver && Math.random() < 0.005 && specialObstacles.length < 2) {
+  createSpecialObstacle(baseSpeed);
+}
+
     if (Math.random() < 0.02 && !gameOver) {
   createStar(baseSpeed);
 }
@@ -987,6 +1041,46 @@ if (
   }
 }
 
+// 🛰️ SPECIAL OBSTACLES
+for (let i = specialObstacles.length - 1; i >= 0; i--) {
+  const o = specialObstacles[i];
+
+  o.x -= o.speed * dt;
+
+  const dx = player.x - o.x;
+  const dy = player.y - o.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // 🛡️ shield détruit
+  if (shieldActive && dist < player.radius + o.size) {
+    createExplosion(o.x, o.y);
+    specialObstacles.splice(i, 1);
+    continue;
+  }
+
+  // 💥 collision
+  if (!shieldActive && dist < player.radius + o.size * 0.7) {
+    createExplosion(player.x, player.y);
+    gameOver = true;
+
+    if (music) music.pause();
+    gameOverText.style.display = "block";
+    distanceDisplay.style.display = "none";
+
+    afficherTableauScore(distance);
+
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+    objectifsBtn.style.display = "block";
+    backToMenuBtn.style.display = "block";
+
+    break;
+  }
+
+  if (o.x < -100) {
+    specialObstacles.splice(i, 1);
+  }
+}    
     
     // ⭐ étoiles mouvement + collision
 for (let i = starsCollectibles.length - 1; i >= 0; i--) {
@@ -1210,6 +1304,7 @@ starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
+specialObstacles.forEach(drawSpecialObstacle);
 
     // 🛡️ SHIELD (visuel + clignotement)
 if (shieldActive) {
