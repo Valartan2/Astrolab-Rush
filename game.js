@@ -571,21 +571,38 @@ function createStar(speed) {
   }
 
   function createSpecialObstacle(speed) {
-  const size = 30 + Math.random() * 20;
 
-  const image = specialObstacleImages[
-    Math.floor(Math.random() * specialObstacleImages.length)
-  ];
+  const index = Math.floor(Math.random() * specialObstacleImages.length);
+  const image = specialObstacleImages[index];
+
+  let size;
+
+  // 🎯 taille fixe par type
+  if (image.src.includes("ISS")) {
+    size = 50;
+  } else if (image.src.includes("Ovni")) {
+    size = 35;
+  } else if (image.src.includes("Soyouz")) {
+    size = 38;
+  } else if (image.src.includes("Starman")) {
+    size = 32;
+  } else {
+    size = 35;
+  }
+
+  let y;
+  do {
+    y = Math.random() * (height - size * 2) + size;
+  } while (Math.abs(y - player.y) < 120);
 
   specialObstacles.push({
-    x: width + size,
-    y: Math.random() * (height - size * 2) + size,
-    size: size,
+    x: width + size + 200,
+    y,
+    size,
     speed: speed * 0.9,
     image
   });
 }
-
   /* -------------------- Particles -------------------- */
  
   class SpriteExplosion {
