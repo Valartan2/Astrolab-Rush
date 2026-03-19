@@ -562,7 +562,7 @@ function createStar(speed) {
     this.frame = 0;
     this.timer = 0;
 
-    this.frameSpeed = 1; // 🔥 rapide et parfait
+    this.frameSpeed = 2; // 🔥 rapide et parfait
   }
 
   update() {
