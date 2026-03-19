@@ -83,7 +83,7 @@ objectifList.style.display="flex";
     BEST_SCORE: "bestScore",
     TOTAL_DISTANCE: "totalDistance",
     SELECTED_ROCKET: "selectedRocketKey",
-    UNLOCKED_ROCKETS: "unlockedRockets"
+    UNLOCKED_ROCKETS: "unlockedRockets",
     STARS_TOTAL: "totalStars"
   };
 
@@ -382,8 +382,6 @@ let maxFuel = 20; // capacité max
 
 let totalStarsCollected = getTotalStars(); // ⭐ persistant
 
-// progression
-let totalStarsCollected = 0;
 
   // 🔤 WORD SYSTEM
 const word = ["G", "A", "L", "A", "X", "Y"];
@@ -1212,7 +1210,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
 
 if (dist < player.radius + s.size) {
   starScore += 1;
-  totalStarsCollected += 1;
+ 
 
  totalStarsCollected += 1;
 setTotalStars(totalStarsCollected);
