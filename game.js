@@ -539,7 +539,7 @@ function createStar(speed) {
   const size = 20;
 
   starsCollectibles.push({
-    x: width + size,
+    x: width + size + 200,
     y: Math.random() * (height - size * 2) + size,
     size: size,
     speed: speed * 0.8
@@ -571,7 +571,7 @@ function createStar(speed) {
   }
 
   function createSpecialObstacle(speed) {
-  const size = 50 + Math.random() * 30;
+  const size = 30 + Math.random() * 20;
 
   const image = specialObstacleImages[
     Math.floor(Math.random() * specialObstacleImages.length)
@@ -1059,7 +1059,7 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
   }
 
   // 💥 collision
-  if (!shieldActive && dist < player.radius + o.size * 0.7) {
+  if (!shieldActive && dist < player.radius + o.size * 0.5) {
     createExplosion(player.x, player.y);
     gameOver = true;
 
