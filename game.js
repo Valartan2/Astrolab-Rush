@@ -64,9 +64,7 @@ const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 
 const wordDisplay = document.getElementById("wordDisplay");
-
-const boostBar = document.getElementById("boostBar");
-const boostLabel = document.getElementById("boostLabel");  
+  
 
 menuObjectivesBtn.onclick = () => {
 
@@ -368,15 +366,6 @@ let shieldRemaining = 0;
 
   let specialObstacles = [];
 
-
-  let boost = 100;
-let maxBoost = 100;
-let boostDrain = 0.12; // vitesse de consommation
-let boostRegenPerStar = 8;
-
-// progression
-let totalStarsCollected = 0;
-
   // 🔤 WORD SYSTEM
 const word = ["G", "A", "L", "A", "X", "Y"];
 let currentLetterIndex = 0;
@@ -384,8 +373,6 @@ let letters = [];
 
   let lastLetterSpawn = 0;
 const letterInterval = 10000; // 10 secondes
-
-  let outOfFuel = false;
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -484,9 +471,7 @@ const letterInterval = 10000; // 10 secondes
     const totalDistance = getTotalDistance();
 
     totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
-    
-    
-    
+
     objectifItems.innerHTML = "";
 
 gradeObjectifs.forEach(obj => {
@@ -923,8 +908,6 @@ function createLetter(speed) {
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
-    boost = maxBoost;
-    outOfFuel = false;
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1194,17 +1177,8 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dy = player.y - s.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-if (dist < player.radius + s.size) {
-  starScore += 1;
-  totalStarsCollected += 1;
-
-  // 🔋 recharge boost
-  boost = Math.min(maxBoost, boost + boostRegenPerStar);
-
-  // 📈 progression permanente (simple)
-  if (totalStarsCollected === 100) maxBoost += 10;
-  if (totalStarsCollected === 500) maxBoost += 20;
-  if (totalStarsCollected === 1000) maxBoost += 30;
+  if (dist < player.radius + s.size) {
+    starScore += 1;
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1324,12 +1298,7 @@ starSound.play().catch(()=>{});
 }
       
     if (!gameOver) {
-      if (!outOfFuel) {
-  player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
-} else {
-  // chute lourde
-  player.velocityY += 3.5 * dt;
-}
+      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
       player.velocityY *= Math.pow(0.87, dt);
@@ -1342,52 +1311,12 @@ starSound.play().catch(()=>{});
         player.velocityY = 0;
       }
 
-      if (outOfFuel) {
-  createExplosion(player.x, player.y);
-  gameOver = true;
-
-  if (music) music.pause();
-
-  gameOverText.style.display = "block";
-  distanceDisplay.style.display = "none";
-
-  afficherTableauScore(distance);
-
-  rejouerBtn.style.display = "block";
-  shareBtn.style.display = "block";
-  objectifsBtn.style.display = "block";
-  backToMenuBtn.style.display = "block";
-
-  return;
-}
-
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
-     // 🔋 BOOST BAR (BON ENDROIT)
-const boostPercent = (boost / maxBoost) * 100;
+     
 
-boostBar.style.width = boostPercent + "%";
-
-if (boostPercent > 60) {
-  boostBar.style.background = "#00ffcc";
-} else if (boostPercent > 30) {
-  boostBar.style.background = "#ffaa00";
-} else {
-  boostBar.style.background = "#ff4444";
-}
-
-boostLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
-      
-      // 🔋 consommation du boost
-boost -= boostDrain * dt;
-
-// 🔋 plus de fuel = chute
-if (boost <= 0) {
-  boost = 0;
-  outOfFuel = true;
-}
       const displayWord = word.map((letter, index) => {
   return index < currentLetterIndex ? letter : "_";
 }).join(" ");
@@ -1456,9 +1385,6 @@ progressLabel.style.display = "none";
 } else {
   progressBar.style.boxShadow = "none";
 }
-
-
-
 
           
           afficherTableauScore(distance);
