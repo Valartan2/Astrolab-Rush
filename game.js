@@ -350,7 +350,7 @@ specialSources.forEach(src => {
   let magnets = [];
 
   let lastMagnetSpawn = 0;
-  let magnetCooldown = 15000; // 15 secondes minimum
+ 
 
   let shieldActive = false;
 let shieldTimer = 0;
@@ -360,7 +360,7 @@ let shields = [];
 let shieldRemaining = 0;
 
   let lastShieldSpawn = 0;
-let shieldCooldown = 20000;
+
 
  let meteorDestroyed = 0;
 
