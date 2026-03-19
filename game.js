@@ -366,6 +366,15 @@ let shieldRemaining = 0;
 
   let specialObstacles = [];
 
+
+  let boost = 100;
+let maxBoost = 100;
+let boostDrain = 0.12; // vitesse de consommation
+let boostRegenPerStar = 8;
+
+// progression
+let totalStarsCollected = 0;
+
   // 🔤 WORD SYSTEM
 const word = ["G", "A", "L", "A", "X", "Y"];
 let currentLetterIndex = 0;
@@ -908,6 +917,7 @@ function createLetter(speed) {
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
+    boost = maxBoost;
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1177,8 +1187,17 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dy = player.y - s.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  if (dist < player.radius + s.size) {
-    starScore += 1;
+if (dist < player.radius + s.size) {
+  starScore += 1;
+  totalStarsCollected += 1;
+
+  // 🔋 recharge boost
+  boost = Math.min(maxBoost, boost + boostRegenPerStar);
+
+  // 📈 progression permanente (simple)
+  if (totalStarsCollected === 100) maxBoost += 10;
+  if (totalStarsCollected === 500) maxBoost += 20;
+  if (totalStarsCollected === 1000) maxBoost += 30;
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1315,7 +1334,29 @@ starSound.play().catch(()=>{});
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
-     
+      // 🔋 consommation du boost
+boost -= boostDrain * dt;
+
+// game over si vide
+if (boost <= 0) {
+  boost = 0;
+  createExplosion(player.x, player.y);
+  gameOver = true;
+
+  if (music) music.pause();
+
+  gameOverText.style.display = "block";
+  distanceDisplay.style.display = "none";
+
+  afficherTableauScore(distance);
+
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+  objectifsBtn.style.display = "block";
+  backToMenuBtn.style.display = "block";
+
+  return;
+}
 
       const displayWord = word.map((letter, index) => {
   return index < currentLetterIndex ? letter : "_";
@@ -1385,6 +1426,23 @@ progressLabel.style.display = "none";
 } else {
   progressBar.style.boxShadow = "none";
 }
+
+          // 🔋 BOOST BAR
+const boostPercent = (boost / maxBoost) * 100;
+
+progressBar.style.width = boostPercent + "%";
+
+// couleur dynamique
+if (boostPercent > 60) {
+  progressBar.style.background = "#00ffcc";
+} else if (boostPercent > 30) {
+  progressBar.style.background = "#ffaa00";
+} else {
+  progressBar.style.background = "#ff4444";
+}
+
+// label
+progressLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
 
           
           afficherTableauScore(distance);
