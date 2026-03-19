@@ -1171,7 +1171,7 @@ progressBar.style.background = getFlashColor();
     break;
   }
 }
-
+}
 
    
 
