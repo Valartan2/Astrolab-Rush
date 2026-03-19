@@ -1338,22 +1338,20 @@ starSound.play().catch(()=>{});
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
-      // 🔋 BOOST BAR
+     // 🔋 BOOST BAR (BON ENDROIT)
 const boostPercent = (boost / maxBoost) * 100;
 
-progressBar.style.width = boostPercent + "%";
+boostBar.style.width = boostPercent + "%";
 
-// couleur dynamique
 if (boostPercent > 60) {
-  progressBar.style.background = "#00ffcc";
+  boostBar.style.background = "#00ffcc";
 } else if (boostPercent > 30) {
-  progressBar.style.background = "#ffaa00";
+  boostBar.style.background = "#ffaa00";
 } else {
-  progressBar.style.background = "#ff4444";
+  boostBar.style.background = "#ff4444";
 }
 
-// label
-progressLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
+boostLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
       
       // 🔋 consommation du boost
 boost -= boostDrain * dt;
