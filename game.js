@@ -63,7 +63,7 @@ starSound.volume = 0.4;
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 
-
+const wordDisplay = document.getElementById("wordDisplay");
   
 
 menuObjectivesBtn.onclick = () => {
@@ -1304,9 +1304,11 @@ const displayWord = word.map((letter, index) => {
   return index < currentLetterIndex ? letter : "_";
 }).join(" ");
 
-ctx.fillStyle = "white";
-ctx.font = "18px Arial";
-ctx.fillText(displayWord, 20, 110);
+      const displayWord = word.map((letter, index) => {
+  return index < currentLetterIndex ? letter : "_";
+}).join(" ");
+
+wordDisplay.textContent = displayWord;
 
       // 🔥 PROGRESSION VERS PROCHAIN PALIER
 let currentThreshold = 0;
