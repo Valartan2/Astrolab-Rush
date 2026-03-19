@@ -64,7 +64,9 @@ const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 
 const wordDisplay = document.getElementById("wordDisplay");
-  
+
+const boostBar = document.getElementById("boostBar");
+const boostLabel = document.getElementById("boostLabel");  
 
 menuObjectivesBtn.onclick = () => {
 
@@ -480,7 +482,9 @@ const letterInterval = 10000; // 10 secondes
     const totalDistance = getTotalDistance();
 
     totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
-
+    
+    
+    
     objectifItems.innerHTML = "";
 
 gradeObjectifs.forEach(obj => {
