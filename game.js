@@ -1246,7 +1246,7 @@ if (shieldActive) {
   ctx.restore();
 }
 
-if (!gameOver) {
+if (!gameOver || isDying) {
   drawRocket(player.x, player.y, player.radius);
 }
    
