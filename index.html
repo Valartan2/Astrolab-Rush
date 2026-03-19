@@ -686,6 +686,7 @@ font-weight:bold;
   background: #222;
   border-radius: 10px;
   overflow: hidden;
+  z-index: 10;    
 }
 
 #boostBar {
@@ -701,6 +702,7 @@ font-weight:bold;
   left: 20px;
   font-size: 12px;
   color: white;
+  z-index: 10;
 }
     
     
@@ -736,16 +738,17 @@ font-weight:bold;
 
   <div id="wordDisplay">G _ _ _ _ _</div>
 
-  <div id="progressLabel">Next Grade</div>
-  <div id="progressContainer">
+<div id="progressLabel">Next Grade</div>
+<div id="progressContainer">
   <div id="progressBar"></div>
+</div>
 
-    <div id="boostContainer">
+<!-- 🔋 BOOST (EN DEHORS) -->
+<div id="boostContainer">
   <div id="boostBar"></div>
 </div>
 
 <div id="boostLabel"></div>
-</div>
 
   <!-- 🆕 Tableau de score -->
   <div id="scoreBoard">
