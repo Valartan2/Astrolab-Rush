@@ -934,7 +934,7 @@ function createLetter(speed) {
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
-    boost = maxBoost;
+  
     outOfFuel = false;
     updateMaxFuel();
     fuel = maxFuel;
