@@ -676,6 +676,32 @@ font-weight:bold;
   display: none;
 }
 
+
+    #boostContainer {
+  position: absolute;
+  top: 80px; /* sous la barre grade */
+  left: 20px;
+  width: 200px;
+  height: 10px;
+  background: #222;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#boostBar {
+  height: 100%;
+  width: 100%;
+  background: #00ffcc;
+  transition: width 0.1s linear;
+}
+
+#boostLabel {
+  position: absolute;
+  top: 95px;
+  left: 20px;
+  font-size: 12px;
+  color: white;
+}
     
     
   </style>
@@ -713,6 +739,12 @@ font-weight:bold;
   <div id="progressLabel">Next Grade</div>
   <div id="progressContainer">
   <div id="progressBar"></div>
+
+    <div id="boostContainer">
+  <div id="boostBar"></div>
+</div>
+
+<div id="boostLabel"></div>
 </div>
 
   <!-- 🆕 Tableau de score -->
