@@ -84,6 +84,7 @@ objectifList.style.display="flex";
     TOTAL_DISTANCE: "totalDistance",
     SELECTED_ROCKET: "selectedRocketKey",
     UNLOCKED_ROCKETS: "unlockedRockets"
+    STARS_TOTAL: "totalStars"
   };
 
   /* -------------------- Grades -------------------- */
@@ -171,6 +172,14 @@ objectifList.style.display="flex";
     selectedRocketKey = "classic";
     setSelectedRocketKey(selectedRocketKey);
   }
+
+  function getTotalStars() {
+  return parseInt(localStorage.getItem(STORAGE_KEYS.STARS_TOTAL) || "0", 10);
+}
+
+function setTotalStars(value) {
+  localStorage.setItem(STORAGE_KEYS.STARS_TOTAL, String(value));
+}
 
   /* -------------------- Assets -------------------- */
   const rocketImages = {};
@@ -368,11 +377,10 @@ let shieldRemaining = 0;
 
   let specialObstacles = [];
 
+let fuel = 20; // secondes restantes
+let maxFuel = 20; // capacité max
 
-  let boost = 100;
-let maxBoost = 100;
-let boostDrain = 0.12; // vitesse de consommation
-let boostRegenPerStar = 8;
+let totalStarsCollected = getTotalStars(); // ⭐ persistant
 
 // progression
 let totalStarsCollected = 0;
@@ -419,6 +427,11 @@ const letterInterval = 10000; // 10 secondes
   }
 
   return currentGrade;
+}
+
+  function updateMaxFuel() {
+  const levels = Math.floor(totalStarsCollected / 50);
+  maxFuel = 20 + levels * 20;
 }
 
   function showMilestone(text) {
@@ -925,6 +938,9 @@ function createLetter(speed) {
     progressLabel.style.display = "block";
     boost = maxBoost;
     outOfFuel = false;
+    updateMaxFuel();
+    fuel = maxFuel;
+
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1198,13 +1214,12 @@ if (dist < player.radius + s.size) {
   starScore += 1;
   totalStarsCollected += 1;
 
-  // 🔋 recharge boost
-  boost = Math.min(maxBoost, boost + boostRegenPerStar);
+ totalStarsCollected += 1;
+setTotalStars(totalStarsCollected);
 
-  // 📈 progression permanente (simple)
-  if (totalStarsCollected === 100) maxBoost += 10;
-  if (totalStarsCollected === 500) maxBoost += 20;
-  if (totalStarsCollected === 1000) maxBoost += 30;
+updateMaxFuel();
+
+showSuccessBanner("⭐ +1");
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1366,26 +1381,26 @@ starSound.play().catch(()=>{});
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
      // 🔋 BOOST BAR (BON ENDROIT)
-const boostPercent = (boost / maxBoost) * 100;
+const fuelPercent = (fuel / maxFuel) * 100;
 
-boostBar.style.width = boostPercent + "%";
+boostBar.style.width = fuelPercent + "%";
 
-if (boostPercent > 60) {
+if (fuelPercent > 60) {
   boostBar.style.background = "#00ffcc";
-} else if (boostPercent > 30) {
+} else if (fuelPercent > 30) {
   boostBar.style.background = "#ffaa00";
 } else {
   boostBar.style.background = "#ff4444";
 }
 
-boostLabel.textContent = `Fuel: ${Math.floor(boost)}%`;
+boostLabel.textContent = `Fuel: ${Math.ceil(fuel)}s`;
       
       // 🔋 consommation du boost
-boost -= boostDrain * dt;
+fuel -= (dt / 60); // 1 seconde réelle
 
 // 🔋 plus de fuel = chute
-if (boost <= 0) {
-  boost = 0;
+if (fuel <= 0) {
+  fuel = 0;
   outOfFuel = true;
 }
       const displayWord = word.map((letter, index) => {
