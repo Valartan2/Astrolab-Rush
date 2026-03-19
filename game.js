@@ -63,6 +63,8 @@ starSound.volume = 0.4;
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 
+  
+
 menuObjectivesBtn.onclick = () => {
 
 playClick();
@@ -218,6 +220,14 @@ magnetImage.src = "magnet.png";
 
   const shieldImage = new Image();
 shieldImage.src = "shield.png";
+
+  const explosionFrames = [];
+
+for (let i = 1; i <= 8; i++) {
+  const img = new Image();
+  img.src = `Explosion${i}.png`;
+  explosionFrames.push(img);
+}
 
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
@@ -544,77 +554,50 @@ function createStar(speed) {
 
   /* -------------------- Particles -------------------- */
  
-  class StarExplosion {
+  class SpriteExplosion {
   constructor(x, y) {
     this.x = x;
     this.y = y;
 
-    this.life = 0;
-    this.maxLife = 25;
+    this.frame = 0;
+    this.timer = 0;
 
-    this.radius = 10;
+    this.frameSpeed = 1; // 🔥 rapide et parfait
   }
 
   update() {
-    this.life++;
-    this.radius += 6;
-  }
+    this.timer++;
 
-  drawStar(radius, spikes, innerRadius, color) {
-    const step = Math.PI / spikes;
-
-    ctx.beginPath();
-    for (let i = 0; i < spikes * 2; i++) {
-      const noise = (Math.random() - 0.5) * 4;
-      const r = i % 2 === 0 ? radius + noise : innerRadius + noise;
-      const angle = i * step;
-
-      const x = this.x + Math.cos(angle) * r;
-      const y = this.y + Math.sin(angle) * r;
-
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    if (this.timer >= this.frameSpeed) {
+      this.frame++;
+      this.timer = 0;
     }
-    ctx.closePath();
-
-    ctx.fillStyle = color;
-    ctx.fill();
   }
 
   draw() {
-    const progress = this.life / this.maxLife;
+    const img = explosionFrames[this.frame];
 
-    // easing (super important pour le rendu smooth)
-    const scale = this.radius * (1 + progress * 2);
+    // ⚠️ sécurité (évite crash)
+    if (!img || !img.complete) return;
 
-    ctx.save();
+    const size = 90 + this.frame * 6;
 
-    // glow
-    ctx.shadowBlur = 30;
-    ctx.shadowColor = "orange";
-
-    // 🔴 couche externe (rouge)
-    this.drawStar(scale, 8, scale * 0.6, `rgba(255,0,0,${1 - progress})`);
-
-    // 🟠 couche intermédiaire
-    this.drawStar(scale * 0.7, 8, scale * 0.4, `rgba(255,120,0,${1 - progress})`);
-
-    // 🟡 coeur
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, scale * 0.25, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,0,${1 - progress})`;
-    ctx.fill();
-
-    ctx.restore();
+    ctx.drawImage(
+      img,
+      this.x - size / 2,
+      this.y - size / 2,
+      size,
+      size
+    );
   }
 
   isDead() {
-    return this.life > this.maxLife;
+    return this.frame >= explosionFrames.length;
   }
 }
 
  function createExplosion(x, y) {
-  particles.push(new StarExplosion(x, y));
+  particles.push(new SpriteExplosion(x, y));
 }
 
   /* -------------------- Drawing -------------------- */
@@ -1190,12 +1173,16 @@ progressLabel.style.display = "none";
       }
     }
 
-    particles.forEach(p => {
-  p.update();
-  p.draw();
-});
+   for (let i = particles.length - 1; i >= 0; i--) {
+  const e = particles[i];
 
-particles = particles.filter(p => !p.isDead());
+  e.update();
+  e.draw();
+
+  if (e.isDead()) {
+    particles.splice(i, 1);
+  }
+}
 
     if (magnetActive) {
   if (performance.now() - magnetTimer > magnetDuration) {
