@@ -227,7 +227,7 @@ const letterImages = {
   "G": new Image(),
   "A": new Image(),
   "L": new Image(),
-  "A": new Image(),
+
   "X": new Image(),
   "Y": new Image()
 };
@@ -235,7 +235,7 @@ const letterImages = {
 letterImages["G"].src = "g.png";
 letterImages["A"].src = "a.png";
 letterImages["L"].src = "l.png";
-letterImages["A"].src = "a.png";  
+
 letterImages["X"].src = "x.png";
 letterImages["Y"].src = "y.png";
 
