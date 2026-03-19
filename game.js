@@ -920,6 +920,9 @@ function createLetter(speed) {
     menu.style.display = "none";
     resetGame();
 
+    wordDisplay.style.display = "block";
+distanceDisplay.style.display = "block";
+
     progressBar.parentElement.style.display = "block";
 progressLabel.style.display = "block";
 
@@ -1000,6 +1003,7 @@ progressLabel.style.display = "block";
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "block";
 
+  wordDisplay.style.display = "none";  
   distanceDisplay.style.display = "none";
   progressBar.parentElement.style.display = "none";
 progressLabel.style.display = "none";  
@@ -1299,10 +1303,7 @@ for (let i = letters.length - 1; i >= 0; i--) {
       distanceDisplay.textContent =
   `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
-      // 🔤 WORD DISPLAY
-const displayWord = word.map((letter, index) => {
-  return index < currentLetterIndex ? letter : "_";
-}).join(" ");
+     
 
       const displayWord = word.map((letter, index) => {
   return index < currentLetterIndex ? letter : "_";
