@@ -1059,8 +1059,7 @@ if (
   !gameOver &&
   !magnetActive &&
   magnets.length === 0 &&
-  performance.now() - lastMagnetSpawn > magnetCooldown &&
-  Math.random() < 0.02
+  performance.now() - lastMagnetSpawn > 12000
 ) {
   createMagnet(baseSpeed);
   lastMagnetSpawn = performance.now();
@@ -1069,10 +1068,10 @@ if (
   !gameOver &&
   !shieldActive &&
   shields.length === 0 &&
-  performance.now() - lastShieldSpawn > shieldCooldown &&
-  Math.random() < 0.02
+  performance.now() - lastShieldSpawn > 15000
 ) {
   createShield(baseSpeed);
+  lastShieldSpawn = performance.now();
 }
 
    // 🔤 SPAWN LETTER (toutes les 10s)
