@@ -219,26 +219,6 @@ magnetImage.src = "magnet.png";
   const shieldImage = new Image();
 shieldImage.src = "shield.png";
 
-
-  // 💥 EXPLOSION SPRITE
-const explosionFrames = [];
-
-const explosionPaths = [
-  "explosion/Explosion1.png",
-  "explosion/Explosion2.png",
-  "explosion/Explosion3.png",
-  "explosion/Explosion4.png",
-  "explosion/Explosion3.png",
-  "explosion/Explosion2.png",
-  "explosion/Explosion1.png"
-];
-
-explosionPaths.forEach(path => {
-  const img = new Image();
-  img.src = path;
-  explosionFrames.push(img);
-});
-
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
@@ -311,7 +291,7 @@ explosionPaths.forEach(path => {
   let startTime = 0;
   let nextGradeIndex = 1;
   let animationId = null;
-  let explosions = [];
+  let particles = [];
   let newlyUnlockedThisRun = [];
 
   let lastTime = 0;
@@ -338,10 +318,6 @@ let shieldRemaining = 0;
 let shieldCooldown = 20000;
 
  let meteorDestroyed = 0;
-
-let isDying = false;
-let deathTimer = 0;
-
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -566,17 +542,41 @@ function createStar(speed) {
     return Math.sqrt(dx * dx + dy * dy) < c.radius + b.radius;
   }
 
-  // 💥 EXPLOSION SYSTEM
-function createExplosion(x, y) {
-  explosions.push({
-    x: x,
-    y: y,
-    frame: 0,
-    timer: 0
-  });
-}
+  /* -------------------- Particles -------------------- */
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = Math.random() * 3 + 2;
+      this.color = "orange";
+      this.speedX = (Math.random() - 0.5) * 5;
+      this.speedY = (Math.random() - 0.5) * 5;
+      this.alpha = 1;
+    }
 
-  
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.alpha -= 0.02;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function createExplosion(x, y) {
+    for (let i = 0; i < 30; i++) {
+      particles.push(new Particle(x, y));
+    }
+  }
+
   /* -------------------- Drawing -------------------- */
   function drawFlame(x, y) {
     const pulse = Math.sin(flamePulse) * 0.5 + 0.5;
@@ -639,24 +639,6 @@ function createExplosion(x, y) {
     ctx.drawImage(b.image, -b.radius, -b.radius, b.radius * 2, b.radius * 2);
     ctx.restore();
   }
-
-  function drawExplosions() {
-  explosions.forEach(e => {
-    const img = explosionFrames[e.frame];
-
-    if (!img || !img.complete) return; // 🔥 FIX CRITIQUE
-
-    const size = 100;
-
-    ctx.drawImage(
-      img,
-      e.x - size / 2,
-      e.y - size / 2,
-      size,
-      size
-    );
-  });
-}
 
    function drawMagnet(m) {
   if (!magnetImage.complete || magnetImage.naturalWidth === 0) return;
@@ -762,7 +744,7 @@ function createExplosion(x, y) {
     nextGradeIndex = 1;
     player.radius = 30;
     bubbles = [];
-    explosions = [];
+    particles = [];
     starsCollectibles = [];
     starScore = 0;
     magnets = [];
@@ -781,8 +763,7 @@ function createExplosion(x, y) {
     lastMagnetSpawn = performance.now();
     lastShieldSpawn = performance.now();
     meteorDestroyed = 0;
-    isDying = false;
-    deathTimer = 0;
+
 
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
@@ -871,7 +852,7 @@ progressLabel.style.display = "block";
   // reset visuel
   gameOver = false;
   bubbles = [];
-  explosions = [];
+  particles = [];
 
   // cacher UI game
   gameOverText.style.display = "none";
@@ -911,22 +892,6 @@ progressLabel.style.display = "none";
   lastTime = timestamp;
     drawStars();
 
-    // 💥 UPDATE EXPLOSIONS
-for (let i = explosions.length - 1; i >= 0; i--) {
-  const e = explosions[i];
-
-  e.timer++;
-
-  if (e.timer > 2) {
-    e.frame++;
-    e.timer = 0;
-  }
-
-  if (e.frame >= explosionFrames.length) {
-    explosions.splice(i, 1);
-  }
-}
-
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 0.70;
     const speedLevel = Math.floor(distance / 500);
@@ -939,7 +904,7 @@ for (let i = explosions.length - 1; i >= 0; i--) {
 if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   frameCount = 0;
   createBubble(baseSpeed * meteorSpeedFactor);
-}
+    }
 
     if (Math.random() < 0.02 && !gameOver) {
   createStar(baseSpeed);
@@ -1096,7 +1061,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
   ctx.restore();
 }
       
-    if (!gameOver && !isDying) {
+    if (!gameOver) {
       player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
       player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
       player.y += player.velocityY * dt;
@@ -1155,47 +1120,41 @@ progressBar.style.background = getFlashColor();
         nextGradeIndex++;
       }
 
-     for (let i = bubbles.length - 1; i >= 0; i--) {
-  if (isColliding(player, bubbles[i])) {
+      for (let i = 0; i < bubbles.length; i++) {
+        if (isColliding(player, bubbles[i])) {
+          createExplosion(player.x, player.y);
+          gameOver = true;
 
-    // 🛡️ si shield actif → ignore collision mortelle
-    if (shieldActive) continue;
+          if (music) music.pause();
+          gameOverText.style.display = "block";
+          distanceDisplay.style.display = "none";
 
-    if (!isDying) {
-      isDying = true;
+          progressBar.parentElement.style.display = "none";
+progressLabel.style.display = "none";
+          
+         if (percent > 85) {
+  progressBar.style.boxShadow = "0 0 10px white";
+} else {
+  progressBar.style.boxShadow = "none";
+}
 
-      createExplosion(player.x, player.y);
+          
+          afficherTableauScore(distance);
 
-      if (music) music.pause();
+          rejouerBtn.style.display = "block";
+          shareBtn.style.display = "block";
+          objectifsBtn.style.display = "block";
+          backToMenuBtn.style.display = "block";
+          break;
+        }
+      }
     }
 
-    break;
-  }
-}
-      if (isDying) {
-  deathTimer++;
-
-  if (deathTimer > 30) {
-
-    gameOver = true;
-
-    gameOverText.style.display = "block";
-    distanceDisplay.style.display = "none";
-
-    progressBar.parentElement.style.display = "none";
-    progressLabel.style.display = "none";
-
-    afficherTableauScore(distance);
-
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-    objectifsBtn.style.display = "block";
-    backToMenuBtn.style.display = "block";
-  }
-}
-}
-
-   
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    particles = particles.filter(p => p.alpha > 0);
 
     if (magnetActive) {
   if (performance.now() - magnetTimer > magnetDuration) {
@@ -1221,13 +1180,6 @@ magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
 
-
-   
-  // 💥 DRAW EXPLOSIONS
-ctx.save();
-drawExplosions();
-ctx.restore();
-  
     // 🛡️ SHIELD (visuel + clignotement)
 if (shieldActive) {
 
@@ -1246,7 +1198,7 @@ if (shieldActive) {
   ctx.restore();
 }
 
-if (!gameOver || isDying) {
+if (!gameOver) {
   drawRocket(player.x, player.y, player.radius);
 }
    
@@ -1275,7 +1227,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-   if (!gameOver || explosions.length > 0) {
+    if (!gameOver || particles.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
