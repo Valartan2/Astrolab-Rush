@@ -947,7 +947,7 @@ function drawX2(b) {
     progressLabel.style.display = "block";
 
     x2s = [];
-    x2Active = false;
+    
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1502,13 +1502,7 @@ if (shieldActive) {
   }
 }
 
-    // 💰 X2 TIMER
-if (x2Active) {
-  if (performance.now() - x2Timer > x2Duration) {
-    
-    showSuccessBanner("💰 x2 OFF");
-  }
-}
+   
 
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
