@@ -1485,7 +1485,7 @@ starScore += 1;
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
 
-    showSuccessBanner("⭐ +1");
+  
     starsCollectibles.splice(i, 1);
     continue;
   }
