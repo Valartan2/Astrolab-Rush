@@ -623,10 +623,10 @@ rocketDefinitions.forEach(rocket => {
   }
 
   li.innerHTML = `
-    ${unlocked ? "✅" : "🔒"} 
-    <strong>${rocket.label}</strong><br>
-    <small>${progressText}</small>
-  `;
+  ${unlocked ? "✅" : "🔒"} 
+  <strong>${rocket.label}</strong><br>
+  <small>${unlocked ? "Unlocked" : progressText}</small> 
+`;
 
   rocketItems.appendChild(li);
 
