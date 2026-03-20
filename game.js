@@ -1698,14 +1698,6 @@ progressLabel.style.display = "none";
 }
 
           
-          afficherTableauScore(distance);
-
-          rejouerBtn.style.display = "block";
-          shareBtn.style.display = "block";
-          objectifsBtn.style.display = "block";
-          backToMenuBtn.style.display = "block";
-          break;
-        }
       }
     }
 
