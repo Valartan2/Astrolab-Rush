@@ -353,8 +353,8 @@ function resize() {
   canvas.width = gameWidth * dpr;
   canvas.height = gameHeight * dpr;
 
-  canvas.style.width = screenWidth + "px";
-  canvas.style.height = screenHeight + "px";
+ canvas.style.width = (gameWidth * scale) + "px";
+canvas.style.height = (gameHeight * scale) + "px";
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
