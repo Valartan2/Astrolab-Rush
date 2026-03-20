@@ -606,8 +606,8 @@ rocketDefinitions.forEach(rocket => {
       break;
 
     case "galaxy":
-      progressText = `🌌 GALAXY: ${totalGalaxy} / ${rocket.unlock.value}`;
-      break;
+  progressText = `🌌 Complete GALAXY`;
+  break;
 
     case "destroy":
       progressText = `${totalDestroyed} / ${rocket.unlock.value} 💥`;
