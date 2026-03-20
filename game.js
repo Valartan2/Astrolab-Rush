@@ -983,6 +983,9 @@ function createLetter(speed) {
 
   ctx.save();
 
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#00ffcc"; // couleur du shield (turquoise)
+
   ctx.drawImage(
     shieldImage,
     s.x - s.size,
