@@ -532,14 +532,20 @@ const letterInterval = 10000; // 10 secondes
 const totalGalaxy = getTotalGalaxy();
 const totalSpecial = getTotalSpecial();
 
-    document.getElementById("totalStarsDisplay").textContent =
-  `Total stars: ${totalStars} ⭐`;
+const starsEl = document.getElementById("totalStarsDisplay");
+if (starsEl) {
+  starsEl.textContent = `Total stars: ${totalStars} ⭐`;
+}
 
-document.getElementById("totalGalaxyDisplay").textContent =
-  `Galaxy completed: ${totalGalaxy} 🌌`;
+const galaxyEl = document.getElementById("totalGalaxyDisplay");
+if (galaxyEl) {
+  galaxyEl.textContent = `Galaxy completed: ${totalGalaxy} 🌌`;
+}
 
-document.getElementById("totalSpecialDisplay").textContent =
-  `Special mission: ${totalSpecial} 🛰️`;
+const specialEl = document.getElementById("totalSpecialDisplay");
+if (specialEl) {
+  specialEl.textContent = `Special mission: ${totalSpecial} 🛰️`;
+}
 
     totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
 
