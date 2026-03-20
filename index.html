@@ -720,6 +720,35 @@ font-weight:bold;
   z-index: 9999;
 }
     
+/* 📱 MODE PAYSAGE MOBILE */
+@media (orientation: landscape) and (max-height: 500px) {
+
+  #scoreBoard {
+    transform: translate(-50%, -50%) scale(0.8);
+    top: 50%;
+  }
+
+  #gameOverText {
+    font-size: 28px;
+    top: 8%;
+  }
+
+  #rejouer,
+  #objectifsBtn,
+  #shareScore,
+  #backToMenu {
+    font-size: 16px;
+    padding: 6px 14px;
+  }
+
+  #rejouer { top: 58%; }
+  #objectifsBtn { top: 68%; }
+  #shareScore { top: 78%; }
+  #backToMenu { top: 88%; }
+
+}
+
+
     
   </style>
 </head>
