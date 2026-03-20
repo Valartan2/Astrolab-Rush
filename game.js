@@ -1059,13 +1059,20 @@ setTotalGalaxy(totalGalaxy);
 const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
 setTotalDestroyed(totalDestroyed);
 
-    document.getElementById("starsRun").textContent = starScore;
-document.getElementById("starsTotal").textContent = getTotalStars();
+const starsRunEl = document.getElementById("starsRun");
+if (starsRunEl) starsRunEl.textContent = starScore;
 
-document.getElementById("galaxyRun").textContent = galaxyCompletedThisRun;
-document.getElementById("galaxyTotal").textContent = getTotalGalaxy();
+const starsTotalEl = document.getElementById("starsTotal");
+if (starsTotalEl) starsTotalEl.textContent = getTotalStars();
 
-document.getElementById("specialTotal").textContent = getTotalSpecial();
+const galaxyRunEl = document.getElementById("galaxyRun");
+if (galaxyRunEl) galaxyRunEl.textContent = galaxyCompletedThisRun;
+
+const galaxyTotalEl = document.getElementById("galaxyTotal");
+if (galaxyTotalEl) galaxyTotalEl.textContent = getTotalGalaxy();
+
+const specialTotalEl = document.getElementById("specialTotal");
+if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 
     newlyUnlockedThisRun = unlockRocketsIfNeeded(newTotal);
 
