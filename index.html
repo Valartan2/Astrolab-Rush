@@ -10,6 +10,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" href="/icon-180.png">
 
+<meta name="screen-orientation" content="landscape">
+<meta name="orientation" content="landscape">
+
+  
   <style>
     /* ✅ Styles iOS : suppression pastille et sélection */
     html, body {
@@ -698,7 +702,23 @@ font-weight:bold;
   display: none;
 }
 
+#rotateScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #001122;
+  color: white;
+  font-size: 24px;
 
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
     
     
   </style>
@@ -725,6 +745,10 @@ font-weight:bold;
 <button id="menuObjectivesBtn" class="menuBtn">Objectives</button>
 <button id="settingsBtn" class="menuBtn">Settings</button>
 
+</div>
+
+  <div id="rotateScreen">
+  🔄 Tourne ton téléphone
 </div>
 
   <canvas id="game"></canvas>
