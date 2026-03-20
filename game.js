@@ -229,20 +229,6 @@ function setTotalSpecial(v) {
 
 });
 
-  const img = new Image();
-
-  img.onload = () => {
-    drawMenuRocket();
-  };
-
-  img.src = rocket.file;
-    img.onerror = () => {
-      if (rocket.file !== "rocket2.png") {
-        img.src = "rocket2.png";
-      }
-    };
-    rocketImages[rocket.key] = img;
-  });
 
   const meteoriteImages = [];
   const meteoriteImageSources = [
