@@ -1091,7 +1091,7 @@ progressLabel.style.display = "none";
     const speedLevel = Math.floor(distance / 400);
 
 // 🚀 démarrage plus lent
-const baseSpeed = (10 + speedLevel * 0.8) * speedFactor;
+const baseSpeed = (9 + speedLevel * 0.8) * speedFactor;
 
 // 🧠 limite propre
 const cappedSpeed = Math.min(baseSpeed, 26);
