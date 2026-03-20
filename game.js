@@ -263,6 +263,9 @@ specialSources.forEach(src => {
   specialObstacleImages.push(img);
 });
 
+  const x2Image = new Image();
+x2Image.src = "x2.png"; // ton image
+
   
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
@@ -365,6 +368,13 @@ let shieldRemaining = 0;
  let meteorDestroyed = 0;
 
   let specialObstacles = [];
+
+
+let x2Active = false;
+let x2Timer = 0;
+let x2Duration = 10000; // 10 secondes
+let x2s = [];
+let lastX2Spawn = 0;
 
   // 🔤 WORD SYSTEM
 const word = ["G", "A", "L", "A", "X", "Y"];
@@ -591,6 +601,15 @@ function createStar(speed) {
   });
 }
 
+  function createX2(speed) {
+  x2s.push({
+    x: width + 40,
+    y: Math.random() * (height - 80) + 40,
+    size: 28,
+    speed: speed * 0.8
+  });
+}
+
 // 🔤 SPAWN LETTER
 function createLetter(speed) {
   if (currentLetterIndex >= word.length) return;
@@ -808,6 +827,24 @@ function createLetter(speed) {
   ctx.restore();
 }
 
+function drawX2(b) {
+  if (!x2Image.complete) return;
+
+  ctx.save();
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#ffd700";
+
+  ctx.drawImage(
+    x2Image,
+    b.x - b.size,
+    b.y - b.size,
+    b.size * 2,
+    b.size * 2
+  );
+
+  ctx.restore();
+}
+  
   function drawStars() {
     ctx.fillStyle = getSpaceColor();
     ctx.fillRect(0, 0, width, height);
@@ -827,6 +864,8 @@ function createLetter(speed) {
       }
     });
   }
+
+  
 
   /* -------------------- Scoreboard -------------------- */
   function afficherTableauScore(score) {
@@ -908,6 +947,9 @@ function createLetter(speed) {
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
+
+    x2s = [];
+    x2Active = false;
   }
 
   /* -------------------- Buttons -------------------- */
@@ -1074,6 +1116,16 @@ if (
   lastShieldSpawn = performance.now();
 }
 
+    if (
+  !gameOver &&
+  !x2Active &&
+  x2s.length === 0 &&
+  performance.now() - lastX2Spawn > 20000
+) {
+  createX2(baseSpeed);
+  lastX2Spawn = performance.now();
+}
+
    // 🔤 SPAWN LETTER (toutes les 10s)
 if (
   !gameOver &&
@@ -1178,7 +1230,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < player.radius + s.size) {
-    starScore += 1;
+  starScore += x2Active ? 2 : 1;
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1243,6 +1295,32 @@ for (let i = shields.length - 1; i >= 0; i--) {
 
   if (s.x < -50) {
     shields.splice(i, 1);
+  }
+}
+
+    // 💰 X2 BONUS
+for (let i = x2s.length - 1; i >= 0; i--) {
+  const b = x2s[i];
+
+  b.x -= b.speed * dt;
+
+  const dx = player.x - b.x;
+  const dy = player.y - b.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + b.size) {
+    x2Active = true;
+    x2Timer = performance.now();
+
+   
+    showSuccessBanner("💰 x2 COINS!");
+
+    x2s.splice(i, 1);
+    continue;
+  }
+
+  if (b.x < -50) {
+    x2s.splice(i, 1);
   }
 }
 
@@ -1433,6 +1511,7 @@ magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
 specialObstacles.forEach(drawSpecialObstacle);
+x2s.forEach(drawX2);    
 
     // 🔤 DRAW LETTERS
 letters.forEach(l => {
@@ -1499,7 +1578,12 @@ if (shieldActive && shieldRemaining < 1000) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
-
+if (x2Active) {
+  if (performance.now() - x2Timer > x2Duration) {
+    x2Active = false;
+    showSuccessBanner("💰 x2 OFF");
+  }
+}
  
 
 
