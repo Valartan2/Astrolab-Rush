@@ -547,7 +547,10 @@ if (specialEl) {
   specialEl.textContent = `Special mission: ${totalSpecial} 🛰️`;
 }
 
-    totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
+const distanceEl = document.getElementById("totalDistanceDisplay");
+if (distanceEl) {
+  distanceEl.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
+}
 
     objectifItems.innerHTML = "";
 
