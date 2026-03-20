@@ -1116,7 +1116,7 @@ if (
 
     if (
   !gameOver &&
-  !x2Active &&
+ 
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
@@ -1505,7 +1505,7 @@ if (shieldActive) {
     // 💰 X2 TIMER
 if (x2Active) {
   if (performance.now() - x2Timer > x2Duration) {
-    x2Active = false;
+    
     showSuccessBanner("💰 x2 OFF");
   }
 }
