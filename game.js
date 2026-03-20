@@ -124,7 +124,7 @@ objectifList.style.display="flex";
 
 { key:"orange", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"stars", value:500} },
 
-{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"galaxy", value:25} }
+{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:3000} }
 
 ];
 
@@ -616,6 +616,10 @@ rocketDefinitions.forEach(rocket => {
     case "special":
       progressText = `${totalSpecial} / ${rocket.unlock.value} 🛰️`;
       break;
+
+      case "run":
+  progressText = `🚀 Reach ${formatNumber(rocket.unlock.value)} m in one run`;
+  break;
   }
 
   li.innerHTML = `
@@ -666,6 +670,10 @@ rocketDefinitions.forEach(rocket => {
       case "special":
         unlocked = totalSpecial >= rocket.unlock.value;
         break;
+
+        case "run":
+  unlocked = bestScore >= rocket.unlock.value;
+  break;
     }
 
     if (unlocked) {
