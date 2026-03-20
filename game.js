@@ -76,7 +76,7 @@ objectifList.style.display="flex";
 
 
 
-  /* -------------------- Storage Keys -------------------- */
+  /* -------------------- Storage Keys -------------------- */ 
   const STORAGE_KEYS = {
   BEST_SCORE: "bestScore",
   TOTAL_DISTANCE: "totalDistance",
