@@ -264,7 +264,7 @@ specialSources.forEach(src => {
 });
 
   const x2Image = new Image();
-x2Image.src = "x2.png"; // ton image
+x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
