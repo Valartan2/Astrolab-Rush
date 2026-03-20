@@ -209,6 +209,26 @@ function setTotalSpecial(v) {
   /* -------------------- Assets -------------------- */
   const rocketImages = {};
 
+  rocketDefinitions.forEach(rocket => {
+
+  const img = new Image();
+
+  img.onload = () => {
+    drawMenuRocket();
+  };
+
+  img.src = rocket.file;
+
+  img.onerror = () => {
+    if (rocket.file !== "rocket2.png") {
+      img.src = "rocket2.png";
+    }
+  };
+
+  rocketImages[rocket.key] = img;
+
+});
+
   const img = new Image();
 
   img.onload = () => {
@@ -1381,6 +1401,13 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
 
   
   if (shieldActive && dist < player.radius + o.size) {
+const src = o.image.src;
+
+if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
+if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
+if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
+if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
+    
     createExplosion(o.x, o.y);
     specialObstacles.splice(i, 1);
     continue;
@@ -1390,14 +1417,7 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
 
  
   if (!shieldActive && dist < player.radius + o.size * 0.5) {
-
-    const src = o.image.src;
-
-if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
-if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
-if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
-if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
-    
+   
     createExplosion(player.x, player.y);
     gameOver = true;
 
