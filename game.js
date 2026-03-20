@@ -112,7 +112,7 @@ objectifList.style.display="flex";
 
 { key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"stars", value:50} },
 
-{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:3} },
+{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:1} },
 
 { key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"stars", value:150} },
 
@@ -539,7 +539,7 @@ if (starsEl) {
 
 const galaxyEl = document.getElementById("totalGalaxyDisplay");
 if (galaxyEl) {
-  galaxyEl.textContent = `Galaxy completed: ${totalGalaxy} 🌌`;
+  galaxyEl.textContent = `Galaxy completed: ${totalGalaxy}`;
 }
 
 const specialEl = document.getElementById("totalSpecialDisplay");
@@ -606,7 +606,7 @@ rocketDefinitions.forEach(rocket => {
       break;
 
     case "galaxy":
-  progressText = `🌌 Complete GALAXY`;
+  progressText = `Complete GALAXY`;
   break;
 
     case "destroy":
