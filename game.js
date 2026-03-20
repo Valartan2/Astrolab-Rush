@@ -1679,6 +1679,7 @@ progressBar.style.background = getFlashColor();
       }
 
       for (let i = 0; i < bubbles.length; i++) {
+    
         if (isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
@@ -1696,7 +1697,14 @@ progressLabel.style.display = "none";
 } else {
   progressBar.style.boxShadow = "none";
 }
+afficherTableauScore(distance);
 
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+    objectifsBtn.style.display = "block";
+    backToMenuBtn.style.display = "block";
+
+    break;
           
       }
     }
