@@ -336,7 +336,10 @@ x2Image.src = "X2.png"; // ton image
   
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
-  const BASE_HEIGHT = 600; // 🔥 hauteur de gameplay fixe
+  const BASE_HEIGHT = 600;
+
+let offsetX = 0;
+let offsetY = 0;
 
 function resize() {
   const dpr = window.devicePixelRatio || 1;
@@ -344,21 +347,25 @@ function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  // 👉 scale basé sur la hauteur
   const scale = screenHeight / BASE_HEIGHT;
 
   const gameWidth = screenWidth / scale;
   const gameHeight = BASE_HEIGHT;
 
-  canvas.width = gameWidth * dpr;
-  canvas.height = gameHeight * dpr;
+  canvas.width = screenWidth * dpr;
+  canvas.height = screenHeight * dpr;
 
- canvas.style.width = (gameWidth * scale) + "px";
-canvas.style.height = (gameHeight * scale) + "px";
+  canvas.style.width = screenWidth + "px";
+  canvas.style.height = screenHeight + "px";
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-  // 🔥 SCALE GLOBAL (clé du système)
+  // 👉 OFFSET POUR CENTRER
+  offsetX = (screenWidth - gameWidth * scale) / 2;
+  offsetY = 0;
+
+  // 🔥 CENTRAGE + SCALE
+  ctx.translate(offsetX * dpr, offsetY * dpr);
   ctx.scale(dpr * scale, dpr * scale);
 
   width = gameWidth;
@@ -368,7 +375,6 @@ canvas.style.height = (gameHeight * scale) + "px";
     player.x = isMobile ? 75 : 150;
   }
 }
-  window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
   const player = {
