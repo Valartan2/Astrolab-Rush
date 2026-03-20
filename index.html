@@ -32,12 +32,24 @@
       touch-action: manipulation;
     }
 
-    canvas {
-      display: block;
-      background: linear-gradient(to top, #000000, #222222);
-      outline: none;
-      touch-action: none;
-    }
+    /* 🎮 Canvas du jeu */
+#game {
+  display: block;
+  background: linear-gradient(to top, #000000, #222222);
+  outline: none;
+  touch-action: none;
+  margin: 0 auto; /* 🔥 centre uniquement le jeu */
+}
+
+/* 🌌 Background menu */
+#menuStars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0; /* 🔥 pas de centrage */
+}
     
     #gameTitle {
       font-size: 48px;
@@ -720,33 +732,7 @@ font-weight:bold;
   z-index: 9999;
 }
     
-/* 📱 MODE PAYSAGE MOBILE */
-@media (orientation: landscape) and (max-height: 500px) {
 
-  #scoreBoard {
-    transform: translate(-50%, -50%) scale(0.8);
-    top: 50%;
-  }
-
-  #gameOverText {
-    font-size: 28px;
-    top: 8%;
-  }
-
-  #rejouer,
-  #objectifsBtn,
-  #shareScore,
-  #backToMenu {
-    font-size: 16px;
-    padding: 6px 14px;
-  }
-
-  #rejouer { top: 58%; }
-  #objectifsBtn { top: 68%; }
-  #shareScore { top: 78%; }
-  #backToMenu { top: 88%; }
-
-}
 
 
     
