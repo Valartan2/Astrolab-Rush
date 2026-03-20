@@ -336,21 +336,38 @@ x2Image.src = "X2.png"; // ton image
   
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
-  function resize() {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    width = canvas.width / dpr;
-    height = canvas.height / dpr;
+  const BASE_HEIGHT = 600; // 🔥 hauteur de gameplay fixe
 
-    if (player) {
-      player.x = isMobile ? 75 : 150;
-    }
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // 👉 scale basé sur la hauteur
+  const scale = screenHeight / BASE_HEIGHT;
+
+  const gameWidth = screenWidth / scale;
+  const gameHeight = BASE_HEIGHT;
+
+  canvas.width = gameWidth * dpr;
+  canvas.height = gameHeight * dpr;
+
+  canvas.style.width = screenWidth + "px";
+  canvas.style.height = screenHeight + "px";
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // 🔥 SCALE GLOBAL (clé du système)
+  ctx.scale(dpr * scale, dpr * scale);
+
+  width = gameWidth;
+  height = gameHeight;
+
+  if (player) {
+    player.x = isMobile ? 75 : 150;
   }
+}
   window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
