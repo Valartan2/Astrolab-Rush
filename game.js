@@ -84,7 +84,8 @@ objectifList.style.display="flex";
   TOTAL_GALAXY: "totalGalaxy",
   TOTAL_DESTROYED: "totalDestroyed",
   SELECTED_ROCKET: "selectedRocketKey",
-  UNLOCKED_ROCKETS: "unlockedRockets"
+  UNLOCKED_ROCKETS: "unlockedRockets",
+  TOTAL_SPECIAL: "totalSpecial",  
 };
 
   /* -------------------- Grades -------------------- */
@@ -207,55 +208,7 @@ function setTotalSpecial(v) {
 
   /* -------------------- Assets -------------------- */
   const rocketImages = {};
- rocketDefinitions.forEach(rocket => {
 
-  const li = document.createElement("li");
-
-  const unlocked = unlockedRocketKeys.includes(rocket.key);
-
-  li.className = "rocket-item";
-  li.classList.add(unlocked ? "rocket-unlocked" : "rocket-locked");
-
-  let progressText = "";
-
-  const totalStars = getTotalStars();
-  const totalGalaxy = getTotalGalaxy();
-  const totalDestroyed = getTotalDestroyed();
-  const totalDistance = getTotalDistance();
-  const totalSpecial = getTotalSpecial();
-
-  switch(rocket.unlock.type){
-
-    case "distance":
-      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
-      break;
-
-    case "stars":
-      progressText = `${totalStars} / ${rocket.unlock.value} ⭐`;
-      break;
-
-    case "galaxy":
-      progressText = `${totalGalaxy} / ${rocket.unlock.value} 🌌`;
-      break;
-
-    case "destroy":
-      progressText = `${totalDestroyed} / ${rocket.unlock.value} 💥`;
-      break;
-
-    case "special":
-      progressText = `${totalSpecial} / ${rocket.unlock.value} 🛰️`;
-      break;
-  }
-
-  li.innerHTML = `
-    ${unlocked ? "✅" : "🔒"} 
-    <strong>${rocket.label}</strong><br>
-    <small>${progressText}</small>
-  `;
-
-  rocketItems.appendChild(li);
-
-});
   const img = new Image();
 
   img.onload = () => {
@@ -569,6 +522,18 @@ const letterInterval = 10000; // 10 secondes
   function updateObjectifDisplay() {
     const bestScore = getBestScore();
     const totalDistance = getTotalDistance();
+    const totalStars = getTotalStars();
+const totalGalaxy = getTotalGalaxy();
+const totalSpecial = getTotalSpecial();
+
+    document.getElementById("totalStarsDisplay").textContent =
+  `Total stars: ${totalStars} ⭐`;
+
+document.getElementById("totalGalaxyDisplay").textContent =
+  `Galaxy completed: ${totalGalaxy} 🌌`;
+
+document.getElementById("totalSpecialDisplay").textContent =
+  `Special mission: ${totalSpecial} 🛰️`;
 
     totalDistanceDisplay.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
 
@@ -605,18 +570,44 @@ rocketDefinitions.forEach(rocket => {
   const unlocked = unlockedRocketKeys.includes(rocket.key);
 
   li.className = "rocket-item";
+  li.classList.add(unlocked ? "rocket-unlocked" : "rocket-locked");
 
-  if(unlocked){
-    li.classList.add("rocket-unlocked");
-  } else {
-    li.classList.add("rocket-locked");
+  const totalStars = getTotalStars();
+  const totalGalaxy = getTotalGalaxy();
+  const totalDestroyed = getTotalDestroyed();
+  const totalDistance = getTotalDistance();
+  const totalSpecial = getTotalSpecial();
+
+  let progressText = "";
+
+  switch(rocket.unlock.type){
+
+    case "distance":
+      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
+      break;
+
+    case "stars":
+      progressText = `${totalStars} / ${rocket.unlock.value} ⭐`;
+      break;
+
+    case "galaxy":
+      progressText = `${totalGalaxy} / ${rocket.unlock.value} 🌌`;
+      break;
+
+    case "destroy":
+      progressText = `${totalDestroyed} / ${rocket.unlock.value} 💥`;
+      break;
+
+    case "special":
+      progressText = `${totalSpecial} / ${rocket.unlock.value} 🛰️`;
+      break;
   }
 
-  const status = unlocked
-    ? " — unlocked"
-    : ` — locked (${formatNumber(rocket.unlockAt)} m total)`;
-
-  li.textContent = `${rocket.label}${status}`;
+  li.innerHTML = `
+    ${unlocked ? "✅" : "🔒"} 
+    <strong>${rocket.label}</strong><br>
+    <small>${progressText}</small>
+  `;
 
   rocketItems.appendChild(li);
 
@@ -1038,6 +1029,15 @@ function drawX2(b) {
     const newTotal = previousTotal + runScore;
     setTotalDistance(newTotal);
 
+    
+document.getElementById("starsRun").textContent = starScore;
+document.getElementById("starsTotal").textContent = getTotalStars();
+
+document.getElementById("galaxyRun").textContent = galaxyCompletedThisRun;
+document.getElementById("galaxyTotal").textContent = getTotalGalaxy();
+
+document.getElementById("specialTotal").textContent = getTotalSpecial();
+
     // ⭐ stars
 const totalStars = getTotalStars() + starScore;
 setTotalStars(totalStars);
@@ -1067,6 +1067,7 @@ setTotalDestroyed(totalDestroyed);
       }, 250);
     }
   }
+
 
   /* -------------------- Reset -------------------- */
   function resetGame() {
@@ -1378,12 +1379,7 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
 
   // 🛡️ shield détruit
 
-  const src = o.image.src;
-
-if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
-if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
-if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
-if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
+  
   if (shieldActive && dist < player.radius + o.size) {
     createExplosion(o.x, o.y);
     specialObstacles.splice(i, 1);
@@ -1391,7 +1387,17 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
   }
 
   // 💥 collision
+
+ 
   if (!shieldActive && dist < player.radius + o.size * 0.5) {
+
+    const src = o.image.src;
+
+if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
+if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
+if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
+if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
+    
     createExplosion(player.x, player.y);
     gameOver = true;
 
@@ -1956,6 +1962,10 @@ toggleMusicBtn.onclick = () => {
   localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
   localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
   localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
+   localStorage.removeItem(STORAGE_KEYS.TOTAL_STARS);
+localStorage.removeItem(STORAGE_KEYS.TOTAL_GALAXY);
+localStorage.removeItem(STORAGE_KEYS.TOTAL_DESTROYED);
+localStorage.removeItem(STORAGE_KEYS.TOTAL_SPECIAL);
 
   location.reload();
 
