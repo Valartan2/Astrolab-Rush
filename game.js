@@ -1218,7 +1218,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x += dx * 0.08;
     s.y += dy * 0.08;
   } else {
-    s.x -= s.speed * dt;
+    s.x -= s.speed * dt * 0.4;
   }
 
 
@@ -1247,7 +1247,7 @@ starScore += 1;
 for (let i = magnets.length - 1; i >= 0; i--) {
   const m = magnets[i];
 
-  m.x -= m.speed * dt;
+  m.x -= m.speed * dt * 0.4;
 
   const dx = player.x - m.x;
   const dy = player.y - m.y;
@@ -1275,7 +1275,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 for (let i = shields.length - 1; i >= 0; i--) {
   const s = shields[i];
 
-  s.x -= s.speed * dt;
+  s.x -= s.speed * dt * 0.4;
 
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1300,7 +1300,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
 for (let i = x2s.length - 1; i >= 0; i--) {
   const b = x2s[i];
 
-  b.x -= b.speed * dt;
+  b.x -= b.speed * dt * 0.4;
 
   const dx = player.x - b.x;
   const dy = player.y - b.y;
