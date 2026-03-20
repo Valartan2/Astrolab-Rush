@@ -369,7 +369,7 @@ let shieldRemaining = 0;
 
   let specialObstacles = [];
 
-
+ let lastSpecialSpawn = 0;
 
 let x2s = [];
 let lastX2Spawn = 0;
@@ -685,24 +685,37 @@ function createLetter(speed) {
   }
 
   draw() {
-    const img = explosionFrames[this.frame];
-    if (!img || !img.complete) return;
+  const img = explosionFrames[this.frame];
+  if (!img || !img.complete) return;
 
-    const size = 90 + this.frame * 8;
+  const size = 90 + this.frame * 10;
+  const alpha = 1 - this.frame / explosionFrames.length;
 
-    const alpha = 1 - this.frame / explosionFrames.length;
-    ctx.globalAlpha = alpha;
+  // 🌟 HALO
+  ctx.save();
+  ctx.globalAlpha = 0.2 * alpha;
+  ctx.fillStyle = "#00ccff";
+  ctx.beginPath();
+  ctx.arc(this.x, this.y, size * 0.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 
-    ctx.drawImage(
-      img,
-      this.x - size / 2,
-      this.y - size / 2,
-      size,
-      size
-    );
+  // 🔥 GLOW
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = "#00ccff";
 
-    ctx.globalAlpha = 1;
-  }
+  ctx.drawImage(
+    img,
+    this.x - size / 2,
+    this.y - size / 2,
+    size,
+    size
+  );
+
+  ctx.restore();
+}
 
   isDead() {
     return this.frame >= explosionFrames.length;
@@ -945,6 +958,7 @@ function drawX2(b) {
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "block";
     progressLabel.style.display = "block";
+    lastSpecialSpawn = 0;
 
     x2s = [];
     
@@ -1074,8 +1088,17 @@ progressLabel.style.display = "none";
 
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
-    const speedLevel = Math.floor(distance / 500);
-    const baseSpeed = Math.min(CONSTANT_SPEED + speedLevel * 1.2, 28) * speedFactor;
+    const speedLevel = Math.floor(distance / 400);
+
+// 🚀 démarrage plus lent
+const baseSpeed = (10 + speedLevel * 0.8) * speedFactor;
+
+// 🧠 limite propre
+const cappedSpeed = Math.min(baseSpeed, 26);
+
+// ⚡ sensation d’accélération
+const speedRamp = 1 + (distance / 3000);
+const finalSpeed = cappedSpeed * speedRamp;
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
 
@@ -1083,16 +1106,21 @@ progressLabel.style.display = "none";
 
 if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
   frameCount = 0;
-  createBubble(baseSpeed * meteorSpeedFactor);
+  createBubble(finalSpeed);
     }
 
     // 🛰️ SPAWN RARE
-if (!gameOver && Math.random() < 0.005 && specialObstacles.length < 2) {
-  createSpecialObstacle(baseSpeed);
+if (
+  !gameOver &&
+  specialObstacles.length === 0 &&
+  performance.now() - lastSpecialSpawn > 8000
+) {
+  createSpecialObstacle(finalSpeed);
+  lastSpecialSpawn = performance.now();
 }
 
     if (Math.random() < 0.02 && !gameOver) {
-  createStar(baseSpeed);
+createStar(finalSpeed);
 }
 
 if (
@@ -1101,7 +1129,7 @@ if (
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > 12000
 ) {
-  createMagnet(baseSpeed);
+  createMagnet(finalSpeed);
   lastMagnetSpawn = performance.now();
 }
   if (
@@ -1110,7 +1138,7 @@ if (
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
 ) {
-  createShield(baseSpeed);
+  createShield(finalSpeed);
   lastShieldSpawn = performance.now();
 }
 
@@ -1120,7 +1148,7 @@ if (
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
-  createX2(baseSpeed);
+  createX2(finalSpeed);
   lastX2Spawn = performance.now();
 }
 
@@ -1130,7 +1158,7 @@ if (
   letters.length === 0 &&
   performance.now() - lastLetterSpawn > letterInterval
 ) {
-  createLetter(baseSpeed);
+  createLetter(finalSpeed);
   lastLetterSpawn = performance.now();
 } 
     
