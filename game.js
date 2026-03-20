@@ -1050,13 +1050,7 @@ function drawX2(b) {
     setTotalDistance(newTotal);
 
     
-document.getElementById("starsRun").textContent = starScore;
-document.getElementById("starsTotal").textContent = getTotalStars();
 
-document.getElementById("galaxyRun").textContent = galaxyCompletedThisRun;
-document.getElementById("galaxyTotal").textContent = getTotalGalaxy();
-
-document.getElementById("specialTotal").textContent = getTotalSpecial();
 
     // ⭐ stars
 const totalStars = getTotalStars() + starScore;
@@ -1069,6 +1063,14 @@ setTotalGalaxy(totalGalaxy);
 // 💥 destruction
 const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
 setTotalDestroyed(totalDestroyed);
+
+    document.getElementById("starsRun").textContent = starScore;
+document.getElementById("starsTotal").textContent = getTotalStars();
+
+document.getElementById("galaxyRun").textContent = galaxyCompletedThisRun;
+document.getElementById("galaxyTotal").textContent = getTotalGalaxy();
+
+document.getElementById("specialTotal").textContent = getTotalSpecial();
 
     newlyUnlockedThisRun = unlockRocketsIfNeeded(newTotal);
 
@@ -1087,6 +1089,8 @@ setTotalDestroyed(totalDestroyed);
       }, 250);
     }
   }
+
+
 
 
   /* -------------------- Reset -------------------- */
