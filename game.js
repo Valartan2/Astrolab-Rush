@@ -1088,7 +1088,11 @@ progressLabel.style.display = "none";
 
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
-    const speedLevel = Math.floor(distance / 400);
+
+const effectiveDistance = Math.min(distance, 1500);
+
+// 👉 UTILISE effectiveDistance PARTOUT
+const speedLevel = Math.floor(effectiveDistance / 400);
 
 // 🚀 démarrage plus lent
 const baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
@@ -1096,8 +1100,9 @@ const baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
 // 🧠 limite propre
 const cappedSpeed = Math.min(baseSpeed, 26);
 
-// ⚡ sensation d’accélération
-const speedRamp = 1 + (distance / 3000);
+// ⚡ accélération BLOQUÉE à 1500
+const speedRamp = 1 + (effectiveDistance / 3000);
+
 const finalSpeed = cappedSpeed * speedRamp;
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
