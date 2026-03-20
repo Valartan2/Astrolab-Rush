@@ -622,11 +622,11 @@ rocketDefinitions.forEach(rocket => {
   break;
   }
 
-  li.innerHTML = `
-  ${unlocked ? "✅" : "🔒"} 
-  <strong>${rocket.label}</strong><br>
-  <small>${unlocked ? "Unlocked" : progressText}</small> 
-`;
+ const status = unlocked 
+  ? " — unlocked" 
+  : ` — ${progressText}`;
+
+li.textContent = `${rocket.label}${status}`;
 
   rocketItems.appendChild(li);
 
