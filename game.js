@@ -586,7 +586,7 @@ function createStar(speed) {
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
     size: 25,
-    speed: speed * 0.4
+    speed: speed * 0.6
   });
 }
 
@@ -595,7 +595,7 @@ function createStar(speed) {
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
     size: 25,
-    speed: speed * 0.4
+    speed: speed * 0.6
   });
 }
 
@@ -604,7 +604,7 @@ function createStar(speed) {
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
     size: 28,
-    speed: speed * 0.4
+    speed: speed * 0.6
   });
 }
 
@@ -618,7 +618,7 @@ function createLetter(speed) {
     x: width + 50,
     y: Math.random() * (height - 100) + 50,
     size: 35,
-    speed: speed * 0.4,
+    speed: speed * 0.6,
     letter: letter
   });
 }
