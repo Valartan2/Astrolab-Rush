@@ -17,20 +17,25 @@
   <style>
     /* ✅ Styles iOS : suppression pastille et sélection */
     html, body {
-      margin: 0; padding: 0; overflow: hidden;
-      background: linear-gradient(to top, #001122, #002233);
-      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: none;
-    }
+  background: black;
 
-    * {
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+  display: flex;              /* 🔥 IMPORTANT */
+  justify-content: center;    /* 🔥 centre horizontal */
+  align-items: center;        /* 🔥 centre vertical */
+
+  height: 100vh;              /* 🔥 IMPORTANT */
+
+  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
 
     /* 🎮 Canvas du jeu */
 #game {
@@ -38,7 +43,7 @@
   background: linear-gradient(to top, #000000, #222222);
   outline: none;
   touch-action: none;
-  margin: 0 auto; /* 🔥 centre uniquement le jeu */
+ 
 }
 
 /* 🌌 Background menu */
