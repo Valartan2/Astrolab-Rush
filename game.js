@@ -1616,17 +1616,10 @@ starSound.play().catch(()=>{});
 }
       
     if (!gameOver) {
-      // force simple et lisible
-const force = pressing ? 0.9 : -0.9;
-
-// vitesse
-player.velocityY += force * dt;
-
-// clamp
+     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
-
-// position
-player.y += player.velocityY;
+player.y += player.velocityY * dt;
+player.velocityY *= Math.pow(0.87, dt);
 
       if (player.y < player.radius) {
         player.y = player.radius;
