@@ -78,11 +78,14 @@ objectifList.style.display="flex";
 
   /* -------------------- Storage Keys -------------------- */
   const STORAGE_KEYS = {
-    BEST_SCORE: "bestScore",
-    TOTAL_DISTANCE: "totalDistance",
-    SELECTED_ROCKET: "selectedRocketKey",
-    UNLOCKED_ROCKETS: "unlockedRockets"
-  };
+  BEST_SCORE: "bestScore",
+  TOTAL_DISTANCE: "totalDistance",
+  TOTAL_STARS: "totalStars",
+  TOTAL_GALAXY: "totalGalaxy",
+  TOTAL_DESTROYED: "totalDestroyed",
+  SELECTED_ROCKET: "selectedRocketKey",
+  UNLOCKED_ROCKETS: "unlockedRockets"
+};
 
   /* -------------------- Grades -------------------- */
   const gradeObjectifs = [
@@ -102,25 +105,25 @@ objectifList.style.display="flex";
   /* -------------------- Rockets -------------------- */
   const rocketDefinitions = [
 
-{ key:"classic", label:"Classic Rocket", file:"rocket2.png", unlockAt:0 },
+{ key:"classic", label:"Classic Rocket", file:"rocket2.png", unlock:{type:"distance", value:0} },
 
-{ key:"white", label:"White Rocket", file:"rocket3.png", unlockAt:500 },
+{ key:"white", label:"White Rocket", file:"rocket3.png", unlock:{type:"distance", value:500} },
 
-{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlockAt:1000 },
+{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"stars", value:50} },
 
-{ key:"red", label:"Red Rocket", file:"rocket5.png", unlockAt:2500 },
+{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:3} },
 
-{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlockAt:5000 },
+{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"stars", value:150} },
 
-{ key:"blue", label:"Blue Rocket", file:"rocket7.png", unlockAt:10000 },
+{ key:"blue", label:"Blue Rocket", file:"rocket7.png", unlock:{type:"distance", value:10000} },
 
-{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlockAt:20000 },
+{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"galaxy", value:10} },
 
-{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlockAt:40000 },
+{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"destroy", value:200} },
 
-{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlockAt:80000 },
+{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"stars", value:500} },
 
-{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlockAt:150000 }
+{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"galaxy", value:25} }
 
 ];
 
@@ -145,6 +148,38 @@ objectifList.style.display="flex";
   function setTotalDistance(value) {
     localStorage.setItem(STORAGE_KEYS.TOTAL_DISTANCE, String(value));
   }
+
+  function getTotalStars() {
+  return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_STARS) || "0", 10);
+}
+
+function setTotalStars(v) {
+  localStorage.setItem(STORAGE_KEYS.TOTAL_STARS, v);
+}
+
+function getTotalGalaxy() {
+  return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_GALAXY) || "0", 10);
+}
+
+function setTotalGalaxy(v) {
+  localStorage.setItem(STORAGE_KEYS.TOTAL_GALAXY, v);
+}
+
+function getTotalDestroyed() {
+  return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_DESTROYED) || "0", 10);
+}
+
+function setTotalDestroyed(v) {
+  localStorage.setItem(STORAGE_KEYS.TOTAL_DESTROYED, v);
+}
+
+function getTotalSpecial() {
+  return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_SPECIAL) || "0", 10);
+}
+
+function setTotalSpecial(v) {
+  localStorage.setItem(STORAGE_KEYS.TOTAL_SPECIAL, v);
+}
 
   function getSelectedRocketKey() {
     return localStorage.getItem(STORAGE_KEYS.SELECTED_ROCKET) || "classic";
@@ -172,7 +207,55 @@ objectifList.style.display="flex";
 
   /* -------------------- Assets -------------------- */
   const rocketImages = {};
-  rocketDefinitions.forEach(rocket => {
+ rocketDefinitions.forEach(rocket => {
+
+  const li = document.createElement("li");
+
+  const unlocked = unlockedRocketKeys.includes(rocket.key);
+
+  li.className = "rocket-item";
+  li.classList.add(unlocked ? "rocket-unlocked" : "rocket-locked");
+
+  let progressText = "";
+
+  const totalStars = getTotalStars();
+  const totalGalaxy = getTotalGalaxy();
+  const totalDestroyed = getTotalDestroyed();
+  const totalDistance = getTotalDistance();
+  const totalSpecial = getTotalSpecial();
+
+  switch(rocket.unlock.type){
+
+    case "distance":
+      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
+      break;
+
+    case "stars":
+      progressText = `${totalStars} / ${rocket.unlock.value} ⭐`;
+      break;
+
+    case "galaxy":
+      progressText = `${totalGalaxy} / ${rocket.unlock.value} 🌌`;
+      break;
+
+    case "destroy":
+      progressText = `${totalDestroyed} / ${rocket.unlock.value} 💥`;
+      break;
+
+    case "special":
+      progressText = `${totalSpecial} / ${rocket.unlock.value} 🛰️`;
+      break;
+  }
+
+  li.innerHTML = `
+    ${unlocked ? "✅" : "🔒"} 
+    <strong>${rocket.label}</strong><br>
+    <small>${progressText}</small>
+  `;
+
+  rocketItems.appendChild(li);
+
+});
   const img = new Image();
 
   img.onload = () => {
@@ -381,6 +464,15 @@ let letters = [];
 
   let lastLetterSpawn = 0;
 const letterInterval = 10000; // 10 secondes
+
+  let galaxyCompletedThisRun = 0;
+
+  let specialDestroyedThisRun = {
+  ISS: false,
+  Starman: false,
+  Soyouz: false,
+  Ovni: false
+};
   
   const distanceSpeedFactor = 2.5;
   const CONSTANT_SPEED = 14;
@@ -531,25 +623,83 @@ rocketDefinitions.forEach(rocket => {
 });
   }
 
-  function unlockRocketsIfNeeded(totalDistanceAfterRun) {
-    const newUnlocks = [];
+  function unlockRocketsIfNeeded() {
 
-    rocketDefinitions.forEach(rocket => {
-      if (
-        totalDistanceAfterRun >= rocket.unlockAt &&
-        !unlockedRocketKeys.includes(rocket.key)
-      ) {
-        unlockedRocketKeys.push(rocket.key);
-        newUnlocks.push(rocket);
-      }
-    });
+  const totalDistance = getTotalDistance();
+  const totalStars = getTotalStars();
+  const totalGalaxy = getTotalGalaxy();
+  const totalDestroyed = getTotalDestroyed();
+  const totalSpecial = getTotalSpecial();
 
-    if (newUnlocks.length) {
-      saveUnlockedRockets(unlockedRocketKeys);
+  const newUnlocks = [];
+
+  rocketDefinitions.forEach(rocket => {
+
+    if (unlockedRocketKeys.includes(rocket.key)) return;
+
+    let unlocked = false;
+
+    switch(rocket.unlock.type){
+
+      case "distance":
+        unlocked = totalDistance >= rocket.unlock.value;
+        break;
+
+      case "stars":
+        unlocked = totalStars >= rocket.unlock.value;
+        break;
+
+      case "galaxy":
+        unlocked = totalGalaxy >= rocket.unlock.value;
+        break;
+
+      case "destroy":
+        unlocked = totalDestroyed >= rocket.unlock.value;
+        break;
+
+      case "special":
+        unlocked = totalSpecial >= rocket.unlock.value;
+        break;
     }
 
-    return newUnlocks;
+    if (unlocked) {
+      unlockedRocketKeys.push(rocket.key);
+      newUnlocks.push(rocket);
+    }
+
+  });
+
+  if (newUnlocks.length) {
+    saveUnlockedRockets(unlockedRocketKeys);
   }
+
+  return newUnlocks;
+}
+
+  function checkSpecialMission() {
+
+  if (
+    specialDestroyedThisRun.ISS &&
+    specialDestroyedThisRun.Starman &&
+    specialDestroyedThisRun.Soyouz &&
+    specialDestroyedThisRun.Ovni
+  ) {
+
+    showSuccessBanner("🛰️ ALL SPECIAL DESTROYED!");
+
+    starScore += 50;
+
+    const total = getTotalSpecial() + 1;
+    setTotalSpecial(total);
+
+    specialDestroyedThisRun = {
+      ISS: false,
+      Starman: false,
+      Soyouz: false,
+      Ovni: false
+    };
+  }
+}
 
   /* -------------------- Bubble (Meteorite) -------------------- */
   function createBubble(speed) {
@@ -888,6 +1038,18 @@ function drawX2(b) {
     const newTotal = previousTotal + runScore;
     setTotalDistance(newTotal);
 
+    // ⭐ stars
+const totalStars = getTotalStars() + starScore;
+setTotalStars(totalStars);
+
+// 🔤 galaxy
+const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
+setTotalGalaxy(totalGalaxy);
+
+// 💥 destruction
+const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
+setTotalDestroyed(totalDestroyed);
+
     newlyUnlockedThisRun = unlockRocketsIfNeeded(newTotal);
 
     currentScoreSpan.textContent = formatNumber(runScore);
@@ -949,6 +1111,7 @@ function drawX2(b) {
     meteorDestroyed = 0;
     currentLetterIndex = 0;
     letters = [];
+    galaxyCompletedThisRun = 0;
     lastLetterSpawn = performance.now();
     [rejouerBtn, gameOverText, shareBtn].forEach(e => e.style.display = "none");
     objectifsBtn.style.display = "none";
@@ -963,6 +1126,12 @@ function drawX2(b) {
     x2s = [];
     
   }
+  specialDestroyedThisRun = {
+  ISS: false,
+  Starman: false,
+  Soyouz: false,
+  Ovni: false
+};
 
   /* -------------------- Buttons -------------------- */
   playButton.onclick = () => {
@@ -1208,6 +1377,13 @@ for (let i = specialObstacles.length - 1; i >= 0; i--) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   // 🛡️ shield détruit
+
+  const src = o.image.src;
+
+if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
+if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
+if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
+if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
   if (shieldActive && dist < player.radius + o.size) {
     createExplosion(o.x, o.y);
     specialObstacles.splice(i, 1);
@@ -1377,6 +1553,8 @@ starSound.play().catch(()=>{});
 
     // 🎉 MOT COMPLET
     if (currentLetterIndex >= word.length) {
+
+      galaxyCompletedThisRun++;
 
       currentLetterIndex = 0;
 
@@ -1602,7 +1780,7 @@ if (shieldActive && shieldRemaining < 1000) {
   ctx.fill();
   ctx.restore();
 }
-    
+    checkSpecialMission();
     frameCount++;
     flamePulse += 0.15;
 
