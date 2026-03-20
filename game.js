@@ -1505,6 +1505,14 @@ if (shieldActive) {
   }
 }
 
+    // 💰 X2 TIMER
+if (x2Active) {
+  if (performance.now() - x2Timer > x2Duration) {
+    x2Active = false;
+    showSuccessBanner("💰 x2 OFF");
+  }
+}
+
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
@@ -1578,13 +1586,7 @@ if (shieldActive && shieldRemaining < 1000) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
-if (x2Active) {
-  if (performance.now() - x2Timer > x2Duration) {
-    x2Active = false;
-    showSuccessBanner("💰 x2 OFF");
-  }
-}
- 
+
 
 
   /* -------------------- Menu Stars Background -------------------- */
