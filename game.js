@@ -59,6 +59,31 @@ starSound.volume = 0.4;
   
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
+  // ✅ ===== ORIENTATION LOCK =====
+function checkOrientation() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const rotateDiv = document.getElementById("rotateScreen");
+
+  if (!rotateDiv) return;
+
+  rotateDiv.style.display = isPortrait ? "flex" : "none";
+
+  // 🛑 STOP GAME SI PORTRAIT
+  if (isPortrait) {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+}
+
+// events
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+
+// premier check
+setTimeout(checkOrientation, 100);
+// ===============================
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
