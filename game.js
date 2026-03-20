@@ -370,9 +370,7 @@ let shieldRemaining = 0;
   let specialObstacles = [];
 
 
-let x2Active = false;
-let x2Timer = 0;
-let x2Duration = 10000; // 10 secondes
+
 let x2s = [];
 let lastX2Spawn = 0;
 
@@ -1230,7 +1228,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < player.radius + s.size) {
-  starScore += x2Active ? 2 : 1;
+starScore += 1;
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1309,8 +1307,7 @@ for (let i = x2s.length - 1; i >= 0; i--) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < player.radius + b.size) {
-    x2Active = true;
-    x2Timer = performance.now();
+  starScore *= 2;
 
    
     showSuccessBanner("💰 x2 COINS!");
