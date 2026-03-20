@@ -336,11 +336,8 @@ x2Image.src = "X2.png"; // ton image
   
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
-  const BASE_WIDTH = 800;
+ const BASE_WIDTH = 800;
 const BASE_HEIGHT = 600;
-
-let offsetX = 0;
-let offsetY = 0;
 
 function resize() {
   const dpr = window.devicePixelRatio || 1;
@@ -348,30 +345,26 @@ function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  const scaleX = screenWidth / BASE_WIDTH;
-  const scaleY = screenHeight / BASE_HEIGHT;
+  // ✅ SCALE QUI FIT ENTIEREMENT
+  const scale = Math.min(
+    screenWidth / BASE_WIDTH,
+    screenHeight / BASE_HEIGHT
+  );
 
-  const scale = Math.max(scaleX, scaleY); // 🔥 remplit écran
+  const canvasWidth = BASE_WIDTH * scale;
+  const canvasHeight = BASE_HEIGHT * scale;
 
-  canvas.width = screenWidth * dpr;
-  canvas.height = screenHeight * dpr;
+  canvas.width = canvasWidth * dpr;
+  canvas.height = canvasHeight * dpr;
 
-  canvas.style.width = screenWidth + "px";
-  canvas.style.height = screenHeight + "px";
+  canvas.style.width = canvasWidth + "px";
+  canvas.style.height = canvasHeight + "px";
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  const gameWidth = BASE_WIDTH;
-  const gameHeight = BASE_HEIGHT;
-
-  offsetX = (screenWidth - gameWidth * scale) / 2;
-  offsetY = (screenHeight - gameHeight * scale) / 2;
-
-  ctx.translate(offsetX * dpr, offsetY * dpr);
   ctx.scale(dpr * scale, dpr * scale);
 
-  width = gameWidth;
-  height = gameHeight;
+  width = BASE_WIDTH;
+  height = BASE_HEIGHT;
 
   if (player) {
     player.x = isMobile ? 75 : 150;
