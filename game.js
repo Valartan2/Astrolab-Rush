@@ -1705,7 +1705,7 @@ afficherTableauScore(distance);
     backToMenuBtn.style.display = "block";
 
     break;
-          
+       }   
       }
     }
 
