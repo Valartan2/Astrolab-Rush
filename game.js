@@ -1904,10 +1904,10 @@ if (shieldActive && shieldRemaining < 1000) {
 
 menuRocketCtx.drawImage(
   img,
-  centerX - size / 2,
-  centerY - size / 2,
-  size,
-  size
+  centerX - rocketSize / 2,
+  centerY - rocketSize / 2,
+  rocketSize,
+  rocketSize
 );
 
   menuRocketCtx.restore();
