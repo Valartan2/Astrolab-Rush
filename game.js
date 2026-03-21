@@ -1140,9 +1140,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
    
 
     if (isMobile) {
-  player.gravityDown = 2.5 * (1 / scaleY);
-  player.gravityUp = -2.3 * (1 / scaleY);
-  player.maxSpeed = 13 * (1 / scaleY);
+  player.gravityDown = 2.5;
+  player.gravityUp = -2.3;
+  player.maxSpeed = 13;
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
@@ -1336,7 +1336,7 @@ const cappedSpeed = Math.min(baseSpeed, 26);
 // ⚡ accélération BLOQUÉE à 1500
 const speedRamp = 1 + (effectiveDistance / 3000);
 
-const finalSpeed = cappedSpeed * speedRamp * (1 / scaleY);
+const finalSpeed = cappedSpeed * speedRamp;
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
 
