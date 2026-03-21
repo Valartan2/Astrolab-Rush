@@ -336,8 +336,6 @@ x2Image.src = "X2.png"; // ton image
   
   /* -------------------- Canvas Resize -------------------- */
  let width, height;
-const BASE_WIDTH = 800;
-const BASE_HEIGHT = 600;
 
 function resize() {
   const dpr = window.devicePixelRatio || 1;
@@ -345,28 +343,24 @@ function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  const scaleX = screenWidth / BASE_WIDTH;
-const scaleY = screenHeight / BASE_HEIGHT;
+  // 🎯 canvas = taille écran
+  canvas.width = screenWidth * dpr;
+  canvas.height = screenHeight * dpr;
 
-// 🎯 équilibre parfait (pas zoomé + quasi plein écran)
-const scale = Math.min(scaleX, scaleY) * 1.1;
-  const canvasWidth = BASE_WIDTH * scale;
-  const canvasHeight = BASE_HEIGHT * scale;
+  canvas.style.width = screenWidth + "px";
+  canvas.style.height = screenHeight + "px";
 
-  canvas.width = canvasWidth * dpr;
-  canvas.height = canvasHeight * dpr;
-
-  canvas.style.width = canvasWidth + "px";
-  canvas.style.height = canvasHeight + "px";
-
+  // reset transform
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(dpr * scale, dpr * scale);
+  ctx.scale(dpr, dpr);
 
-  width = BASE_WIDTH;
-  height = BASE_HEIGHT;
+  // 🔥 LE PLUS IMPORTANT : le monde suit l’écran
+  width = screenWidth;
+  height = screenHeight;
 
+  // reposition joueur
   if (player) {
-    player.x = isMobile ? 75 : 150;
+    player.x = isMobile ? width * 0.15 : width * 0.2;
   }
 }
 
