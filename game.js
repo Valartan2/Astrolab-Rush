@@ -5,9 +5,12 @@
   const BASE_WIDTH = 1280;
 const BASE_HEIGHT = 720;
 
-let scale = 1;
+
 let width = BASE_WIDTH;
 let height = BASE_HEIGHT;
+
+let scaleX = 1;
+let scaleY = 1;  
 
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
@@ -327,17 +330,19 @@ x2Image.src = "X2.png"; // ton image
   canvas.style.width = window.innerWidth + "px";
   canvas.style.height = window.innerHeight + "px";
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); 
   ctx.scale(dpr, dpr);
 
   width = window.innerWidth;
   height = window.innerHeight;
 
-  // reposition joueur propre
-  if (player) {
-    player.x = isMobile ? 75 : 150;
-    player.y = height / 2;
-  }
+  // 🔥 SCALE dynamique
+  scaleX = width / BASE_WIDTH;
+  scaleY = height / BASE_HEIGHT;
+
+  // 🎯 reposition joueur
+  player.x = (isMobile ? 150 : 150) * scaleX;
+  player.y = height / 2;
 }
   window.addEventListener("resize", resize);
 
@@ -345,7 +350,7 @@ x2Image.src = "X2.png"; // ton image
   const player = {
     x: 150,
     y: 0,
-    radius: 30,
+    radius: 30 * scaleY,
     velocityY: 0,
     gravityUp: -0.8,
     gravityDown: 0.9,
@@ -732,7 +737,7 @@ li.textContent = `${rocket.label}${status}`;
   function createBubble(speed) {
     const base = isMobile ? 15 : 25;
     const extra = isMobile ? 10 : 15;
-    const radius = Math.random() * extra + base;
+    const radius = (Math.random() * extra + base) * scaleY;
     const y = radius + Math.random() * (height - 2 * radius);
     const image = meteoriteImages[Math.floor(Math.random() * meteoriteImages.length)];
 
@@ -748,7 +753,7 @@ li.textContent = `${rocket.label}${status}`;
   }
 
 function createStar(speed) {
-  const size = 20;
+  const size = 20 * scaleY;
 
   starsCollectibles.push({
     x: width + size + 200,
@@ -762,7 +767,7 @@ function createStar(speed) {
   magnets.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 25,
+    size: 25 * scaleY,
     speed: speed * 0.6
   });
 }
@@ -771,7 +776,7 @@ function createStar(speed) {
   shields.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 25,
+    size: 25 * scaleY,
     speed: speed * 0.6
   });
 }
@@ -780,7 +785,7 @@ function createStar(speed) {
   x2s.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 28,
+    size: 28 * scaleY,
     speed: speed * 0.6
   });
 }
@@ -794,7 +799,7 @@ function createLetter(speed) {
   letters.push({
     x: width + 50,
     y: Math.random() * (height - 100) + 50,
-    size: 35,
+    size: 35 * scaleY,
     speed: speed * 0.6,
     letter: letter
   });
@@ -815,15 +820,15 @@ function createLetter(speed) {
 
   // 🎯 taille fixe par type
   if (image.src.includes("ISS")) {
-    size = 100;
+    size = 100 * scaleY;
   } else if (image.src.includes("Ovni")) {
-    size = 35;
+    size = 35 * scaleY;
   } else if (image.src.includes("Soyouz")) {
-    size = 38;
+    size = 38 * scaleY;
   } else if (image.src.includes("Starman")) {
-    size = 32;
+    size = 32 * scaleY;
   } else {
-    size = 35;
+    size = 35 * scaleY;
   }
 
   let y;
