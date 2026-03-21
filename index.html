@@ -673,6 +673,9 @@ font-weight:bold;
   z-index: 10;
   display: none;
 }
+    #progressContainer {
+  transform: translateZ(0); /* 🔥 force rendu GPU propre */
+}
 
 #progressBar {
   height: 100%;
@@ -680,10 +683,12 @@ font-weight:bold;
 
   background: linear-gradient(to right, #00ffcc, #00ccff);
 
-  border-radius: 0; /* 🔥 IMPORTANT */
-  display: block;   /* 🔥 sécurité mobile */
+  display: block;
 
-  transition: width 0.15s linear;
+  min-height: 100%;   /* 🔥 FIX MOBILE */
+  max-height: 100%;   /* 🔥 FIX MOBILE */
+
+  transform: scaleY(1.01); /* 🔥 petit hack anti-compression */
 }
 
 #wordDisplay {
