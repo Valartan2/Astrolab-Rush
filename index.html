@@ -34,6 +34,31 @@
       outline: none;
       touch-action: none;
     }
+
+ 
+@media screen and (orientation: portrait) {
+  /* ⚠️ UNIQUEMENT mobile */
+  body.mobile::before {
+    content: "🔄 Tourne ton téléphone";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  body.mobile canvas {
+    display: none;
+  }
+}
+
     
     #gameTitle {
       font-size: 48px;
