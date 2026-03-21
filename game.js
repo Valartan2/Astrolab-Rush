@@ -1138,9 +1138,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
    
 
     if (isMobile) {
-  player.gravityDown = 2.5;
-  player.gravityUp = -2.3;
-  player.maxSpeed = 13;
+  player.gravityDown = 2.5 * (1 / scaleY);
+  player.gravityUp = -2.3 * (1 / scaleY);
+  player.maxSpeed = 13 * (1 / scaleY);
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
@@ -1334,7 +1334,7 @@ const cappedSpeed = Math.min(baseSpeed, 26);
 // ⚡ accélération BLOQUÉE à 1500
 const speedRamp = 1 + (effectiveDistance / 3000);
 
-const finalSpeed = cappedSpeed * speedRamp;
+const finalSpeed = cappedSpeed * speedRamp * (1 / scaleY);
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 25 : 20;
 
@@ -1432,7 +1432,7 @@ if (
 for (let i = specialObstacles.length - 1; i >= 0; i--) {
   const o = specialObstacles[i];
 
-  o.x -= o.speed * dt* 0.6;
+  o.x -= o.speed * dt * 0.6 * (1 / scaleY);
 
   const dx = player.x - o.x;
   const dy = player.y - o.y;
@@ -1494,7 +1494,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x += dx * 0.08;
     s.y += dy * 0.08;
   } else {
-    s.x -= s.speed * dt * 0.6;
+    s.x -= s.speed * dt * 0.6 * (1 / scaleY);
   }
 
 
@@ -1523,7 +1523,7 @@ starScore += 1;
 for (let i = magnets.length - 1; i >= 0; i--) {
   const m = magnets[i];
 
-  m.x -= m.speed * dt * 0.6;
+  m.x -= m.speed * dt * 0.6 * (1 / scaleY);
 
   const dx = player.x - m.x;
   const dy = player.y - m.y;
@@ -1551,7 +1551,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 for (let i = shields.length - 1; i >= 0; i--) {
   const s = shields[i];
 
-  s.x -= s.speed * dt * 0.6;
+  s.x -= s.speed * dt * 0.6 * (1 / scaleY);
 
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1576,7 +1576,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
 for (let i = x2s.length - 1; i >= 0; i--) {
   const b = x2s[i];
 
-  b.x -= b.speed * dt * 0.6;
+  b.x -= b.speed * dt * 0.6 * (1 / scaleY);
 
   const dx = player.x - b.x;
   const dy = player.y - b.y;
@@ -1601,7 +1601,7 @@ for (let i = x2s.length - 1; i >= 0; i--) {
 for (let i = letters.length - 1; i >= 0; i--) {
   const l = letters[i];
 
-  l.x -= l.speed * dt;
+  l.x -= l.speed * dt * (1 / scaleY);
 
   const dx = player.x - l.x;
   const dy = player.y - l.y;
@@ -1653,7 +1653,7 @@ starSound.play().catch(()=>{});
     if (!gameOver) {
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
-player.y += player.velocityY * dt;
+player.y += player.velocityY * dt * (1 / scaleY);
 player.velocityY *= Math.pow(0.87, dt);
 
       if (player.y < player.radius) {
