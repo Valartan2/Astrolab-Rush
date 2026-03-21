@@ -59,31 +59,6 @@ starSound.volume = 0.4;
   
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-  // ✅ ===== ORIENTATION LOCK =====
-function checkOrientation() {
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const rotateDiv = document.getElementById("rotateScreen");
-
-  if (!rotateDiv) return;
-
-  rotateDiv.style.display = isPortrait ? "flex" : "none";
-
-  // 🛑 STOP GAME SI PORTRAIT
-  if (isPortrait) {
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-  }
-}
-
-// events
-window.addEventListener("resize", checkOrientation);
-window.addEventListener("orientationchange", checkOrientation);
-
-// premier check
-setTimeout(checkOrientation, 100);
-// ===============================
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
@@ -335,34 +310,23 @@ x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
- let width, height;
+  let width, height;
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    width = canvas.width / dpr;
+    height = canvas.height / dpr;
 
-function resize() {
-  const dpr = window.devicePixelRatio || 1;
-
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  // 🎯 canvas = taille écran
-  canvas.width = screenWidth * dpr;
-  canvas.height = screenHeight * dpr;
-
-  canvas.style.width = screenWidth + "px";
-  canvas.style.height = screenHeight + "px";
-
-  // reset transform
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(dpr, dpr);
-
-  // 🔥 LE PLUS IMPORTANT : le monde suit l’écran
-  width = screenWidth;
-  height = screenHeight;
-
-  // reposition joueur
-  if (player) {
-    player.x = isMobile ? width * 0.15 : width * 0.2;
+    if (player) {
+      player.x = isMobile ? 75 : 150;
+    }
   }
-}
+  window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
   const player = {
