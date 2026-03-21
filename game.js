@@ -434,7 +434,7 @@ const letterInterval = 10000; // 10 secondes
   Ovni: false
 };
   
-  const distanceSpeedFactor = 2.5;
+  const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
 
   /* -------------------- Stars Background -------------------- */
