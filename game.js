@@ -1162,9 +1162,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     player.gravityUp = -1.5;
     player.maxSpeed = 9;
   } else {
-    player.gravityDown = 2.5;
-    player.gravityUp = -2.3;
-    player.maxSpeed = 13;
+    player.gravityDown = 2.2;
+    player.gravityUp = -2.2;
+    player.maxSpeed = 11;
   }
 
 } else {
