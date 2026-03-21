@@ -678,8 +678,10 @@ font-weight:bold;
   height: 100%;
   width: 0%;
 
-   background: linear-gradient(to right, #00ffcc, #00ccff);
-  border-radius: 10px;
+  background: linear-gradient(to right, #00ffcc, #00ccff);
+
+  border-radius: 0; /* 🔥 IMPORTANT */
+  display: block;   /* 🔥 sécurité mobile */
 
   transition: width 0.15s linear;
 }
