@@ -345,12 +345,11 @@ function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  // 🔥 FULL SCREEN
-  const scale = Math.max(
-    screenWidth / BASE_WIDTH,
-    screenHeight / BASE_HEIGHT
-  );
+  const scaleX = screenWidth / BASE_WIDTH;
+const scaleY = screenHeight / BASE_HEIGHT;
 
+// 🎯 équilibre parfait (pas zoomé + quasi plein écran)
+const scale = Math.min(scaleX, scaleY) * 1.1;
   const canvasWidth = BASE_WIDTH * scale;
   const canvasHeight = BASE_HEIGHT * scale;
 
