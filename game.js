@@ -1900,7 +1900,15 @@ if (shieldActive && shieldRemaining < 1000) {
     menuRocketCtx.filter = "grayscale(100%)";
   }
 
-  menuRocketCtx.drawImage(img, centerX-40, centerY-40, 80, 80);
+  const size = isMobile ? 60 : 80;
+
+menuRocketCtx.drawImage(
+  img,
+  centerX - size / 2,
+  centerY - size / 2,
+  size,
+  size
+);
 
   menuRocketCtx.restore();
 
