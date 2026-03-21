@@ -65,7 +65,8 @@ const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const wordDisplay = document.getElementById("wordDisplay");
   
-
+const GAME_ZOOM = 0.75; // 👈 1 = normal / 0.75 = dézoom / 0.6 = fort dézoom
+  
 menuObjectivesBtn.onclick = () => {
 
 playClick();
@@ -318,9 +319,9 @@ x2Image.src = "X2.png"; // ton image
     canvas.style.width = window.innerWidth + "px";
     canvas.style.height = window.innerHeight + "px";
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    width = canvas.width / dpr;
-    height = canvas.height / dpr;
+    ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
+    width = (canvas.width / dpr) / GAME_ZOOM;
+height = (canvas.height / dpr) / GAME_ZOOM;
 
     if (player) {
       player.x = isMobile ? 75 : 150;
