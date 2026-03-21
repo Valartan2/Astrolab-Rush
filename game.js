@@ -319,25 +319,24 @@ x2Image.src = "X2.png"; // ton image
   /* -------------------- Canvas Resize -------------------- */
   
   function resize() {
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
 
-  scale = Math.min(
-    screenWidth / BASE_WIDTH,
-    screenHeight / BASE_HEIGHT
-  );
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
 
-  canvas.width = BASE_WIDTH;
-  canvas.height = BASE_HEIGHT;
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
 
-  canvas.style.width = BASE_WIDTH * scale + "px";
-  canvas.style.height = BASE_HEIGHT * scale + "px";
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
 
-  width = BASE_WIDTH;
-  height = BASE_HEIGHT;
+  width = window.innerWidth;
+  height = window.innerHeight;
 
+  // reposition joueur propre
   if (player) {
     player.x = isMobile ? 75 : 150;
+    player.y = height / 2;
   }
 }
   window.addEventListener("resize", resize);
