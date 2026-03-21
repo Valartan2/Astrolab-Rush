@@ -337,8 +337,10 @@ x2Image.src = "X2.png"; // ton image
   height = window.innerHeight;
 
   // 🔥 SCALE dynamique
-  scaleX = width / BASE_WIDTH;
-  scaleY = height / BASE_HEIGHT;
+ const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
+
+scaleX = scale;
+scaleY = scale;
 
   // 🚀 IMPORTANT (joueur visible)
   player.radius = 30 * scaleY;  
