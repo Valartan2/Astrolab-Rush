@@ -362,6 +362,7 @@ x2Image.src = "X2.png"; // ton image
 
   resize();
   player.y = height / 2;
+  player.radius = 30 * scaleY;
 
   /* -------------------- Input -------------------- */
   let pressing = false;
@@ -1146,7 +1147,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
   player.maxSpeed = 11;
 }
     nextGradeIndex = 1;
-    player.radius = 30;
+    player.radius = 30 * scaleY;
     bubbles = [];
     specialObstacles = [];
     particles = [];
@@ -1309,8 +1310,7 @@ progressLabel.style.display = "none";
   /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(scale, scale);
+   
 
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
   dt = Math.min(dt, 1.5);  
