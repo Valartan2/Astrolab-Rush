@@ -276,20 +276,16 @@ transition:opacity 0.15s;
     }
 
     #shareScore {
-      position: absolute;
-      top: 80%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      padding: 10px 20px;
-      border-radius: 12px;
-      border: 3px solid black;
-      background: #00cfcf;
-      color: black;
-      cursor: pointer;
-      display: none;
-      box-shadow: 3px 3px 0 black;
-    }
+  font-size: 24px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 3px solid black;
+  background: #00cfcf;
+  color: black;
+  cursor: pointer;
+  display: none;
+  box-shadow: 3px 3px 0 black;
+}
 
     #shareScore:hover {
       background: #00cfcf;
@@ -298,10 +294,6 @@ transition:opacity 0.15s;
     }
 
    #objectifsBtn {
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translateX(-50%);
   font-size: 24px;
   font-weight: bold;
   padding: 10px 20px;
@@ -313,8 +305,7 @@ transition:opacity 0.15s;
   cursor: pointer;
   display: none;
   box-shadow: 3px 3px 0 black;
-  z-index: 18;
- text-transform: uppercase;
+  text-transform: uppercase;
 }
     #objectifList {
   position: fixed;
@@ -472,23 +463,17 @@ opacity:0.7;
 
 
     #rejouer {
-      position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      padding: 10px 20px;
-      color: black;
-      background: #ffaa00;
-      border: 3px solid black;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 3px 3px 0 black;
-      text-transform: uppercase;
-      display: none;
-      z-index: 18;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+  font-size: 24px;
+  padding: 10px 20px;
+  color: black;
+  background: #ffaa00;
+  border: 3px solid black;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 black;
+  text-transform: uppercase;
+  display: none;
+}
 
     #rejouer:hover {
       background: #ff8800;
@@ -637,11 +622,7 @@ font-weight:bold;
   box-shadow: 2px 2px 0 black;
 }   
 
-#backToMenu {
-  position: absolute;
-  top: 90%;
-  left: 50%;
-  transform: translateX(-50%);
+    #backToMenu {
   font-size: 22px;
   padding: 10px 20px;
   border-radius: 12px;
@@ -651,7 +632,6 @@ font-weight:bold;
   cursor: pointer;
   display: none;
   box-shadow: 3px 3px 0 black;
-  z-index: 18;
   font-family: 'Comic Sans MS','Arial Rounded MT Bold',sans-serif;
   font-weight: bold;
   text-transform: uppercase;
@@ -723,8 +703,79 @@ font-weight:bold;
   display: none;
 }
 
+.mobile #scoreBoard {
+  width: 90%;
+  max-width: 320px;
+  padding: 15px;
+}
 
-    
+.mobile #scoreBoard button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.mobile #scoreBoard h2 {
+  font-size: 20px;
+}
+
+.mobile #scoreBoard p {
+  font-size: 14px;
+}
+
+    .mobile #menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+}
+
+.mobile #menu h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.mobile #menu button {
+  width: 180px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+    .mobile #distance {
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+.mobile #progressBar {
+  height: 8px;
+}
+
+.mobile #progressLabel {
+  font-size: 12px;
+}
+
+.mobile #wordDisplay {
+  font-size: 14px;
+}
+    .mobile #progressBarContainer {
+  width: 140px;
+}
+
+    #scoreBoard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#scoreBoard button {
+  width: 100%;
+  max-width: 220px;
+}
     
   </style>
 </head>
@@ -763,19 +814,22 @@ font-weight:bold;
   <div id="progressBar"></div>
 </div>
 
-
-  <!-- 🆕 Tableau de score -->
-  <div id="scoreBoard">
+<!-- 🆕 Tableau de score -->
+<div id="scoreBoard">
   <h2>ScoreBoard</h2>
+
   <p><strong>Current Distance:</strong> <span id="currentScore">0</span> m</p>
   <p><strong>Best Score:</strong> <span id="bestScore">0</span> m</p>
   <p><strong>Total Distance:</strong> <span id="totalScore">0</span> m</p>
-  
   <p><strong>Grade:</strong> <span id="grade">-</span></p>
-</div>
-   
 
- 
+  <!-- 🔥 BOUTONS INTÉGRÉS -->
+  <button id="rejouer">Replay</button>
+  <button id="objectifsBtn">Objectives</button>
+  <button id="shareScore">Share Score</button>
+  <button id="backToMenu">Menu</button>
+</div>
+
 <div id="objectifList" style="display: none;">
   <div id="objectifPanel">
     <h2>Objectives</h2>
@@ -791,15 +845,10 @@ font-weight:bold;
   </div>
 </div>
 
-  <div id="gameOverText">GAME OVER</div>
+<div id="gameOverText">GAME OVER</div>
 
-  <button id="rejouer">Replay</button>
-  <button id="objectifsBtn">Objectives</button>
-  <button id="shareScore">Share Score</button>
-
-  <button id="backToMenu">Menu</button>
-  
-  <div id="success-banner"></div>
+<div id="success-banner"></div>
+ 
   
   <audio id="gameMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
