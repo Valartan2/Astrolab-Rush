@@ -1,25 +1,6 @@
 (() => {
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  const isLandscapeMobile = isMobile && window.innerWidth > window.innerHeight;
-
-  
-  const BASE_WIDTH = 1280;
-const BASE_HEIGHT = 720;
-
-
-let width = BASE_WIDTH;
-let height = BASE_HEIGHT;
-
-let scaleX = 1;
-let scaleY = 1; 
-
-  const GAME_ZOOM = isMobile ? 1.4 : 1.0;
-
-if (isMobile) {
-  document.body.classList.add("mobile");
-}
 
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
@@ -76,7 +57,7 @@ starSound.volume = 0.4;
   if (music) music.volume = 0.3;
 
   
- 
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
@@ -329,45 +310,23 @@ x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
-function resize() {
-  const dpr = window.devicePixelRatio || 1;
+  let width, height;
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    width = canvas.width / dpr;
+    height = canvas.height / dpr;
 
-  let screenW = window.innerWidth;
-  let screenH = window.innerHeight;
-
-  // 📱 MOBILE → forcer paysage
-  if (isMobile) {
-    width = Math.max(screenW, screenH);
-    height = Math.min(screenW, screenH);
-  } 
-  // 💻 DESKTOP → inchangé
-  else {
-    width = screenW;
-    height = screenH;
+    if (player) {
+      player.x = isMobile ? 75 : 150;
+    }
   }
-
-  canvas.width = width * dpr;
-  canvas.height = height * dpr;
-
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0); 
-  ctx.scale(dpr, dpr);
-
-  // 🔥 SCALE propre (le plus important)
-  const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
-
-scaleX = scale * GAME_ZOOM;
-scaleY = scale * GAME_ZOOM;
-
-  // 🚀 joueur
-  player.radius = 30 * scaleY;
-  player.x = 150 * scaleX;
-  player.y = height / 2;
-}
-
-window.addEventListener("resize", resize);
+  window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
   const player = {
@@ -382,7 +341,6 @@ window.addEventListener("resize", resize);
 
   resize();
   player.y = height / 2;
-  player.radius = 30 * scaleY;
 
   /* -------------------- Input -------------------- */
   let pressing = false;
@@ -761,7 +719,7 @@ li.textContent = `${rocket.label}${status}`;
   function createBubble(speed) {
     const base = isMobile ? 15 : 25;
     const extra = isMobile ? 10 : 15;
-    const radius = (Math.random() * extra + base) * scaleY;
+    const radius = Math.random() * extra + base;
     const y = radius + Math.random() * (height - 2 * radius);
     const image = meteoriteImages[Math.floor(Math.random() * meteoriteImages.length)];
 
@@ -777,7 +735,7 @@ li.textContent = `${rocket.label}${status}`;
   }
 
 function createStar(speed) {
-  const size = 20 * scaleY;
+  const size = 20;
 
   starsCollectibles.push({
     x: width + size + 200,
@@ -791,7 +749,7 @@ function createStar(speed) {
   magnets.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 25 * scaleY,
+    size: 25,
     speed: speed * 0.6
   });
 }
@@ -800,7 +758,7 @@ function createStar(speed) {
   shields.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 25 * scaleY,
+    size: 25,
     speed: speed * 0.6
   });
 }
@@ -809,7 +767,7 @@ function createStar(speed) {
   x2s.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
-    size: 28 * scaleY,
+    size: 28,
     speed: speed * 0.6
   });
 }
@@ -823,7 +781,7 @@ function createLetter(speed) {
   letters.push({
     x: width + 50,
     y: Math.random() * (height - 100) + 50,
-    size: 35 * scaleY,
+    size: 35,
     speed: speed * 0.6,
     letter: letter
   });
@@ -844,15 +802,15 @@ function createLetter(speed) {
 
   // 🎯 taille fixe par type
   if (image.src.includes("ISS")) {
-    size = 100 * scaleY;
+    size = 100;
   } else if (image.src.includes("Ovni")) {
-    size = 35 * scaleY;
+    size = 35;
   } else if (image.src.includes("Soyouz")) {
-    size = 38 * scaleY;
+    size = 38;
   } else if (image.src.includes("Starman")) {
-    size = 32 * scaleY;
+    size = 32;
   } else {
-    size = 35 * scaleY;
+    size = 35;
   }
 
   let y;
@@ -1158,24 +1116,16 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
    
 
     if (isMobile) {
-
-  if (isLandscapeMobile) {
-    player.gravityDown = 1.6;
-    player.gravityUp = -1.5;
-    player.maxSpeed = 9;
-  } else {
-    player.gravityDown = 2.2;
-    player.gravityUp = -2.2;
-    player.maxSpeed = 11;
-  }
-
+  player.gravityDown = 2.5;
+  player.gravityUp = -2.3;
+  player.maxSpeed = 13;
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
   player.maxSpeed = 11;
 }
     nextGradeIndex = 1;
-    player.radius = 30 * scaleY;
+    player.radius = 30;
     bubbles = [];
     specialObstacles = [];
     particles = [];
@@ -1338,18 +1288,12 @@ progressLabel.style.display = "none";
   /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
 
-   
-
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
   dt = Math.min(dt, 1.5);  
   lastTime = timestamp;
     drawStars();
 
-    let speedFactor = 1;
-
-if (isMobile) {
-  speedFactor = isLandscapeMobile ? 0.55 : 0.7;
-}
+    const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
 
 const effectiveDistance = Math.min(distance, 1500);
@@ -1464,7 +1408,7 @@ if (
 for (let i = specialObstacles.length - 1; i >= 0; i--) {
   const o = specialObstacles[i];
 
-  o.x -= o.speed * dt * 0.6;
+  o.x -= o.speed * dt* 0.6;
 
   const dx = player.x - o.x;
   const dy = player.y - o.y;
@@ -1633,7 +1577,7 @@ for (let i = x2s.length - 1; i >= 0; i--) {
 for (let i = letters.length - 1; i >= 0; i--) {
   const l = letters[i];
 
-  l.x -= l.speed * dt * 0.6;
+  l.x -= l.speed * dt;
 
   const dx = player.x - l.x;
   const dy = player.y - l.y;
