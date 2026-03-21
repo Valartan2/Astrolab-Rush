@@ -1300,7 +1300,8 @@ progressLabel.style.display = "none";
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
 
-const effectiveDistance = Math.min(distance, 1500);
+const maxDistanceCap = isMobile ? 1000 : 1500;
+const effectiveDistance = Math.min(distance, maxDistanceCap);
 
 // 👉 UTILISE effectiveDistance PARTOUT
 const speedLevel = Math.floor(effectiveDistance / 400);
