@@ -67,8 +67,7 @@ const wordDisplay = document.getElementById("wordDisplay");
   
 const GAME_ZOOM = isMobile ? 0.8 : 1;
 
-// zoom léger quand ça va vite
-const dynamicZoom = GAME_ZOOM - Math.min(distance / 10000, 0.1);
+
 
 ctx.scale(dynamicZoom, dynamicZoom);
 menuObjectivesBtn.onclick = () => {
