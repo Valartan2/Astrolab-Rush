@@ -340,6 +340,9 @@ x2Image.src = "X2.png"; // ton image
   scaleX = width / BASE_WIDTH;
   scaleY = height / BASE_HEIGHT;
 
+  // 🚀 IMPORTANT (joueur visible)
+  player.radius = 30 * scaleY;  
+
   // 🎯 reposition joueur
   player.x = (isMobile ? 150 : 150) * scaleX;
   player.y = height / 2;
@@ -350,7 +353,7 @@ x2Image.src = "X2.png"; // ton image
   const player = {
     x: 150,
     y: 0,
-    radius: 30 * scaleY,
+    radius: 30,
     velocityY: 0,
     gravityUp: -0.8,
     gravityDown: 0.9,
