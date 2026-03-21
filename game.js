@@ -1432,7 +1432,7 @@ if (
 for (let i = specialObstacles.length - 1; i >= 0; i--) {
   const o = specialObstacles[i];
 
-  o.x -= o.speed * dt * 0.6 * (1 / scaleY);
+  o.x -= o.speed * dt * 0.6;
 
   const dx = player.x - o.x;
   const dy = player.y - o.y;
@@ -1494,7 +1494,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x += dx * 0.08;
     s.y += dy * 0.08;
   } else {
-    s.x -= s.speed * dt * 0.6 * (1 / scaleY);
+    s.x -= s.speed * dt * 0.6;
   }
 
 
@@ -1523,7 +1523,7 @@ starScore += 1;
 for (let i = magnets.length - 1; i >= 0; i--) {
   const m = magnets[i];
 
-  m.x -= m.speed * dt * 0.6 * (1 / scaleY);
+  m.x -= m.speed * dt * 0.6;
 
   const dx = player.x - m.x;
   const dy = player.y - m.y;
@@ -1551,7 +1551,7 @@ for (let i = magnets.length - 1; i >= 0; i--) {
 for (let i = shields.length - 1; i >= 0; i--) {
   const s = shields[i];
 
-  s.x -= s.speed * dt * 0.6 * (1 / scaleY);
+  s.x -= s.speed * dt * 0.6;
 
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1576,7 +1576,7 @@ for (let i = shields.length - 1; i >= 0; i--) {
 for (let i = x2s.length - 1; i >= 0; i--) {
   const b = x2s[i];
 
-  b.x -= b.speed * dt * 0.6 * (1 / scaleY);
+  b.x -= b.speed * dt * 0.6;
 
   const dx = player.x - b.x;
   const dy = player.y - b.y;
@@ -1601,7 +1601,7 @@ for (let i = x2s.length - 1; i >= 0; i--) {
 for (let i = letters.length - 1; i >= 0; i--) {
   const l = letters[i];
 
-  l.x -= l.speed * dt * (1 / scaleY);
+  l.x -= l.speed * dt * 0.6;
 
   const dx = player.x - l.x;
   const dy = player.y - l.y;
@@ -1653,7 +1653,7 @@ starSound.play().catch(()=>{});
     if (!gameOver) {
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
-player.y += player.velocityY * dt * (1 / scaleY);
+player.y += player.velocityY * dt;
 player.velocityY *= Math.pow(0.87, dt);
 
       if (player.y < player.radius) {
