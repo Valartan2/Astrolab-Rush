@@ -1176,7 +1176,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
   playButton.onclick = () => {
     playClick();
 
-   
+   document.getElementById("topHUD").style.display = "flex";
 
     if (music && musicEnabled) {
   music.currentTime = 0;
@@ -1440,6 +1440,8 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
     gameOver = true;
 
     wordDisplay.style.display = "none";
+
+    document.getElementById("topHUD").style.display = "none";
     
     if (music) music.pause();
     gameOverText.style.display = "block";
@@ -1628,6 +1630,10 @@ starSound.play().catch(()=>{});
 }
       
     if (!gameOver) {
+
+document.getElementById("starCount").textContent = starScore; // 👈 AJOUT
+  document.getElementById("destroyCount").textContent = meteorDestroyed; // 👈 AJOUT
+      
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
 player.y += player.velocityY * dt;
