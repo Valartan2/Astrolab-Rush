@@ -65,8 +65,12 @@ const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const wordDisplay = document.getElementById("wordDisplay");
   
-const GAME_ZOOM = 0.75; // 👈 1 = normal / 0.75 = dézoom / 0.6 = fort dézoom
-  
+const GAME_ZOOM = isMobile ? 0.9 : 0.7;
+
+// zoom léger quand ça va vite
+const dynamicZoom = GAME_ZOOM - Math.min(distance / 10000, 0.1);
+
+ctx.scale(dynamicZoom, dynamicZoom);
 menuObjectivesBtn.onclick = () => {
 
 playClick();
