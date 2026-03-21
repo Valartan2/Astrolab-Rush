@@ -1684,7 +1684,12 @@ progressBar.style.width = percent + "%";
 const remaining = Math.floor(nextThreshold - distance);
 progressLabel.textContent = `Next Grade : ${remaining} m`;
 
-progressBar.style.background = getFlashColor();      
+progressBar.style.background = getFlashColor();     
+
+const progressText = document.getElementById("progressText");
+
+progressText.textContent =
+  Math.floor(distance) + " / " + nextThreshold;      
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
