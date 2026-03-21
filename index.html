@@ -109,19 +109,10 @@
     }
 
     #menu {
-  position: fixed;
-  inset: 0;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 10;
-  text-align: center;
-
-  padding: 20px;
-  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
     #menuImage {
@@ -136,15 +127,8 @@
       object-fit: contain;
     }
 
-    .mobile .menuBtn {
-  width: 160px;
-  font-size: 16px;
-  padding: 8px 12px;
-}
+   
 
-    .mobile #menu {
-  gap: 10px;
-}
 
     #menuRocket{
 width:220px;
@@ -750,25 +734,8 @@ font-weight:bold;
   font-size: 14px;
 }
 
-    .mobile #menu {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  padding: 20px;
-}
+   
 
-.mobile #menu h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-.mobile #menu button {
-  width: 180px;
-  font-size: 16px;
-  padding: 10px;
-}
 
     .mobile #distance {
   font-size: 14px;
@@ -790,16 +757,101 @@ font-weight:bold;
   width: 140px;
 }
 
-    #scoreBoard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
 
 #scoreBoard button {
   width: 100%;
   max-width: 220px;
+}
+
+    /* 🔥 MODE ARCADE MOBILE PAYSAGE */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+
+  #menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px; /* 🔥 compact */
+    padding: 10px;
+  }
+
+  #gameTitle {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  #menuImage {
+    width: 90px;
+    margin: 5px 0;
+  }
+
+  #rocketSelector {
+    margin: 0;
+    gap: 6px;
+  }
+
+  #menuRocket {
+    width: 120px;
+    height: 80px;
+  }
+
+  .menuBtn {
+    width: 160px;
+    font-size: 14px;
+    padding: 8px;
+  }
+  #scoreBoard {
+  transform: translate(-50%, -50%) scale(0.85);
+  }
+  #menu {
+  max-height: 100vh;
+  overflow: hidden;
+  }
+
+}
+
+    @media screen and (max-width: 900px) and (orientation: landscape) {
+
+  #gameOverText {
+    top: 8%;
+    font-size: 24px;
+  }
+
+  #scoreBoard {
+    position: fixed;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 260px;
+    padding: 12px;
+
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  #scoreBoard h2 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  #scoreBoard p {
+    font-size: 13px;
+    margin: 2px 0;
+  }
+
+  #scoreBoard button {
+    width: 180px;
+    font-size: 14px;
+    padding: 8px;
+  }
+
 }
     
   </style>
