@@ -1126,7 +1126,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
-  player.maxSpeed = 11;
+  player.maxSpeed = 13;
 }
     nextGradeIndex = 1;
     player.radius = 30;
