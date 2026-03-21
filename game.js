@@ -16,7 +16,8 @@ let scaleX = 1;
 let scaleY = 1; 
 
   const GAME_ZOOM = isMobile ? 1.4 : 1.0;
-  
+
+if (isMobile) {
   document.body.classList.add("mobile");
 }
 
