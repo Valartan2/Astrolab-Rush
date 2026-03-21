@@ -316,7 +316,7 @@ x2Image.src = "X2.png"; // ton image
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = window.innerWidth + "px";
@@ -441,7 +441,7 @@ const letterInterval = 10000; // 10 secondes
   const CONSTANT_SPEED = 14;
 
   /* -------------------- Stars Background -------------------- */
-  const stars = Array.from({ length: 150 }, () => ({
+  const stars = Array.from({ length: isMobile ? 60 : 150 }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
     radius: Math.random() * 1.5 + 0.2,
@@ -871,7 +871,7 @@ function createLetter(speed) {
   // 🔥 GLOW
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.shadowBlur = 25;
+  ctx.shadowBlur = isMobile ? 0 : 15;
   ctx.shadowColor = "#00ccff";
 
   ctx.drawImage(
@@ -1317,7 +1317,7 @@ const speedRamp = 1 + (effectiveDistance / 3000);
 
 const finalSpeed = cappedSpeed * speedRamp;
     const spawnRate = 25;
-    const maxMeteorites = isMobile ? 25 : 20;
+    const maxMeteorites = isMobile ? 20 : 20;
 
     frameCount += dt;
 
