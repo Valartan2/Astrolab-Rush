@@ -335,8 +335,8 @@ x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
-  let width, height;
- const BASE_WIDTH = 800;
+ let width, height;
+const BASE_WIDTH = 800;
 const BASE_HEIGHT = 600;
 
 function resize() {
@@ -345,8 +345,8 @@ function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
 
-  // ✅ SCALE QUI FIT ENTIEREMENT
-  const scale = Math.min(
+  // 🔥 FULL SCREEN
+  const scale = Math.max(
     screenWidth / BASE_WIDTH,
     screenHeight / BASE_HEIGHT
   );
