@@ -2,7 +2,9 @@
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const isLandscapeMobile = isMobile && window.innerWidth > window.innerHeight;
 
+  
   const BASE_WIDTH = 1280;
 const BASE_HEIGHT = 720;
 
@@ -1154,9 +1156,17 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
    
 
     if (isMobile) {
-  player.gravityDown = 2.5;
-  player.gravityUp = -2.3;
-  player.maxSpeed = 13;
+
+  if (isLandscapeMobile) {
+    player.gravityDown = 1.6;
+    player.gravityUp = -1.5;
+    player.maxSpeed = 9;
+  } else {
+    player.gravityDown = 2.5;
+    player.gravityUp = -2.3;
+    player.maxSpeed = 13;
+  }
+
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
@@ -1333,7 +1343,11 @@ progressLabel.style.display = "none";
   lastTime = timestamp;
     drawStars();
 
-    const speedFactor = isMobile ? 0.7 : 1;
+    let speedFactor = 1;
+
+if (isMobile) {
+  speedFactor = isLandscapeMobile ? 0.55 : 0.7;
+}
     const meteorSpeedFactor = 1;
 
 const effectiveDistance = Math.min(distance, 1500);
