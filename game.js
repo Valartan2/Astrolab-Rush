@@ -2,6 +2,13 @@
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
+  const BASE_WIDTH = 1280;
+const BASE_HEIGHT = 720;
+
+let scale = 1;
+let width = BASE_WIDTH;
+let height = BASE_HEIGHT;
+
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
   const distanceDisplay = document.getElementById("distance");
@@ -312,20 +319,27 @@ x2Image.src = "X2.png"; // ton image
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    width = canvas.width / dpr;
-    height = canvas.height / dpr;
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
 
-    if (player) {
-      player.x = isMobile ? 75 : 150;
-    }
+  scale = Math.min(
+    screenWidth / BASE_WIDTH,
+    screenHeight / BASE_HEIGHT
+  );
+
+  canvas.width = BASE_WIDTH;
+  canvas.height = BASE_HEIGHT;
+
+  canvas.style.width = BASE_WIDTH * scale + "px";
+  canvas.style.height = BASE_HEIGHT * scale + "px";
+
+  width = BASE_WIDTH;
+  height = BASE_HEIGHT;
+
+  if (player) {
+    player.x = isMobile ? 75 : 150;
   }
+}
   window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
@@ -1287,6 +1301,9 @@ progressLabel.style.display = "none";
 
   /* -------------------- Main Loop -------------------- */
   function gameLoop(timestamp) {
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(scale, scale);
 
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
   dt = Math.min(dt, 1.5);  
