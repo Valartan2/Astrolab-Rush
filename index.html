@@ -702,7 +702,71 @@ font-weight:bold;
   width: 220px;
   height: 60px;
 }
+
+    #distance,
+#wordDisplay,
+#progressContainer,
+#progressLabel {
+  display: none !important;
+}
     
+
+#topHUD {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100%;
+  max-width: 600px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 10px;
+  z-index: 20;
+}
+
+#stats {
+  font-size: 14px;
+  color: white;
+
+  background: rgba(0,0,0,0.5);
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+#progressWrapper {
+  flex: 1;
+  height: 22px;
+
+  background: rgba(255,255,255,0.2);
+  border: 3px solid black;
+  border-radius: 12px;
+
+  position: relative;
+  overflow: hidden;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #00ffcc, #00ccff);
+}
+
+#progressText {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  left: 0;
+
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+}    
     
   </style>
 </head>
@@ -731,6 +795,18 @@ font-weight:bold;
 </div>
 
   <canvas id="game"></canvas>
+
+  <div id="topHUD" style="display:none;">
+  <div id="stats">
+    ⭐ <span id="starCount">0</span>
+    💥 <span id="destroyCount">0</span>
+  </div>
+
+  <div id="progressWrapper">
+    <div id="progressBar"></div>
+    <div id="progressText">0 / 500</div>
+  </div>
+</div>
 
   <div id="distance">Distance: 0 m</div>
 
