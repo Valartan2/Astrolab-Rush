@@ -105,13 +105,20 @@
     }
 
     #menu {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      text-align: center;
-    }
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 10;
+  text-align: center;
+
+  padding: 20px;
+  box-sizing: border-box;
+}
 
     #menuImage {
       display: block;
@@ -246,26 +253,17 @@ transition:opacity 0.15s;
   animation: scorePulse 0.4s ease;
 }
 
-    /* 🆕 Tableau de score */
-    #scoreBoard {
-  position: absolute;
-  top: 25%;
+   #scoreBoard {
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%);
-  background: #fffbe6;
-  padding: 18px 20px;
-  border-radius: 20px;
-  border: 5px solid black;
-  text-align: center;
-  z-index: 17;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  font-size: 20px;
-  font-weight: bold;
-  color: #222;
-  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-  display: none;
-  width: 340px;
+  transform: translate(-50%, -50%);
+
+  width: 320px;
   max-width: 90vw;
+
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
     #scoreBoard h2 {
