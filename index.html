@@ -10,51 +10,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" href="/icon-180.png">
 
-<meta name="screen-orientation" content="landscape">
-<meta name="orientation" content="landscape">
-
-  
   <style>
     /* ✅ Styles iOS : suppression pastille et sélection */
     html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+      margin: 0; padding: 0; overflow: hidden;
+      background: linear-gradient(to top, #001122, #002233);
+      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
 
-  background: black;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
+    }
 
-  display: flex;              /* 🔥 IMPORTANT */
-  justify-content: center;    /* 🔥 centre horizontal */
-  align-items: center;        /* 🔥 centre vertical */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
 
-  height: 100vh;              /* 🔥 IMPORTANT */
-
-  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
-
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: none;
-}
-
-    /* 🎮 Canvas du jeu */
-#game {
-  display: block;
-  background: linear-gradient(to top, #000000, #222222);
-  outline: none;
-  touch-action: none;
- 
-}
-
-/* 🌌 Background menu */
-#menuStars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0; /* 🔥 pas de centrage */
-}
+    canvas {
+      display: block;
+      background: linear-gradient(to top, #000000, #222222);
+      outline: none;
+      touch-action: none;
+    }
     
     #gameTitle {
       font-size: 48px;
@@ -719,27 +698,8 @@ font-weight:bold;
   display: none;
 }
 
-#rotateScreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #001122;
-  color: white;
-  font-size: 24px;
 
-  display: none;
-
-  align-items: center;
-  justify-content: center;
-
-  z-index: 9999;
-}
     
-
-
-
     
   </style>
 </head>
@@ -765,10 +725,6 @@ font-weight:bold;
 <button id="menuObjectivesBtn" class="menuBtn">Objectives</button>
 <button id="settingsBtn" class="menuBtn">Settings</button>
 
-</div>
-
-  <div id="rotateScreen">
-  🔄 Tourne ton téléphone
 </div>
 
   <canvas id="game"></canvas>
