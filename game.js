@@ -12,6 +12,10 @@ let height = BASE_HEIGHT;
 let scaleX = 1;
 let scaleY = 1;  
 
+  if (isMobile) {
+  document.body.classList.add("mobile");
+}
+
   const rejouerBtn = document.getElementById("rejouer");
   const gameOverText = document.getElementById("gameOverText");
   const distanceDisplay = document.getElementById("distance");
@@ -320,36 +324,45 @@ x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
-  
-  function resize() {
+function resize() {
   const dpr = window.devicePixelRatio || 1;
 
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
+  let screenW = window.innerWidth;
+  let screenH = window.innerHeight;
 
-  canvas.style.width = window.innerWidth + "px";
-  canvas.style.height = window.innerHeight + "px";
+  // 📱 MOBILE → forcer paysage
+  if (isMobile) {
+    width = Math.max(screenW, screenH);
+    height = Math.min(screenW, screenH);
+  } 
+  // 💻 DESKTOP → inchangé
+  else {
+    width = screenW;
+    height = screenH;
+  }
+
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
 
   ctx.setTransform(1, 0, 0, 1, 0, 0); 
   ctx.scale(dpr, dpr);
 
-  width = window.innerWidth;
-  height = window.innerHeight;
+  // 🔥 SCALE propre (le plus important)
+  const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
 
-  // 🔥 SCALE dynamique
- const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
+  scaleX = scale;
+  scaleY = scale;
 
-scaleX = scale;
-scaleY = scale;
-
-  // 🚀 IMPORTANT (joueur visible)
-  player.radius = 30 * scaleY;  
-
-  // 🎯 reposition joueur
-  player.x = (isMobile ? 150 : 150) * scaleX;
+  // 🚀 joueur
+  player.radius = 30 * scaleY;
+  player.x = 150 * scaleX;
   player.y = height / 2;
 }
-  window.addEventListener("resize", resize);
+
+window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
   const player = {
