@@ -317,7 +317,7 @@ x2Image.src = "X2.png"; // ton image
 
   
   /* -------------------- Canvas Resize -------------------- */
-  let width, height;
+  
   function resize() {
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
