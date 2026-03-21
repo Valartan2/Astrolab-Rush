@@ -15,9 +15,8 @@ let height = BASE_HEIGHT;
 let scaleX = 1;
 let scaleY = 1; 
 
-  const GAME_ZOOM = 1.2; // 🔥 ajuste ici (1.1 à 1.4 idéal)
-
-  if (isMobile) {
+  const GAME_ZOOM = isMobile ? 1.4 : 1.0;
+  
   document.body.classList.add("mobile");
 }
 
