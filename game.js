@@ -1,6 +1,7 @@
 (() => {
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
   const BASE_WIDTH = 1280;
 const BASE_HEIGHT = 720;
@@ -71,7 +72,7 @@ starSound.volume = 0.4;
   if (music) music.volume = 0.3;
 
   
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+ 
 
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
