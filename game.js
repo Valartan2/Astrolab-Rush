@@ -1471,12 +1471,15 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const s = starsCollectibles[i];
 
   if (magnetActive) {
-    const dx = player.x - s.x;
-    const dy = player.y - s.y;
+  const dx = player.x - s.x;
+  const dy = player.y - s.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
 
-    s.x += dx * 0.08;
-    s.y += dy * 0.08;
-  } else {
+  const speed = dist < 80 ? 20 : 10;
+
+  s.x += (dx / dist) * speed;
+  s.y += (dy / dist) * speed;
+} else {
     s.x -= s.speed * dt * 0.6;
   }
 
