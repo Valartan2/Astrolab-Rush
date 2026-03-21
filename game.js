@@ -69,7 +69,7 @@ const GAME_ZOOM = isMobile ? 0.8 : 1;
 
 
 
-ctx.scale(dynamicZoom, dynamicZoom);
+ctx.scale(GAME_ZOOM, GAME_ZOOM);
 menuObjectivesBtn.onclick = () => {
 
 playClick();
