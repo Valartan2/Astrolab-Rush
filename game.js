@@ -13,7 +13,9 @@ let width = BASE_WIDTH;
 let height = BASE_HEIGHT;
 
 let scaleX = 1;
-let scaleY = 1;  
+let scaleY = 1; 
+
+  const GAME_ZOOM = 1.2; // 🔥 ajuste ici (1.1 à 1.4 idéal)
 
   if (isMobile) {
   document.body.classList.add("mobile");
@@ -356,8 +358,8 @@ function resize() {
   // 🔥 SCALE propre (le plus important)
   const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
 
-  scaleX = scale;
-  scaleY = scale;
+scaleX = scale * GAME_ZOOM;
+scaleY = scale * GAME_ZOOM;
 
   // 🚀 joueur
   player.radius = 30 * scaleY;
