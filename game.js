@@ -1117,9 +1117,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
    
 
     if (isMobile) {
-  player.gravityDown = 2.5;
-  player.gravityUp = -2.3;
-  player.maxSpeed = 13;
+  player.gravityDown = 1.9;
+  player.gravityUp = -1.7;
+  player.maxSpeed = 10;
 } else {
   player.gravityDown = 2.2;
   player.gravityUp = -2.2;
