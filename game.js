@@ -1913,19 +1913,9 @@ menuRocketCtx.drawImage(
   menuRocketCtx.restore();
 
 }
-menuRocketCanvas.addEventListener("click", () => {
-
-  const rocket = rocketDefinitions[rocketScrollIndex];
-
-  if(unlockedRocketKeys.includes(rocket.key)){
-    selectedRocketKey = rocket.key;
-    setSelectedRocketKey(rocket.key);
-    showSuccessBanner(`🚀 ${rocket.label} selected`);
-  }
 
 
-
-});
+  
 
 const arrowLeft = document.getElementById("arrowLeft");
 const arrowRight = document.getElementById("arrowRight");
@@ -1939,10 +1929,10 @@ arrowLeft.onclick = () => {
   if(unlockedRocketKeys.includes(rocket.key)){
     selectedRocketKey = rocket.key;
     setSelectedRocketKey(rocket.key);
+    showSuccessBanner(`🚀 ${rocket.label} selected`);
   }
 
   drawMenuRocket();
-
 };
 
 arrowRight.onclick = () => {
@@ -1954,10 +1944,10 @@ arrowRight.onclick = () => {
   if(unlockedRocketKeys.includes(rocket.key)){
     selectedRocketKey = rocket.key;
     setSelectedRocketKey(rocket.key);
+    showSuccessBanner(`🚀 ${rocket.label} selected`);
   }
 
   drawMenuRocket();
-
 };
 
 settingsBtn.onclick = () => {
