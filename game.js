@@ -89,7 +89,8 @@ objectifList.style.display="flex";
   TOTAL_DESTROYED: "totalDestroyed",
   SELECTED_ROCKET: "selectedRocketKey",
   UNLOCKED_ROCKETS: "unlockedRockets",
-  TOTAL_SPECIAL: "totalSpecial",  
+  TOTAL_SPECIAL: "totalSpecial",
+  TOTAL_BIG_STARS: "totalBigStars",  
 };
 
   /* -------------------- Grades -------------------- */
@@ -156,6 +157,14 @@ objectifList.style.display="flex";
 
   function getTotalStars() {
   return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_STARS) || "0", 10);
+}
+
+  function getTotalBigStars() {
+  return parseInt(localStorage.getItem("totalBigStars") || "0", 10);
+}
+
+function setTotalBigStars(v) {
+  localStorage.setItem("totalBigStars", v);
 }
 
 function setTotalStars(v) {
@@ -395,6 +404,7 @@ height = (canvas.height / dpr) / GAME_ZOOM;
 
   let starsCollectibles = [];
   let starScore = 0;
+  let bigStarScore = 0;
 
   let magnetActive = false;
   let magnetTimer = 0;
@@ -1086,6 +1096,9 @@ function drawX2(b) {
 const totalStars = getTotalStars() + starScore;
 setTotalStars(totalStars);
 
+    const totalBigStars = getTotalBigStars() + bigStarScore;
+setTotalBigStars(totalBigStars);
+
 // 🔤 galaxy
 const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
 setTotalGalaxy(totalGalaxy);
@@ -1155,6 +1168,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     particles = [];
     starsCollectibles = [];
     starScore = 0;
+    bigStarScore = 0;
     magnets = [];
     magnetActive = false;
     frameCount = 0;
@@ -1417,21 +1431,27 @@ if (
 
          // 🌟 transformation en étoiles
 if (meteorToStarActive) {
+
   const dx = player.x - b.x;
   const dy = player.y - b.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  if (dist < player.radius + b.radius) {
-    starScore += 2;
+  // 🧲 AIMANT
+  if (magnetActive) {
+    const speed = dist < 80 ? 20 : 10;
+    b.x += (dx / dist) * speed;
+    b.y += (dy / dist) * speed;
+  }
 
-    starSound.currentTime = 0;
-    starSound.play().catch(()=>{});
+  // 🌟 COLLECTE GROSSE ÉTOILE
+  if (dist < player.radius + b.radius) {
+
+    bigStarScore += 1;
 
     bubbles.splice(i, 1);
     continue;
   }
 }
-
   // 🛡️ SHIELD destruction
   const dx = player.x - b.x;
   const dy = player.y - b.y;
@@ -1713,6 +1733,7 @@ starSound.play().catch(()=>{});
 
 document.getElementById("starCount").textContent = starScore; // 👈 AJOUT
   document.getElementById("destroyCount").textContent = meteorDestroyed; // 👈 AJOUT
+      document.getElementById("bigStarCount").textContent = bigStarScore; // ✅ AJOUT
       
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
