@@ -1251,7 +1251,9 @@ normalModeBtn.onclick = () => {
 focusModeBtn.onclick = () => {
   playClick();
   focusMode = true;
-  startGame();
+  setTimeout(() => {
+    startGame();
+  }, 50); // 🔥 CRUCIAL
 };
 
   rejouerBtn.onclick = () => {
