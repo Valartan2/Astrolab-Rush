@@ -1367,11 +1367,11 @@ progressLabel.style.display = "none";
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
   dt = Math.min(dt, 1.5);  
   lastTime = timestamp;
+
     if (!focusMode) {
-  drawStars();
-} else {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, width, height);
+  starsCollectibles.forEach(drawStar);
+  magnets.forEach(drawMagnet);
+  x2s.forEach(drawX2);
 }
 
     const speedFactor = isMobile ? 0.7 : 1;
