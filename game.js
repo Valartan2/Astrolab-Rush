@@ -1145,6 +1145,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 
   /* -------------------- Reset -------------------- */
   function resetGame() {
+
+    document.getElementById("topHUD").style.display = "none"; // ✅ AJOUT
+    
     if (animationId) {
       cancelAnimationFrame(animationId);
       animationId = null;
@@ -1299,6 +1302,8 @@ progressLabel.style.display = "block";
   shareBtn.style.display = "none";
   objectifsBtn.style.display = "none";
   backToMenuBtn.style.display = "none";
+
+    document.getElementById("topHUD").style.display = "none"; // ✅ AJOUT ICI
 
   // remettre menu
   menu.style.display = "block";
@@ -1819,6 +1824,8 @@ progressText.textContent =
           if (music) music.pause();
           gameOverText.style.display = "block";
           distanceDisplay.style.display = "none";
+
+          document.getElementById("topHUD").style.display = "none";
 
           progressBar.parentElement.style.display = "none";
 progressLabel.style.display = "none";
