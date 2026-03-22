@@ -766,7 +766,15 @@ font-weight:bold;
   font-size: 12px;
   color: white;
   font-weight: bold;
-}    
+}   
+
+    .smallStar {
+  font-size: 16px;
+}
+
+.bigStar {
+  font-size: 24px; /* ou 26 si tu veux plus impact */
+}
     
   </style>
 </head>
@@ -798,9 +806,9 @@ font-weight:bold;
 
   <div id="topHUD" style="display:none;">
   <div id="stats">
-    ⭐ <span id="starCount">0</span>
-    🌟 <span id="bigStarCount">0</span>
-    💥 <span id="destroyCount">0</span>
+    <span class="smallStar">⭐</span> <span id="starCount">0</span>
+    <span class="bigStar">⭐</span> <span id="bigStarCount">0</span>
+ 💥 <span id="destroyCount">0</span>
   </div>
 
   <div id="progressWrapper">
