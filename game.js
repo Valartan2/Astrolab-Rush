@@ -1187,6 +1187,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     flamePulse = 0;
     gameOver = false;
     distance = 0;
+    progressBar.style.width = "1%";
     startTime = performance.now();
     newlyUnlockedThisRun = [];
     lastTime = performance.now();
