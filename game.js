@@ -1213,10 +1213,6 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
   document.getElementById("topHUD").style.display = "flex";
 }
 
-// ✅ TOUJOURS visible
-progressBar.parentElement.style.display = "block";
-progressLabel.style.display = "block";
-}
     lastSpecialSpawn = 0;
 
  // 🛡️ SHIELD RESET
@@ -1353,24 +1349,24 @@ progressLabel.style.display = "none";
 
 function startGame() {
 
-  modeSelect.style.display = "none";
-
-  resetGame(); // ✅ DOIT ÊTRE EN PREMIER
-
   if (focusMode) {
     document.getElementById("topHUD").style.display = "none";
-    progressBar.parentElement.style.display = "none";
-    progressLabel.style.display = "none";
   } else {
     document.getElementById("topHUD").style.display = "flex";
-    progressBar.parentElement.style.display = "block";
-    progressLabel.style.display = "block";
   }
+
+  // ✅ BARRE TOUJOURS VISIBLE
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
 
   if (music && musicEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
+
+  modeSelect.style.display = "none";
+
+  resetGame();
 
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
