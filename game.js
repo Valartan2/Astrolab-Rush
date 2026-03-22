@@ -1146,7 +1146,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
   /* -------------------- Reset -------------------- */
   function resetGame() {
 
-    document.getElementById("topHUD").style.display = "none"; // ✅ AJOUT
+    
     
     if (animationId) {
       cancelAnimationFrame(animationId);
