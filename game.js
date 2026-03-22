@@ -1510,40 +1510,37 @@ if (
    
   b.x -= b.speed * Math.min(dt, 1.2);
 
-         // 🌟 transformation en étoiles
-      
+ / 🌟 transformation en étoiles
+if (meteorToStarActive) {
 
+  const dx = player.x - b.x;
+  const dy = player.y - b.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // 🧲 AIMANT
+  if (magnetActive) {
+    const speed = dist < 80 ? 20 : 10;
+    b.x += (dx / dist) * speed;
+    b.y += (dy / dist) * speed;
+  }
+
+  // 🌟 COLLECTE GROSSE ÉTOILE
+  if (dist < player.radius + b.radius) {
+    bigStarScore += 1;
+    bubbles.splice(i, 1);
+    continue;
+  }
+}
+
+// 🛡️ SHIELD destruction
 const dx = player.x - b.x;
 const dy = player.y - b.y;
 const dist = Math.sqrt(dx * dx + dy * dy);
 
-// 🧲 AIMANT (toujours actif)
-if (magnetActive) {
-  const speed = dist < 80 ? 20 : 10;
-  b.x += (dx / dist) * speed;
-  b.y += (dy / dist) * speed;
-}
+if (shieldActive && dist < player.radius + 80) {
+  createExplosion(b.x, b.y);
 
-// 🌟 état actuel
-const isStar = meteorToStarActive;
-
-// 🎯 COLLISION
-if (dist < player.radius + b.radius) {
-
-  if (isStar) {
-    // ⭐ collecte
-    bigStarScore += 1;
-
-  } else if (shieldActive) {
-    // 🛡️ destruction
-    createExplosion(b.x, b.y);
-    meteorDestroyed++;
-
-  } else {
-    // 💀 game over
-    createExplosion(player.x, player.y);
-    gameOver = true;
-  }
+  meteorDestroyed++; // (tu l’avais ajouté après 👍)
 
   bubbles.splice(i, 1);
   continue;
