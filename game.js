@@ -1355,9 +1355,7 @@ function startGame() {
     document.getElementById("topHUD").style.display = "flex";
   }
 
-  // ✅ BARRE TOUJOURS VISIBLE
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
+  
 
   if (music && musicEnabled) {
     music.currentTime = 0;
@@ -1368,6 +1366,10 @@ function startGame() {
 
   resetGame();
 
+// ✅ BARRE TOUJOURS VISIBLE
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+  
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
 
