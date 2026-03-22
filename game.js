@@ -1502,7 +1502,7 @@ if (
    
   b.x -= b.speed * Math.min(dt, 1.2);
 
- / 🌟 transformation en étoiles
+ // 🌟 transformation en étoiles
 if (meteorToStarActive) {
 
   const dx = player.x - b.x;
