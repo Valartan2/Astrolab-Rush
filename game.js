@@ -1350,6 +1350,10 @@ progressLabel.style.display = "none";
 
   resetGame();
 
+  // 🚀 DÉMARRE DIRECT LE LOOP (COMME REPLAY)
+  animationId = requestAnimationFrame(gameLoop);
+
+  // UI APRÈS
   if (focusMode) {
     document.getElementById("topHUD").style.display = "none";
   } else {
@@ -1363,10 +1367,6 @@ progressLabel.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
-
-progressBar.style.width = "5%";
-   
-  animationId = requestAnimationFrame(gameLoop);
 }
 
   /* -------------------- Start Screen -------------------- */
