@@ -1187,7 +1187,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     flamePulse = 0;
     gameOver = false;
     distance = 0;
-    progressBar.style.width = "1%";
+    progressBar.style.width = "5%";
     startTime = performance.now();
     newlyUnlockedThisRun = [];
     lastTime = performance.now();
@@ -1211,6 +1211,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     progressBar.parentElement.style.display = "block";
 progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
+
+    isDying = false;
+  
 
  // 🛡️ SHIELD RESET
 shields = [];
@@ -1361,6 +1364,8 @@ progressLabel.style.display = "none";
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
 
+progressBar.style.width = "5%";
+   
   animationId = requestAnimationFrame(gameLoop);
 }
 
