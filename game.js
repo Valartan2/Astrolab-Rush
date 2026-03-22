@@ -466,6 +466,12 @@ let meteorToStarDuration = 8000; // 8 secondes
 
 let meteorToStarBonuses = [];
 let lastMeteorToStarSpawn = 0;
+
+  let nextMagnetDistance = 300;
+let nextShieldDistance = 600;
+let nextX2Distance = 900;
+let nextMeteorBonusDistance = 1200;
+let nextLetterDistance = 500;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -479,6 +485,10 @@ let lastMeteorToStarSpawn = 0;
   }));
 
   /* -------------------- Helpers -------------------- */
+
+  function getNextGap(min, max) {
+  return min + Math.random() * (max - min);
+}
   function getBestScore() {
     return parseInt(localStorage.getItem(STORAGE_KEYS.BEST_SCORE) || "0", 10);
   }
@@ -1213,6 +1223,12 @@ progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
 
     isDying = false;
+
+    nextMagnetDistance = 300;
+nextShieldDistance = 600;
+nextX2Distance = 900;
+nextMeteorBonusDistance = 1200;
+nextLetterDistance = 500;
   
 
  // 🛡️ SHIELD RESET
@@ -1493,68 +1509,91 @@ if (!focusMode && Math.random() < 0.02 && !gameOver) {
   createStar(finalSpeed);
 }
 
-// 🧲 MAGNET
+ 
 if (
-  !gameOver && !isDying &&
+  !gameOver &&
+  !isDying &&
   !magnetActive &&
   magnets.length === 0 &&
-  performance.now() - lastMagnetSpawn > 12000
+  !focusMode
 ) {
-  if (!focusMode) {
+
+  if (distance > nextMagnetDistance) {
+
     createMagnet(finalSpeed);
-    lastMagnetSpawn = performance.now();
+
+    nextMagnetDistance = distance + getNextGap(400, 800);
+
   }
 }
 
-// 🛡️ SHIELD
 if (
-  !gameOver && !isDying &&
+  !gameOver &&
+  !isDying &&
   !shieldActive &&
-  !meteorToStarActive && // 🔥 AJOUT
   shields.length === 0 &&
-  performance.now() - lastShieldSpawn > 15000
+  !meteorToStarActive &&
+  !focusMode
 ) {
-  if (!focusMode) {
+
+  if (distance > nextShieldDistance) {
+
     createShield(finalSpeed);
-    lastShieldSpawn = performance.now();
+
+    nextShieldDistance = distance + getNextGap(600, 1200);
+
   }
 }
 
-// 💰 X2
 if (
-  !gameOver && !isDying &&
+  !gameOver &&
+  !isDying &&
   x2s.length === 0 &&
-  performance.now() - lastX2Spawn > 20000
+  !focusMode
 ) {
-  if (!focusMode) {
+
+  if (distance > nextX2Distance) {
+
     createX2(finalSpeed);
-    lastX2Spawn = performance.now();
+
+    nextX2Distance = distance + getNextGap(800, 1400);
+
   }
 }
 
 // 🌟 METEOR BONUS
 if (
-  !gameOver && !isDying &&
+  !gameOver &&
+  !isDying &&
   !meteorToStarActive &&
-  !shieldActive && // 🔥 AJOUT
+  !shieldActive &&
   meteorToStarBonuses.length === 0 &&
-  performance.now() - lastMeteorToStarSpawn > 25000
+  !focusMode
 ) {
-  if (!focusMode) {
+
+  if (distance > nextMeteorBonusDistance) {
+
     createMeteorToStarBonus(finalSpeed);
-    lastMeteorToStarSpawn = performance.now();
+
+    nextMeteorBonusDistance = distance + getNextGap(1000, 1800);
+
   }
 }
 
 // 🔤 LETTERS
 if (
-  !gameOver && !isDying &&
+  !gameOver &&
+  !isDying &&
   letters.length === 0 &&
-  performance.now() - lastLetterSpawn > letterInterval
+  !focusMode
 ) {
-  if (!focusMode) {
+
+  if (distance > nextLetterDistance) {
+
     createLetter(finalSpeed);
-    lastLetterSpawn = performance.now();
+
+    nextLetterDistance = distance + getNextGap(500, 900);
+
   }
 }
    
