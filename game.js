@@ -1377,11 +1377,13 @@ progressLabel.style.display = "none";
   distanceDisplay.style.display = "block";
 
   // 🎯 HUD
-  if (focusMode) {
-    document.getElementById("topHUD").style.display = "none";
-  } else {
-    document.getElementById("topHUD").style.display = "flex";
-  }
+ document.getElementById("topHUD").style.display = "flex";
+
+if (focusMode) {
+  document.getElementById("stats").style.display = "none";
+} else {
+  document.getElementById("stats").style.display = "block";
+ }
 }
 
   /* -------------------- Start Screen -------------------- */
