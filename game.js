@@ -1413,64 +1413,73 @@ if (
   lastSpecialSpawn = performance.now();
 }
 
-   if (!focusMode && Math.random() < 0.02 && !gameOver) {
+ // ⭐ étoiles
+if (!focusMode && Math.random() < 0.02 && !gameOver) {
   createStar(finalSpeed);
 }
 
+// 🧲 MAGNET
 if (
   !gameOver &&
   !magnetActive &&
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > 12000
 ) {
-  
   if (!focusMode) {
-  createMagnet(finalSpeed);
+    createMagnet(finalSpeed);
+    lastMagnetSpawn = performance.now();
+  }
 }
-  
-  if (
+
+// 🛡️ SHIELD
+if (
   !gameOver &&
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
 ) {
-
-    if (!focusMode) {
-  createShield(finalSpeed);
+  if (!focusMode) {
+    createShield(finalSpeed);
+    lastShieldSpawn = performance.now();
+  }
 }
 
-    if (
+// 💰 X2
+if (
   !gameOver &&
- 
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
-
-      if (!focusMode) {
-  createX2(finalSpeed);
+  if (!focusMode) {
+    createX2(finalSpeed);
+    lastX2Spawn = performance.now();
+  }
 }
 
-    if (
+// 🌟 METEOR BONUS
+if (
   !gameOver &&
   meteorToStarBonuses.length === 0 &&
   performance.now() - lastMeteorToStarSpawn > 25000
 ) {
-      
   if (!focusMode) {
-  createMeteorToStarBonus(finalSpeed);
+    createMeteorToStarBonus(finalSpeed);
+    lastMeteorToStarSpawn = performance.now();
+  }
 }
 
-   // 🔤 SPAWN LETTER (toutes les 10s)
+// 🔤 LETTERS
 if (
   !gameOver &&
   letters.length === 0 &&
   performance.now() - lastLetterSpawn > letterInterval
 ) {
-
   if (!focusMode) {
-  createLetter(finalSpeed);
+    createLetter(finalSpeed);
+    lastLetterSpawn = performance.now();
+  }
 }
-    
+   
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
 
