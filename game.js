@@ -1207,8 +1207,13 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    progressBar.parentElement.style.display = "block";
-    progressLabel.style.display = "block";
+   if (focusMode) {
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+} else {
+  progressBar.parentElement.style.display = "none";
+  progressLabel.style.display = "none";
+}
     lastSpecialSpawn = 0;
 
  // 🛡️ SHIELD RESET
@@ -1344,8 +1349,18 @@ progressLabel.style.display = "none";
 
 if (focusMode) {
   document.getElementById("topHUD").style.display = "none";
+
+  // 🔥 cache aussi les compteurs
+  document.getElementById("starCount").style.display = "none";
+  document.getElementById("destroyCount").style.display = "none";
+  document.getElementById("bigStarCount").style.display = "none";
+
 } else {
   document.getElementById("topHUD").style.display = "flex";
+
+  document.getElementById("starCount").style.display = "inline";
+  document.getElementById("destroyCount").style.display = "inline";
+  document.getElementById("bigStarCount").style.display = "inline";
 }
 
   if (music && musicEnabled) {
