@@ -1362,16 +1362,29 @@ progressLabel.style.display = "none";
   drawMenuRocket();
 
   /* -------------------- Main Loop -------------------- */
-  function gameLoop(timestamp) {
+function gameLoop(timestamp) {
 
-  let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
-  dt = Math.min(dt, 1.5);  
+  let dt = (timestamp - lastTime) / 16.67;
+  dt = Math.min(dt, 1.5);
   lastTime = timestamp;
 
-    if (!focusMode) {
-  starsCollectibles.forEach(drawStar);
-  magnets.forEach(drawMagnet);
-  x2s.forEach(drawX2);
+  // 🧹 RESET
+ctx.setTransform(1, 0, 0, 1, 0, 0);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
+
+// 🌌 BACKGROUND
+drawStars();
+
+// 🎯 FOCUS MODE (option stylée)
+if (focusMode) {
+  ctx.save();
+  ctx.globalAlpha = 0.25;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
 }
 
     const speedFactor = isMobile ? 0.7 : 1;
