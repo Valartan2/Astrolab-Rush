@@ -1927,7 +1927,7 @@ progressText.textContent =
   isDying = true;
 createExplosion(player.x, player.y);
 pressing = false;
-return;
+
     break;
        }   
       }
