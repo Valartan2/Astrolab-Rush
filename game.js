@@ -1498,7 +1498,7 @@ if (
 
 // 🛡️ SHIELD
 if (
-  !gameOver && !isDying
+  !gameOver && !isDying &&
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
@@ -1511,7 +1511,7 @@ if (
 
 // 💰 X2
 if (
-  !gameOver && !isDying
+  !gameOver && !isDying &&
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
@@ -1523,7 +1523,7 @@ if (
 
 // 🌟 METEOR BONUS
 if (
-  !gameOver && !isDying
+  !gameOver && !isDying &&
   meteorToStarBonuses.length === 0 &&
   performance.now() - lastMeteorToStarSpawn > 25000
 ) {
@@ -1535,7 +1535,7 @@ if (
 
 // 🔤 LETTERS
 if (
-  !gameOver && !isDying
+  !gameOver && !isDying &&
   letters.length === 0 &&
   performance.now() - lastLetterSpawn > letterInterval
 ) {
