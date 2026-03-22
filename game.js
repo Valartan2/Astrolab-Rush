@@ -7,6 +7,14 @@
   const distanceDisplay = document.getElementById("distance");
   const menu = document.getElementById("menu");
   const playButton = document.getElementById("playButton");
+
+  // 🔥 MODE SYSTEM
+let focusMode = false;
+
+const modeSelect = document.getElementById("modeSelect");
+const normalModeBtn = document.getElementById("normalModeBtn");
+const focusModeBtn = document.getElementById("focusModeBtn");
+  
   const shareBtn = document.getElementById("shareScore");
   const scoreBoard = document.getElementById("scoreBoard");
   const currentScoreSpan = document.getElementById("currentScore");
@@ -1213,30 +1221,26 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 };
 
   /* -------------------- Buttons -------------------- */
-  playButton.onclick = () => {
-    playClick();
+playButton.onclick = () => {
+  playClick();
 
-   document.getElementById("topHUD").style.display = "flex";
+  // 🔥 au lieu de lancer le jeu → écran choix mode
+  menu.style.display = "none";
+  modeSelect.style.display = "block";
+};
+  // 🎮 NORMAL MODE
+normalModeBtn.onclick = () => {
+  playClick();
+  focusMode = false;
+  startGame();
+};
 
-    if (music && musicEnabled) {
-  music.currentTime = 0;
-  music.play().catch(() => {});
-}
-
-    menu.style.display = "none";
-    resetGame();
-
-    wordDisplay.style.display = "block";
-distanceDisplay.style.display = "block";
-
-    progressBar.parentElement.style.display = "block";
-progressLabel.style.display = "block";
-
-    const menuCanvas = document.getElementById("menuStars");
-    if (menuCanvas) menuCanvas.style.display = "none";
-
-    animationId = requestAnimationFrame(gameLoop);
-  };
+// 🎯 FOCUS MODE
+focusModeBtn.onclick = () => {
+  playClick();
+  focusMode = true;
+  startGame();
+};
 
   rejouerBtn.onclick = () => {
     playClick();
@@ -1324,6 +1328,31 @@ progressLabel.style.display = "none";
   drawMenuRocket();
 
 };
+
+  function startGame() {
+
+  document.getElementById("topHUD").style.display = "flex";
+
+  if (music && musicEnabled) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
+
+  modeSelect.style.display = "none";
+
+  resetGame();
+
+  wordDisplay.style.display = "block";
+  distanceDisplay.style.display = "block";
+
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "none";
+
+  animationId = requestAnimationFrame(gameLoop);
+}
 
   /* -------------------- Start Screen -------------------- */
   menu.style.display = "block";
