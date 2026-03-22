@@ -1640,6 +1640,9 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
   // 🔥 stop immédiat du gameplay
   pressing = false;
 
+    specialObstacles.splice(i, 1); // 🔥 MANQUANT
+
+
   break; // 🚨 TRÈS IMPORTANT
 }
 
