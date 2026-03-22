@@ -1207,14 +1207,15 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    if (focusMode) {
+ if (focusMode) {
   document.getElementById("topHUD").style.display = "none";
-  progressBar.parentElement.style.display = "none";
-  progressLabel.style.display = "none";
 } else {
   document.getElementById("topHUD").style.display = "flex";
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
+}
+
+// ✅ TOUJOURS visible
+progressBar.parentElement.style.display = "block";
+progressLabel.style.display = "block";
 }
     lastSpecialSpawn = 0;
 
