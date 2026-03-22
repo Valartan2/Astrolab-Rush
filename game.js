@@ -1347,6 +1347,8 @@ progressLabel.style.display = "none";
 
   function startGame() {
 
+     resetGame()
+
 if (focusMode) {
   document.getElementById("topHUD").style.display = "none";
 
@@ -1370,7 +1372,7 @@ if (focusMode) {
 
   modeSelect.style.display = "none";
 
-  resetGame();
+
 
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
@@ -1888,9 +1890,13 @@ player.velocityY *= Math.pow(0.87, dt);
       }
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
-      distanceDisplay.textContent =
-  `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
-
+      if (focusMode) {
+  distanceDisplay.textContent =
+    `Distance: ${formatNumber(Math.floor(distance))} m`;
+} else {
+  distanceDisplay.textContent =
+    `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+}
      
 
       const displayWord = word.map((letter, index) => {
