@@ -401,6 +401,7 @@ height = (canvas.height / dpr) / GAME_ZOOM;
   let frameCount = 0;
   let flamePulse = 0;
   let gameOver = false;
+  let isDying = false;
   let distance = 0;
   let startTime = 0;
   let nextGradeIndex = 1;
