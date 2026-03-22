@@ -1207,8 +1207,15 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    progressBar.parentElement.style.display = "block";
-    progressLabel.style.display = "block";
+    if (focusMode) {
+  document.getElementById("topHUD").style.display = "none";
+  progressBar.parentElement.style.display = "none";
+  progressLabel.style.display = "none";
+} else {
+  document.getElementById("topHUD").style.display = "flex";
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+}
     lastSpecialSpawn = 0;
 
  // 🛡️ SHIELD RESET
@@ -1263,8 +1270,11 @@ focusModeBtn.onclick = () => {
 
     resetGame();
 
-// ✅ remettre HUD
+if (!focusMode) {
   document.getElementById("topHUD").style.display = "flex";
+} else {
+  document.getElementById("topHUD").style.display = "none";
+}
     
     wordDisplay.style.display = "block";
     animationId = requestAnimationFrame(gameLoop);
@@ -1340,28 +1350,29 @@ progressLabel.style.display = "none";
 
 };
 
-  function startGame() {
+function startGame() {
 
-if (focusMode) {
-  document.getElementById("topHUD").style.display = "none";
-} else {
-  document.getElementById("topHUD").style.display = "flex";
-}
+  modeSelect.style.display = "none";
+
+  resetGame(); // ✅ DOIT ÊTRE EN PREMIER
+
+  if (focusMode) {
+    document.getElementById("topHUD").style.display = "none";
+    progressBar.parentElement.style.display = "none";
+    progressLabel.style.display = "none";
+  } else {
+    document.getElementById("topHUD").style.display = "flex";
+    progressBar.parentElement.style.display = "block";
+    progressLabel.style.display = "block";
+  }
 
   if (music && musicEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
 
-  modeSelect.style.display = "none";
-
-  resetGame();
-
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
-
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
