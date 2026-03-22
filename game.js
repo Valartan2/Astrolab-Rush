@@ -1524,12 +1524,8 @@ if (magnetActive) {
   b.y += (dy / dist) * speed;
 }
 
-// 🌟 SI METEOR → STAR
-let isStar = false;
-
-if (meteorToStarActive) {
-  isStar = true;
-}
+// 🌟 état actuel
+const isStar = meteorToStarActive;
 
 // 🎯 COLLISION
 if (dist < player.radius + b.radius) {
@@ -1537,10 +1533,12 @@ if (dist < player.radius + b.radius) {
   if (isStar) {
     // ⭐ collecte
     bigStarScore += 1;
+
   } else if (shieldActive) {
     // 🛡️ destruction
     createExplosion(b.x, b.y);
     meteorDestroyed++;
+
   } else {
     // 💀 game over
     createExplosion(player.x, player.y);
