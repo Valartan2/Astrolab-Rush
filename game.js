@@ -1485,7 +1485,7 @@ if (!focusMode && Math.random() < 0.02 && !gameOver) {
 
 // 🧲 MAGNET
 if (
-  !gameOver && !isDying
+  !gameOver && !isDying &&
   !magnetActive &&
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > 12000
