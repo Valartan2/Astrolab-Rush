@@ -1342,7 +1342,11 @@ progressLabel.style.display = "none";
 
   function startGame() {
 
+if (focusMode) {
+  document.getElementById("topHUD").style.display = "none";
+} else {
   document.getElementById("topHUD").style.display = "flex";
+}
 
   if (music && musicEnabled) {
     music.currentTime = 0;
@@ -1848,9 +1852,12 @@ starSound.play().catch(()=>{});
       
   if (!gameOver && !isDying) {
 
-document.getElementById("starCount").textContent = starScore; // 👈 AJOUT
-  document.getElementById("destroyCount").textContent = meteorDestroyed; // 👈 AJOUT
-      document.getElementById("bigStarCount").textContent = bigStarScore; // ✅ AJOUT
+  if (!focusMode) {
+    document.getElementById("starCount").textContent = starScore;
+    document.getElementById("destroyCount").textContent = meteorDestroyed;
+    document.getElementById("bigStarCount").textContent = bigStarScore;
+  }
+
       
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
 player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
