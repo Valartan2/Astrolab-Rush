@@ -1388,6 +1388,47 @@ ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 // 🌌 BACKGROUND
 drawStars();
 
+  // 💀 PHASE DE MORT (explosion uniquement)
+if (isDying) {
+
+  // 🎇 update + draw explosion
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const e = particles[i];
+    e.update();
+    e.draw();
+
+    if (e.isDead()) {
+      particles.splice(i, 1);
+    }
+  }
+
+  // ✅ fin explosion → vrai game over
+ if (particles.length === 0) {
+
+  isDying = false;
+  gameOver = true;
+
+  wordDisplay.style.display = "none";
+  document.getElementById("topHUD").style.display = "none";
+
+  if (music) music.pause();
+
+  gameOverText.style.display = "block";
+  distanceDisplay.style.display = "none";
+
+  afficherTableauScore(distance);
+
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+  objectifsBtn.style.display = "block";
+  backToMenuBtn.style.display = "block";
+}
+  }
+
+  animationId = requestAnimationFrame(gameLoop);
+  return; // 🚨 STOP TOUT LE RESTE
+}
+
 // 🎯 FOCUS MODE (option stylée)
 if (focusMode) {
   ctx.save();
@@ -1427,8 +1468,9 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
     }
 
     // 🛰️ SPAWN RARE
-if (
-  !gameOver &&
+
+  if (
+  !gameOver && !isDying &&
   specialObstacles.length === 0 &&
   performance.now() - lastSpecialSpawn > 8000
 ) {
@@ -1443,7 +1485,7 @@ if (!focusMode && Math.random() < 0.02 && !gameOver) {
 
 // 🧲 MAGNET
 if (
-  !gameOver &&
+  !gameOver && !isDying
   !magnetActive &&
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > 12000
@@ -1456,7 +1498,7 @@ if (
 
 // 🛡️ SHIELD
 if (
-  !gameOver &&
+  !gameOver && !isDying
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
@@ -1469,7 +1511,7 @@ if (
 
 // 💰 X2
 if (
-  !gameOver &&
+  !gameOver && !isDying
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
@@ -1481,7 +1523,7 @@ if (
 
 // 🌟 METEOR BONUS
 if (
-  !gameOver &&
+  !gameOver && !isDying
   meteorToStarBonuses.length === 0 &&
   performance.now() - lastMeteorToStarSpawn > 25000
 ) {
@@ -1493,7 +1535,7 @@ if (
 
 // 🔤 LETTERS
 if (
-  !gameOver &&
+  !gameOver && !isDying
   letters.length === 0 &&
   performance.now() - lastLetterSpawn > letterInterval
 ) {
@@ -1585,8 +1627,12 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
  
   if (!shieldActive && dist < player.radius + o.size * 0.5) {
    
-    createExplosion(player.x, player.y);
-    gameOver = true;
+   
+    isDying = true;
+createExplosion(player.x, player.y);
+
+// 🔥 stop immédiat du gameplay
+pressing = false;
 
     wordDisplay.style.display = "none";
 
@@ -1806,7 +1852,7 @@ starSound.play().catch(()=>{});
   ctx.restore();
 }
       
-    if (!gameOver) {
+  if (!gameOver && !isDying) {
 
 document.getElementById("starCount").textContent = starScore; // 👈 AJOUT
   document.getElementById("destroyCount").textContent = meteorDestroyed; // 👈 AJOUT
@@ -1888,32 +1934,12 @@ progressText.textContent =
 
       for (let i = 0; i < bubbles.length; i++) {
     
-        if (!meteorToStarActive && isColliding(player, bubbles[i])) {
-          createExplosion(player.x, player.y);
-          gameOver = true;
-          wordDisplay.style.display = "none";
-          
-          if (music) music.pause();
-          gameOverText.style.display = "block";
-          distanceDisplay.style.display = "none";
-
-          document.getElementById("topHUD").style.display = "none";
-
-          progressBar.parentElement.style.display = "none";
-progressLabel.style.display = "none";
-          
-         if (percent > 85) {
-  progressBar.style.boxShadow = "0 0 10px white";
-} else {
-  progressBar.style.boxShadow = "none";
-}
-afficherTableauScore(distance);
-
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-    objectifsBtn.style.display = "block";
-    backToMenuBtn.style.display = "block";
-
+       if (!meteorToStarActive && isColliding(player, bubbles[i])) {
+  isDying = true;
+  isDying = true;
+createExplosion(player.x, player.y);
+pressing = false;
+return;
     break;
        }   
       }
@@ -2034,7 +2060,7 @@ if (shieldActive) {
   ctx.restore();
 }
 
-if (!gameOver) {
+if (!gameOver && !isDying) {
   drawRocket(player.x, player.y, player.radius);
 }
 
@@ -2072,7 +2098,7 @@ if (shieldActive && shieldRemaining < 1000) {
     frameCount++;
     flamePulse += 0.15;
 
-    if (!gameOver || particles.length > 0) {
+    if ((!gameOver && !isDying) || particles.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
