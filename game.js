@@ -1501,6 +1501,7 @@ if (
 if (
   !gameOver && !isDying &&
   !shieldActive &&
+  !meteorToStarActive && // 🔥 AJOUT
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
 ) {
@@ -1525,6 +1526,8 @@ if (
 // 🌟 METEOR BONUS
 if (
   !gameOver && !isDying &&
+  !meteorToStarActive &&
+  !shieldActive && // 🔥 AJOUT
   meteorToStarBonuses.length === 0 &&
   performance.now() - lastMeteorToStarSpawn > 25000
 ) {
