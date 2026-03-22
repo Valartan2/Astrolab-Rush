@@ -1207,13 +1207,8 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-   if (focusMode) {
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
-} else {
-  progressBar.parentElement.style.display = "none";
-  progressLabel.style.display = "none";
-}
+    progressBar.parentElement.style.display = "block";
+progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
 
  // 🛡️ SHIELD RESET
