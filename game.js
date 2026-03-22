@@ -1628,29 +1628,16 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
   if (!shieldActive && dist < player.radius + o.size * 0.5) {
    
    
-    isDying = true;
-createExplosion(player.x, player.y);
+   
 
-// 🔥 stop immédiat du gameplay
-pressing = false;
+  isDying = true;
+  createExplosion(player.x, player.y);
 
-    wordDisplay.style.display = "none";
+  // 🔥 stop immédiat du gameplay
+  pressing = false;
 
-    document.getElementById("topHUD").style.display = "none";
-    
-    if (music) music.pause();
-    gameOverText.style.display = "block";
-    distanceDisplay.style.display = "none";
-
-    afficherTableauScore(distance);
-
-    rejouerBtn.style.display = "block";
-    shareBtn.style.display = "block";
-    objectifsBtn.style.display = "block";
-    backToMenuBtn.style.display = "block";
-
-    break;
-  }
+  return; // 🚨 TRÈS IMPORTANT
+}
 
   if (o.x < -100) {
     specialObstacles.splice(i, 1);
