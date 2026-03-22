@@ -1453,6 +1453,15 @@ if (focusMode) {
   ctx.restore();
 }
 
+  // ✅ FORCE LA BARRE TOUJOURS VISIBLE
+if (progressBar.parentElement.style.display !== "block") {
+  progressBar.parentElement.style.display = "block";
+}
+
+if (progressLabel.style.display !== "block") {
+  progressLabel.style.display = "block";
+}
+
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
 
