@@ -1210,7 +1210,15 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
 
- 
+ // 🛡️ SHIELD RESET
+shields = [];
+shieldActive = false;
+shieldTimer = 0;
+
+// 🌟 METEOR → STAR RESET
+meteorToStarBonuses = [];
+meteorToStarActive = false;
+meteorToStarTimer = 0;
 
     x2s = [];
     
