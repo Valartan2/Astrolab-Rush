@@ -1640,7 +1640,7 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
   // 🔥 stop immédiat du gameplay
   pressing = false;
 
-  return; // 🚨 TRÈS IMPORTANT
+  break; // 🚨 TRÈS IMPORTANT
 }
 
   if (o.x < -100) {
