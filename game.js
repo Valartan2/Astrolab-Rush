@@ -1366,26 +1366,22 @@ progressLabel.style.display = "none";
 
   resetGame();
 
-  // 🔥 FIX BARRE
-  progressBar.style.width = "1%";
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
-
   animationId = requestAnimationFrame(gameLoop);
-
-  if (focusMode) {
-    document.getElementById("topHUD").style.display = "none";
-  } else {
-    document.getElementById("topHUD").style.display = "flex";
-  }
-
-  wordDisplay.style.display = "block";
-  distanceDisplay.style.display = "block";
 
   modeSelect.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
+
+  wordDisplay.style.display = "block";
+  distanceDisplay.style.display = "block";
+
+  // 🎯 HUD
+  if (focusMode) {
+    document.getElementById("topHUD").style.display = "none";
+  } else {
+    document.getElementById("topHUD").style.display = "flex";
+  }
 }
 
   /* -------------------- Start Screen -------------------- */
