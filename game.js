@@ -1349,32 +1349,32 @@ progressLabel.style.display = "none";
 
 function startGame() {
 
+  modeSelect.style.display = "none";
+
+  resetGame();
+
+  // ✅ HUD
   if (focusMode) {
     document.getElementById("topHUD").style.display = "none";
   } else {
     document.getElementById("topHUD").style.display = "flex";
   }
 
-  
-
-  if (music && musicEnabled) {
-    music.currentTime = 0;
-    music.play().catch(() => {});
-  }
-
-  modeSelect.style.display = "none";
-
-  resetGame();
-
-// ✅ BARRE TOUJOURS VISIBLE
+  // ✅ BARRE = TOUJOURS VISIBLE
   progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
-  
+  progressLabel.style.display = "block"; 
+
+  // ✅ AUTRES UI
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
+
+  if (music && musicEnabled) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
 
   animationId = requestAnimationFrame(gameLoop);
 }
