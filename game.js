@@ -1356,6 +1356,11 @@ progressLabel.style.display = "none";
   // UI APRÈS
   if (focusMode) {
     document.getElementById("topHUD").style.display = "none";
+
+// 🔥 MAIS ON GARDE LA BARRE
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+    
   } else {
     document.getElementById("topHUD").style.display = "flex";
   }
