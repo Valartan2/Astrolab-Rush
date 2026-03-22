@@ -1367,7 +1367,12 @@ progressLabel.style.display = "none";
   let dt = (timestamp - lastTime) / 16.67; // normalisé à 60fps
   dt = Math.min(dt, 1.5);  
   lastTime = timestamp;
-    drawStars();
+    if (!focusMode) {
+  drawStars();
+} else {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, width, height);
+}
 
     const speedFactor = isMobile ? 0.7 : 1;
     const meteorSpeedFactor = 1;
@@ -1408,8 +1413,8 @@ if (
   lastSpecialSpawn = performance.now();
 }
 
-    if (Math.random() < 0.02 && !gameOver) {
-createStar(finalSpeed);
+   if (!focusMode && Math.random() < 0.02 && !gameOver) {
+  createStar(finalSpeed);
 }
 
 if (
@@ -1418,17 +1423,20 @@ if (
   magnets.length === 0 &&
   performance.now() - lastMagnetSpawn > 12000
 ) {
+  
+  if (!focusMode) {
   createMagnet(finalSpeed);
-  lastMagnetSpawn = performance.now();
 }
+  
   if (
   !gameOver &&
   !shieldActive &&
   shields.length === 0 &&
   performance.now() - lastShieldSpawn > 15000
 ) {
+
+    if (!focusMode) {
   createShield(finalSpeed);
-  lastShieldSpawn = performance.now();
 }
 
     if (
@@ -1437,8 +1445,9 @@ if (
   x2s.length === 0 &&
   performance.now() - lastX2Spawn > 20000
 ) {
+
+      if (!focusMode) {
   createX2(finalSpeed);
-  lastX2Spawn = performance.now();
 }
 
     if (
@@ -1446,8 +1455,9 @@ if (
   meteorToStarBonuses.length === 0 &&
   performance.now() - lastMeteorToStarSpawn > 25000
 ) {
+      
+  if (!focusMode) {
   createMeteorToStarBonus(finalSpeed);
-  lastMeteorToStarSpawn = performance.now();
 }
 
    // 🔤 SPAWN LETTER (toutes les 10s)
@@ -1456,9 +1466,10 @@ if (
   letters.length === 0 &&
   performance.now() - lastLetterSpawn > letterInterval
 ) {
+
+  if (!focusMode) {
   createLetter(finalSpeed);
-  lastLetterSpawn = performance.now();
-} 
+}
     
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
@@ -1919,8 +1930,10 @@ if (shieldActive) {
    
 
     // ⭐ étoiles
-starsCollectibles.forEach(drawStar);
-magnets.forEach(drawMagnet);
+if (!focusMode) {
+  starsCollectibles.forEach(drawStar);
+  magnets.forEach(drawMagnet);
+}
 
 // ⭐ METEOR RUSH VISUEL
 
