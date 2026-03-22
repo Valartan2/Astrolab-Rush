@@ -1894,16 +1894,21 @@ starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
 
 // ⭐ METEOR RUSH VISUEL
+
+const BIG_STAR_SCALE = 1.8;
+
 bubbles.forEach(b => {
 
   if (meteorToStarActive) {
 
+    const size = b.radius * 2 * BIG_STAR_SCALE;
+
     ctx.drawImage(
       starImage,
-      b.x - b.radius,
-      b.y - b.radius,
-      b.radius * 2,
-      b.radius * 2
+      b.x - size / 2,
+      b.y - size / 2,
+      size,
+      size
     );
 
   } else {
