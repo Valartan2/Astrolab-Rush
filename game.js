@@ -444,7 +444,7 @@ const letterInterval = 10000; // 10 secondes
 let meteorToStarTimer = 0;
 let meteorToStarDuration = 8000; // 8 secondes
 
-let meteorStars = []; // météorites transformées
+
 let meteorToStarBonuses = [];
 let lastMeteorToStarSpawn = 0;
   
@@ -1531,12 +1531,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x -= s.speed * dt * 0.6;
   }
 
-if (meteorToStarActive) {
-  if (performance.now() - meteorToStarTimer > meteorToStarDuration) {
-    meteorToStarActive = false;
-    showSuccessBanner("⚠️ RUSH OVER");
-  }
-}
+
   
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1840,6 +1835,13 @@ afficherTableauScore(distance);
     magnetActive = false;
   }
 }
+    // 🌟 METEOR RUSH TIMER (BON ENDROIT)
+if (meteorToStarActive) {
+  if (performance.now() - meteorToStarTimer > meteorToStarDuration) {
+    meteorToStarActive = false;
+    showSuccessBanner("⚠️ RUSH OVER");
+  }
+}
 
     // 🛡️ UPDATE SHIELD TIMER (MANQUANT)
 if (shieldActive) {
@@ -1858,7 +1860,29 @@ if (shieldActive) {
     // ⭐ étoiles
 starsCollectibles.forEach(drawStar);
 magnets.forEach(drawMagnet);
-bubbles.forEach(drawMeteorite);
+
+// ⭐ METEOR RUSH VISUEL
+bubbles.forEach(b => {
+
+  if (meteorToStarActive) {
+
+    ctx.drawImage(
+      starImage,
+      b.x - b.radius,
+      b.y - b.radius,
+      b.radius * 2,
+      b.radius * 2
+    );
+
+  } else {
+
+    drawMeteorite(b);
+
+  }
+
+});
+
+
 shields.forEach(drawShield);
 specialObstacles.forEach(drawSpecialObstacle);
 x2s.forEach(drawX2);  
