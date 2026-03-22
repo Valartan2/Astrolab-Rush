@@ -1366,17 +1366,15 @@ progressLabel.style.display = "none";
 
   resetGame();
 
-  // 🚀 DÉMARRE DIRECT LE LOOP (COMME REPLAY)
-  animationId = requestAnimationFrame(gameLoop);
-
-  // UI APRÈS
-  if (focusMode) {
-    document.getElementById("topHUD").style.display = "none";
-
-// 🔥 MAIS ON GARDE LA BARRE
+  // 🔥 FIX BARRE
+  progressBar.style.width = "1%";
   progressBar.parentElement.style.display = "block";
   progressLabel.style.display = "block";
-    
+
+  animationId = requestAnimationFrame(gameLoop);
+
+  if (focusMode) {
+    document.getElementById("topHUD").style.display = "none";
   } else {
     document.getElementById("topHUD").style.display = "flex";
   }
