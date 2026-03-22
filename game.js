@@ -312,6 +312,9 @@ specialSources.forEach(src => {
   const x2Image = new Image();
 x2Image.src = "X2.png"; // ton image
 
+  const meteorToStarImage = new Image();
+meteorToStarImage.src = "meteor_star.png";
+
   
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
@@ -436,6 +439,14 @@ const letterInterval = 10000; // 10 secondes
   Soyouz: false,
   Ovni: false
 };
+
+  let meteorToStarActive = false;
+let meteorToStarTimer = 0;
+let meteorToStarDuration = 8000; // 8 secondes
+
+let meteorStars = []; // météorites transformées
+let meteorToStarBonuses = [];
+let lastMeteorToStarSpawn = 0;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -769,6 +780,15 @@ function createStar(speed) {
 
   function createX2(speed) {
   x2s.push({
+    x: width + 40,
+    y: Math.random() * (height - 80) + 40,
+    size: 28,
+    speed: speed * 0.6
+  });
+}
+
+  function createMeteorToStarBonus(speed) {
+  meteorToStarBonuses.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
     size: 28,
@@ -1369,6 +1389,15 @@ if (
   lastX2Spawn = performance.now();
 }
 
+    if (
+  !gameOver &&
+  meteorToStarBonuses.length === 0 &&
+  performance.now() - lastMeteorToStarSpawn > 25000
+) {
+  createMeteorToStarBonus(finalSpeed);
+  lastMeteorToStarSpawn = performance.now();
+}
+
    // 🔤 SPAWN LETTER (toutes les 10s)
 if (
   !gameOver &&
@@ -1382,7 +1411,26 @@ if (
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
 
+
+   
   b.x -= b.speed * Math.min(dt, 1.2);
+
+         // 🌟 transformation en étoiles
+if (meteorToStarActive) {
+  const dx = player.x - b.x;
+  const dy = player.y - b.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + b.radius) {
+    starScore += 2;
+
+    starSound.currentTime = 0;
+    starSound.play().catch(()=>{});
+
+    bubbles.splice(i, 1);
+    continue;
+  }
+}
 
   // 🛡️ SHIELD destruction
   const dx = player.x - b.x;
@@ -1483,7 +1531,12 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
     s.x -= s.speed * dt * 0.6;
   }
 
-
+if (meteorToStarActive) {
+  if (performance.now() - meteorToStarTimer > meteorToStarDuration) {
+    meteorToStarActive = false;
+    showSuccessBanner("⚠️ RUSH OVER");
+  }
+}
   
   const dx = player.x - s.x;
   const dy = player.y - s.y;
@@ -1580,6 +1633,31 @@ for (let i = x2s.length - 1; i >= 0; i--) {
 
   if (b.x < -50) {
     x2s.splice(i, 1);
+  }
+}
+
+    // 🌟 METEOR → STAR BONUS
+for (let i = meteorToStarBonuses.length - 1; i >= 0; i--) {
+  const b = meteorToStarBonuses[i];
+
+  b.x -= b.speed * dt * 0.6;
+
+  const dx = player.x - b.x;
+  const dy = player.y - b.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < player.radius + b.size) {
+    meteorToStarActive = true;
+    meteorToStarTimer = performance.now();
+
+    showSuccessBanner("🌟 METEOR RUSH!");
+
+    meteorToStarBonuses.splice(i, 1);
+    continue;
+  }
+
+  if (b.x < -50) {
+    meteorToStarBonuses.splice(i, 1);
   }
 }
 
@@ -1717,7 +1795,7 @@ progressText.textContent =
 
       for (let i = 0; i < bubbles.length; i++) {
     
-        if (isColliding(player, bubbles[i])) {
+        if (!meteorToStarActive && isColliding(player, bubbles[i])) {
           createExplosion(player.x, player.y);
           gameOver = true;
           wordDisplay.style.display = "none";
@@ -1783,7 +1861,19 @@ magnets.forEach(drawMagnet);
 bubbles.forEach(drawMeteorite);
 shields.forEach(drawShield);
 specialObstacles.forEach(drawSpecialObstacle);
-x2s.forEach(drawX2);    
+x2s.forEach(drawX2);  
+
+    meteorToStarBonuses.forEach(b => {
+  if (!meteorToStarImage.complete) return;
+
+  ctx.drawImage(
+    meteorToStarImage,
+    b.x - b.size,
+    b.y - b.size,
+    b.size * 2,
+    b.size * 2
+  );
+});
 
     // 🔤 DRAW LETTERS
 letters.forEach(l => {
@@ -1820,7 +1910,16 @@ if (shieldActive) {
 if (!gameOver) {
   drawRocket(player.x, player.y, player.radius);
 }
-   
+
+if (meteorToStarActive) {
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = "#ffff00";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 100, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
 
     // 🛡️ SHIELD VISUEL (UN SEUL DRAW PROPRE)
 if (shieldActive) {
