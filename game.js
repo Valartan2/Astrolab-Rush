@@ -1388,7 +1388,7 @@ ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 // 🌌 BACKGROUND
 drawStars();
 
-  // 💀 PHASE DE MORT (explosion uniquement)
+// 💀 PHASE DE MORT (explosion uniquement)
 if (isDying) {
 
   // 🎇 update + draw explosion
@@ -1403,30 +1403,30 @@ if (isDying) {
   }
 
   // ✅ fin explosion → vrai game over
- if (particles.length === 0) {
+  if (particles.length === 0) {
 
-  isDying = false;
-  gameOver = true;
+    isDying = false;
+    gameOver = true;
 
-  wordDisplay.style.display = "none";
-  document.getElementById("topHUD").style.display = "none";
+    wordDisplay.style.display = "none";
+    document.getElementById("topHUD").style.display = "none";
 
-  if (music) music.pause();
+    if (music) music.pause();
 
-  gameOverText.style.display = "block";
-  distanceDisplay.style.display = "none";
+    gameOverText.style.display = "block";
+    distanceDisplay.style.display = "none";
 
-  afficherTableauScore(distance);
+    afficherTableauScore(distance);
 
-  rejouerBtn.style.display = "block";
-  shareBtn.style.display = "block";
-  objectifsBtn.style.display = "block";
-  backToMenuBtn.style.display = "block";
-}
+    rejouerBtn.style.display = "block";
+    shareBtn.style.display = "block";
+    objectifsBtn.style.display = "block";
+    backToMenuBtn.style.display = "block";
   }
 
+  // 🔁 CONTINUE L’ANIMATION DE MORT UNIQUEMENT
   animationId = requestAnimationFrame(gameLoop);
-  return; // 🚨 STOP TOUT LE RESTE
+  return; // 🚨 IMPORTANT : ici seulement
 }
 
 // 🎯 FOCUS MODE (option stylée)
