@@ -1345,40 +1345,20 @@ progressLabel.style.display = "none";
 
 };
 
-  function startGame() {
+ function startGame() {
 
-     resetGame()
+  resetGame();
 
-if (focusMode) {
-  document.getElementById("topHUD").style.display = "none";
-
-  // 🔥 cache aussi les compteurs
-  document.getElementById("starCount").style.display = "none";
-  document.getElementById("destroyCount").style.display = "none";
-  document.getElementById("bigStarCount").style.display = "none";
-
-} else {
-  document.getElementById("topHUD").style.display = "flex";
-
-  document.getElementById("starCount").style.display = "inline";
-  document.getElementById("destroyCount").style.display = "inline";
-  document.getElementById("bigStarCount").style.display = "inline";
-}
-
-  if (music && musicEnabled) {
-    music.currentTime = 0;
-    music.play().catch(() => {});
+  if (focusMode) {
+    document.getElementById("topHUD").style.display = "none";
+  } else {
+    document.getElementById("topHUD").style.display = "flex";
   }
-
-  modeSelect.style.display = "none";
-
-
 
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
 
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
+  modeSelect.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
