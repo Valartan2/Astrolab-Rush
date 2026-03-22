@@ -1247,6 +1247,10 @@ progressLabel.style.display = "block";
 }
 
     resetGame();
+
+// ✅ remettre HUD
+  document.getElementById("topHUD").style.display = "flex";
+    
     wordDisplay.style.display = "block";
     animationId = requestAnimationFrame(gameLoop);
   };
