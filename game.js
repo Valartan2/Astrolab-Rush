@@ -1320,10 +1320,10 @@ playButton.onclick = () => {
   modeSelect.style.display = "block";
 };
 
-
 endlessModeBtn.onclick = () => {
   playClick();
   gameMode = "endless";
+  focusMode = true; // 🔥 IMPORTANT
   startGame();
 };
 
