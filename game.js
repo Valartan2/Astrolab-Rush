@@ -9,11 +9,34 @@
   const playButton = document.getElementById("playButton");
 
   // 🔥 MODE SYSTEM
-let focusMode = false;
+let gameMode = "endless"; // "endless", "mission", "time"
+let timeLeft = 60;
+let missionTarget = 30;
 
 const modeSelect = document.getElementById("modeSelect");
-const normalModeBtn = document.getElementById("normalModeBtn");
-const focusModeBtn = document.getElementById("focusModeBtn");
+const endlessModeBtn = document.getElementById("endlessModeBtn");
+const missionModeBtn = document.getElementById("missionModeBtn");
+const timeModeBtn = document.getElementById("timeModeBtn");
+
+endlessModeBtn.onclick = () => {
+  playClick();
+  gameMode = "endless";
+  startGame();
+};
+
+missionModeBtn.onclick = () => {
+  playClick();
+  gameMode = "mission";
+  missionTarget = 30; // objectif étoiles
+  startGame();
+};
+
+timeModeBtn.onclick = () => {
+  playClick();
+  gameMode = "time";
+  timeLeft = 60;
+  startGame();
+};
   
   const shareBtn = document.getElementById("shareScore");
   const scoreBoard = document.getElementById("scoreBoard");
@@ -1225,6 +1248,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     flamePulse = 0;
     gameOver = false;
     distance = 0;
+    if (gameMode === "time") {
+  timeLeft = 60;
+}
     progressBar.style.width = "5%";
     startTime = performance.now();
     newlyUnlockedThisRun = [];
@@ -1724,8 +1750,12 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dy = player.y - s.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  if (dist < player.radius + s.size) {
-starScore += 1;
+if (dist < player.radius + s.size) {
+  starScore += 1;
+
+  if (gameMode === "time") {
+    timeLeft += 2; // ⭐ +2 secondes
+  }
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1895,6 +1925,17 @@ starSound.play().catch(()=>{});
   ctx.fill();
   ctx.restore();
 }
+
+  // ⏱️ TIME ATTACK
+if (gameMode === "time" && !gameOver && !isDying) {
+  timeLeft -= dt / 60;
+
+  if (timeLeft <= 0) {
+    timeLeft = 0;
+    isDying = true;
+    createExplosion(player.x, player.y);
+  }
+}
       
   if (!gameOver && !isDying) {
 
@@ -1919,10 +1960,16 @@ player.velocityY *= Math.pow(0.87, dt);
       }
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
-      if (focusMode) {
+     if (gameMode === "time") {
   distanceDisplay.textContent =
-    `Distance: ${formatNumber(Math.floor(distance))} m`;
+    `⏱️ ${timeLeft.toFixed(1)}s 🚀 ${Math.floor(distance)} m`;
+
+} else if (gameMode === "mission") {
+  distanceDisplay.textContent =
+    `⭐ ${starScore} / ${missionTarget}`;
+
 } else {
+  // endless = comportement actuel
   distanceDisplay.textContent =
     `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 }
@@ -1933,6 +1980,18 @@ player.velocityY *= Math.pow(0.87, dt);
 }).join(" ");
 
 wordDisplay.textContent = displayWord;
+
+    // 🎯 MISSION MODE
+if (gameMode === "mission") {
+  if (starScore >= missionTarget) {
+    showSuccessBanner("MISSION COMPLETE!");
+
+    setTimeout(() => {
+      isDying = true;
+      createExplosion(player.x, player.y);
+    }, 500);
+  }
+}
 
       // 🔥 PROGRESSION VERS PROCHAIN PALIER
 let currentThreshold = 0;
