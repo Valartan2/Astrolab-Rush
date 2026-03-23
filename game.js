@@ -2130,7 +2130,7 @@ else {
   break;
 }   
       }
-    }
+    
 
    for (let i = particles.length - 1; i >= 0; i--) {
   const e = particles[i];
