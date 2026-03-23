@@ -1295,13 +1295,14 @@ playButton.onclick = () => {
 endlessModeBtn.onclick = () => {
   playClick();
   gameMode = "endless";
-  focusMode = true; // 🔥 IMPORTANT
+  focusMode = true;
   startGame();
 };
 
 missionModeBtn.onclick = () => {
   playClick();
   gameMode = "mission";
+  focusMode = false; // ✅ AJOUT
   missionTarget = 30;
   startGame();
 };
@@ -1309,6 +1310,7 @@ missionModeBtn.onclick = () => {
 timeModeBtn.onclick = () => {
   playClick();
   gameMode = "time";
+  focusMode = false; // ✅ AJOUT
   timeLeft = 60;
   startGame();
 };
