@@ -10,6 +10,7 @@
 
   // 🔥 MODE SYSTEM
 let gameMode = "endless"; // "endless", "mission", "time"
+  let focusMode = false;
 let timeLeft = 60;
 let missionTarget = 30;
 
@@ -21,6 +22,7 @@ const timeModeBtn = document.getElementById("timeModeBtn");
 endlessModeBtn.onclick = () => {
   playClick();
   gameMode = "endless";
+  focusMode = false;
   startGame();
 };
 
@@ -28,6 +30,7 @@ missionModeBtn.onclick = () => {
   playClick();
   gameMode = "mission";
   missionTarget = 30; // objectif étoiles
+   focusMode = false;
   startGame();
 };
 
@@ -35,6 +38,7 @@ timeModeBtn.onclick = () => {
   playClick();
   gameMode = "time";
   timeLeft = 60;
+   focusMode = false;
   startGame();
 };
   
