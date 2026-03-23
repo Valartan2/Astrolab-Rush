@@ -1315,20 +1315,29 @@ playButton.onclick = () => {
   menu.style.display = "none";
   modeSelect.style.display = "block";
 };
-  // 🎮 NORMAL MODE
-normalModeBtn.onclick = () => {
+
+  const endlessModeBtn = document.getElementById("endlessModeBtn");
+const missionModeBtn = document.getElementById("missionModeBtn");
+const timeModeBtn = document.getElementById("timeModeBtn");
+
+endlessModeBtn.onclick = () => {
   playClick();
-  focusMode = false;
+  gameMode = "endless";
   startGame();
 };
 
-// 🎯 FOCUS MODE
-focusModeBtn.onclick = () => {
+missionModeBtn.onclick = () => {
   playClick();
-  focusMode = true;
-  setTimeout(() => {
-    startGame();
-  }, 50); // 🔥 CRUCIAL
+  gameMode = "mission";
+  missionTarget = 30;
+  startGame();
+};
+
+timeModeBtn.onclick = () => {
+  playClick();
+  gameMode = "time";
+  timeLeft = 60;
+  startGame();
 };
 
   rejouerBtn.onclick = () => {
