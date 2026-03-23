@@ -751,8 +751,10 @@ if (shopList) {
     if (r.owned) {
       li.textContent = `🚀 ${r.name} — ✅ Owned`;
     } else if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
-      li.innerHTML = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
-        <button onclick="acheterShopRocket('${r.id}')">Buy</button>`;
+      li.innerHTML = `
+  🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
+  <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
+`;
     } else {
       li.textContent = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}`;
     }
@@ -1188,7 +1190,7 @@ function drawX2(b) {
   
 
 
-  function acheterShopRocket(id) {
+  window.acheterShopRocket = function(id) {
 
   const r = shopRockets.find(x => x.id === id);
   if (!r) return;
