@@ -2121,7 +2121,7 @@ if (!gameOver && !isDying) {
   if (!focusMode && gameMode !== "time") {
     document.getElementById("starCount").textContent = starScore;
     document.getElementById("destroyCount").textContent = meteorDestroyed;
-    document.getElementById("bigStarCount").textContent = bigStarScore;
+   
   }
 
   // physics
