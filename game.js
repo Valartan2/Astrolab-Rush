@@ -480,15 +480,9 @@ let nextLetterDistance = 500;
 
   let nextBonusDistance = 250;
 
-function getRandomBonus() {
-  const bonuses = [
-    "magnet",
-    "shield",
-    "x2",
-    "meteor"
-  ];
 
-  let lastBonusType = null;
+
+ 
 
 let lastBonusType = null;
 
