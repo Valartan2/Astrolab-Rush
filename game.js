@@ -2301,7 +2301,7 @@ if (shieldActive && shieldRemaining < 1000) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
-  }
+  
 
 
 
