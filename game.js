@@ -1316,9 +1316,6 @@ playButton.onclick = () => {
   modeSelect.style.display = "block";
 };
 
-  const endlessModeBtn = document.getElementById("endlessModeBtn");
-const missionModeBtn = document.getElementById("missionModeBtn");
-const timeModeBtn = document.getElementById("timeModeBtn");
 
 endlessModeBtn.onclick = () => {
   playClick();
