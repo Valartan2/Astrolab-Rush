@@ -1593,8 +1593,20 @@ if (gameMode === "time" && !gameOver && !isDying) {
     nextBonusDistance = distance + getNextGap(300, 600);
   }
 }
+  // 🧲 AIMANT uniquement en time attack
+if (gameMode === "time" && !gameOver && !isDying) {
 
-  if (gameMode === "mission" || gameMode === "time") {
+  if (distance > nextBonusDistance) {
+
+    if (!magnetActive && magnets.length === 0) {
+      createMagnet(finalSpeed);
+    }
+
+    nextBonusDistance = distance + getNextGap(300, 600);
+  }
+}
+
+  if (gameMode === "mission") {
 
   if (distance > nextBonusDistance) {
 
