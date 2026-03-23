@@ -1893,8 +1893,7 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
     hitSound.play().catch(()=>{});
 
     // 🔴 feedback visuel
-    flashScreen("red");
-
+    hitFlashTimer = 150;
     specialObstacles.splice(i, 1);
 
     continue;
@@ -2442,6 +2441,10 @@ if (shieldActive && shieldRemaining < 1000) {
     checkSpecialMission();
     frameCount++;
     flamePulse += 0.15;
+
+  if (hitFlashTimer > 0) {
+  hitFlashTimer -= 16; // simple et stable
+}
 
     if ((!gameOver && !isDying) || particles.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
