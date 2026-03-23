@@ -1640,6 +1640,7 @@ if (
   !isDying &&
   letters.length === 0 &&
   !focusMode
+  gameMode !== "time"
 ) {
 
   if (distance > nextLetterDistance) {
