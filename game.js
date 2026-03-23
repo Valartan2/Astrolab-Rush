@@ -756,30 +756,31 @@ if (shopList) {
 
  shopRockets.forEach(r => {
 
-   if (r.owned) return;
   const li = document.createElement("li");
 
-  if (unlockedRocketKeys.includes(r.id)) {
+  const isOwned = unlockedRocketKeys.includes(r.id);
 
-  if (selectedRocketKey === r.id) {
-    li.innerHTML = `
-      <img src="${r.file}" class="rocket-icon">
-      <span>🚀 ${r.name} — Equipped 🚀</span>
-    `;
+  if (isOwned) {
+
+    if (selectedRocketKey === r.id) {
+      li.innerHTML = `
+        <img src="${r.file}" class="rocket-icon">
+        <span>🚀 ${r.name} — Equipped 🚀</span>
+      `;
+    } else {
+      li.innerHTML = `
+        <img src="${r.file}" class="rocket-icon">
+        <span>${r.name} — owned ✅</span>
+      `;
+    }
+
   } else {
+
     li.innerHTML = `
       <img src="${r.file}" class="rocket-icon">
-      <span>${r.name} — owned</span>
+      <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
+      <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
     `;
-  }
-
-} else {
-
-    li.innerHTML = `
-  <img src="${r.file}" class="rocket-icon">
-  <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
-  <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
-`;
   }
 
   shopList.appendChild(li);
