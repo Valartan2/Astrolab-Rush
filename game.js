@@ -167,7 +167,7 @@ objectifList.style.display="flex";
 
 { key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"destroy", value:200} },
 
-{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"stars", value:500} },
+{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
 
 { key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:3000} }
 
@@ -745,22 +745,30 @@ const shopList = document.getElementById("shopRocketItems");
 if (shopList) {
   shopList.innerHTML = "";
 
-  shopRockets.forEach(r => {
-    const li = document.createElement("li");
+ shopRockets.forEach(r => {
+  const li = document.createElement("li");
 
-    if (r.owned) {
-      li.textContent = `🚀 ${r.name} — ✅ Owned`;
-    } else if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
-      li.innerHTML = `
-  🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
-  <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
-`;
+  if (unlockedRocketKeys.includes(r.id)) {
+
+    if (selectedRocketKey === r.id) {
+      li.textContent = `🚀 ${r.name} — Equipped 🚀`;
     } else {
-      li.textContent = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}`;
+      li.innerHTML = `
+        🚀 ${r.name} — Owned
+        <button class="buy-btn" onclick="equiperRocket('${r.id}')">Equip</button>
+      `;
     }
 
-    shopList.appendChild(li);
-  });
+  } else {
+
+    li.innerHTML = `
+      🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
+      <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
+    `;
+  }
+
+  shopList.appendChild(li);
+});
 }
 
     
@@ -1208,7 +1216,10 @@ function drawX2(b) {
   setTotalStars(getTotalStars() - r.priceStars);
   meteors -= r.priceMeteors;
 
-  r.owned = true;
+  if (!unlockedRocketKeys.includes(r.id)) {
+  unlockedRocketKeys.push(r.id);
+  saveUnlockedRockets(unlockedRocketKeys);
+}
 
   updateObjectifDisplay();
   showSuccessBanner("🚀 Rocket purchased!");
