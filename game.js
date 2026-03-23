@@ -2102,13 +2102,25 @@ else {
       for (let i = 0; i < bubbles.length; i++) {
     
        if (!meteorToStarActive && isColliding(player, bubbles[i])) {
-  isDying = true;
-  isDying = true;
-createExplosion(player.x, player.y);
-pressing = false;
 
-    break;
-       }   
+  if (gameMode === "time") {
+
+    timeLeft -= 3; // ⏱️ perte de temps
+
+    flashScreen("red"); // feedback visuel
+
+    createExplosion(bubbles[i].x, bubbles[i].y); // impact visuel
+
+    bubbles.splice(i, 1);
+    continue;
+  }
+
+  // autres modes = mort normale
+  isDying = true;
+  createExplosion(player.x, player.y);
+  pressing = false;
+  break;
+}   
       }
     }
 
