@@ -14,6 +14,28 @@ let gameMode = "endless"; // "endless", "mission", "time"
 let timeLeft = 60;
 let missionTarget = 30;
 
+
+  // 🛒 SHOP SYSTEM
+let stars = 0;
+let meteors = 0;
+
+const shopRockets = [
+  {
+    id: "neon",
+    name: "Neon Rocket",
+    priceStars: 300,
+    priceMeteors: 0,
+    owned: false
+  },
+  {
+    id: "retro",
+    name: "Retro Rocket",
+    priceStars: 200,
+    priceMeteors: 20,
+    owned: false
+  }
+];
+
 const modeSelect = document.getElementById("modeSelect");
 const endlessModeBtn = document.getElementById("endlessModeBtn");
 const missionModeBtn = document.getElementById("missionModeBtn");
@@ -109,6 +131,8 @@ objectifList.style.display="flex";
   TOTAL_BIG_STARS: "totalBigStars",  
 };
 
+
+  
   /* -------------------- Grades -------------------- */
   const gradeObjectifs = [
     { threshold: 0, label: "Interstellar Recruit" },
@@ -149,6 +173,8 @@ objectifList.style.display="flex";
 
 ];
 
+
+  
   function getSavedUnlockedRockets() {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
@@ -1126,6 +1152,21 @@ function drawX2(b) {
     });
   }
 
+  // 🛒 ACHAT FUSÉE SHOP
+function acheterShopRocket(id) {
+  const r = shopRockets.find(r => r.id === id);
+
+  if (!r || r.owned) return;
+
+  if (stars >= r.priceStars && meteors >= r.priceMeteors) {
+    stars -= r.priceStars;
+    meteors -= r.priceMeteors;
+
+    r.owned = true;
+
+    updateShopUI();
+  }
+}
   
 
   /* -------------------- Scoreboard -------------------- */
