@@ -1792,51 +1792,54 @@ for (let i = bubbles.length - 1; i >= 0; i--) {
   const dy = player.y - b.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  // 🌟 METEOR → STAR
-  if (meteorToStarActive) {
+  // 🌟 PRIORITÉ 1 : METEOR → STAR
+if (meteorToStarActive) {
 
-    // 🧲 AIMANT
-    if (magnetActive) {
-      const speed = dist < 80 ? 20 : 10;
-      b.x += (dx / dist) * speed;
-      b.y += (dy / dist) * speed;
-    }
+  if (magnetActive) {
+    const speed = dist < 80 ? 20 : 10;
+    b.x += (dx / dist) * speed;
+    b.y += (dy / dist) * speed;
+  }
 
-    // ⭐ COLLECTE
   if (dist < player.radius + b.radius) {
     bigStarScore += 1;
-    starScore += 5; // 🔥 IMPORTANT
+    starScore += 5;
     bubbles.splice(i, 1);
     continue;
   }
 }
 
-  // 🛡️ SHIELD
-  if (shieldActive && dist < player.radius + 80) {
-    createExplosion(b.x, b.y);
-    meteorDestroyed++;
+// 🛡️ PRIORITÉ 2 : SHIELD
+else if (shieldActive && dist < player.radius + b.radius) {
+
+  createExplosion(b.x, b.y);
+  meteorDestroyed++;
+
+  // 💥 BONUS → tu peux donner des étoiles aussi
+  starScore += 1; // optionnel
+
+  bubbles.splice(i, 1);
+  continue;
+}
+
+// 💀 PRIORITÉ 3 : COLLISION NORMALE
+else if (dist < player.radius + b.radius) {
+
+  if (gameMode === "time") {
+    timeLeft -= 3;
+    hitSound.currentTime = 0;
+    hitSound.play().catch(()=>{});
+    flashScreen("red");
     bubbles.splice(i, 1);
     continue;
   }
 
-  // 💀 COLLISION NORMALE
-  if (!shieldActive && !meteorToStarActive && dist < player.radius + b.radius) {
-
-    if (gameMode === "time") {
-      timeLeft -= 3;
-      hitSound.currentTime = 0;
-      hitSound.play().catch(()=>{});
-      flashScreen("red");
-      bubbles.splice(i, 1);
-      continue;
-    }
-
-    isDying = true;
-    createExplosion(player.x, player.y);
-    pressing = false;
-    bubbles.splice(i, 1);
-    break;
-  }
+  isDying = true;
+  createExplosion(player.x, player.y);
+  pressing = false;
+  bubbles.splice(i, 1);
+  break;
+}
 
   // rebond vertical
   if (b.y > height - b.radius || b.y < b.radius) {
