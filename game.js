@@ -536,6 +536,8 @@ let meteorToStarRemaining = 0;
   let missionCompleted = false;
 
   let totalMeteorToStar = parseInt(localStorage.getItem("totalMeteorToStar")) || 0;
+
+let hitFlashTimer = 0;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -1070,13 +1072,23 @@ function createLetter(speed) {
   }
 
   function drawRocket(x, y, radius) {
-    const currentRocket = getCurrentRocketImage();
-  
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
-    ctx.restore();
+  const currentRocket = getCurrentRocketImage();
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // 🚀 fusée normale
+  ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
+
+  // 🔴 HIT FLASH (AJOUT ICI)
+  if (hitFlashTimer > 0) {
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = "red";
+    ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
   }
+
+  ctx.restore();
+}
 
   function drawStar(star) {
   if (!starImage.complete || starImage.naturalWidth === 0) return;
@@ -1817,7 +1829,7 @@ else if (dist < player.radius + b.radius) {
     timeLeft -= 3;
     hitSound.currentTime = 0;
     hitSound.play().catch(()=>{});
-    flashScreen("red");
+    hitFlashTimer = 150; // ms
     bubbles.splice(i, 1);
     continue;
   }
