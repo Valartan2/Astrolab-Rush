@@ -2246,7 +2246,7 @@ progressText.textContent =
 
       for (let i = 0; i < bubbles.length; i++) {
     
-       if (!meteorToStarActive && !isDying && isColliding(player, bubbles[i])) {
+       if (!meteorToStarActive && !shieldActive && !isDying && isColliding(player, bubbles[i])) {
 
   if (gameMode === "time") {
 
