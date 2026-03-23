@@ -1988,12 +1988,14 @@ if (!gameOver && !isDying) {
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
 
   // 🎯 DISPLAY PAR MODE (ICI ✅)
-  if (gameMode === "time") {
+ if (gameMode === "time") {
 
-    progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
 
-    distanceDisplay.textContent =
-      `🚀 ${formatNumber(Math.floor(distance))} m`;
+  distanceDisplay.textContent =
+    `🚀 ${formatNumber(Math.floor(distance))} m ⏱️ ${timeLeft.toFixed(1)}s`;
+
+}
 
   } else if (gameMode === "mission") {
 
@@ -2109,7 +2111,7 @@ else {
 
       for (let i = 0; i < bubbles.length; i++) {
     
-       if (!meteorToStarActive && isColliding(player, bubbles[i])) {
+       if (!meteorToStarActive && !isDying && isColliding(player, bubbles[i])) {
 
   if (gameMode === "time") {
 
@@ -2127,6 +2129,7 @@ else {
   isDying = true;
   createExplosion(player.x, player.y);
   pressing = false;
+  bubbles.splice(i, 1);       
   break;
 }   
       }
