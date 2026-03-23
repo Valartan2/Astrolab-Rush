@@ -1764,75 +1764,65 @@ if (
 }
   
    
-    for (let i = bubbles.length - 1; i >= 0; i--) {
+for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
 
-
-   
   b.x -= b.speed * Math.min(dt, 1.2);
-
- // 🌟 transformation en étoiles
-if (meteorToStarActive) {
 
   const dx = player.x - b.x;
   const dy = player.y - b.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  // 🧲 AIMANT
-  if (magnetActive) {
-    const speed = dist < 80 ? 20 : 10;
-    b.x += (dx / dist) * speed;
-    b.y += (dy / dist) * speed;
+  // 🌟 METEOR → STAR
+  if (meteorToStarActive) {
+
+    // 🧲 AIMANT
+    if (magnetActive) {
+      const speed = dist < 80 ? 20 : 10;
+      b.x += (dx / dist) * speed;
+      b.y += (dy / dist) * speed;
+    }
+
+    if (dist < player.radius + b.radius) {
+      bigStarScore += 1;
+      bubbles.splice(i, 1);
+      continue;
+    }
   }
 
-  // 🌟 COLLECTE GROSSE ÉTOILE
-  if (dist < player.radius + b.radius) {
-    bigStarScore += 1;
-    bubbles.splice(i, 1);
-    continue;
-  }
-}
-
-// 🛡️ SHIELD destruction
-const dx = player.x - b.x;
-const dy = player.y - b.y;
-const dist = Math.sqrt(dx * dx + dy * dy);
-
-if (shieldActive && dist < player.radius + 80) {
-  createExplosion(b.x, b.y);
-
-  meteorDestroyed++; // (tu l’avais ajouté après 👍)
-
-  bubbles.splice(i, 1);
-  continue;
-}
-
-// 💀 COLLISION NORMALE (IMPORTANT)
-if (!shieldActive && !meteorToStarActive && dist < player.radius + b.radius) {
-
-  if (gameMode === "time") {
-    timeLeft -= 3;
-
-    hitSound.currentTime = 0;
-    hitSound.play().catch(()=>{});
-    flashScreen("red");
-
+  // 🛡️ SHIELD
+  if (shieldActive && dist < player.radius + 80) {
+    createExplosion(b.x, b.y);
+    meteorDestroyed++;
     bubbles.splice(i, 1);
     continue;
   }
 
-  isDying = true;
-  createExplosion(player.x, player.y);
-  pressing = false;
+  // 💀 COLLISION NORMALE
+  if (!shieldActive && !meteorToStarActive && dist < player.radius + b.radius) {
 
-  bubbles.splice(i, 1);
-  break;
-}
-      
+    if (gameMode === "time") {
+      timeLeft -= 3;
+      hitSound.currentTime = 0;
+      hitSound.play().catch(()=>{});
+      flashScreen("red");
+      bubbles.splice(i, 1);
+      continue;
+    }
+
+    isDying = true;
+    createExplosion(player.x, player.y);
+    pressing = false;
+    bubbles.splice(i, 1);
+    break;
+  }
+
+  // rebond vertical
   if (b.y > height - b.radius || b.y < b.radius) {
     b.direction *= -1;
   }
 
+  // sortie écran
   if (b.x + b.radius < 0) {
     bubbles.splice(i, 1);
   }
