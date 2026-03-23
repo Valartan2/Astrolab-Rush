@@ -2138,7 +2138,7 @@ progressText.textContent =
 
     flashScreen("red"); // feedback visuel
 
-    createExplosion(bubbles[i].x, bubbles[i].y); // impact visuel
+    
 
     bubbles.splice(i, 1);
     continue;
