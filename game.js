@@ -2154,18 +2154,7 @@ if (!gameOver && !isDying) {
 
 wordDisplay.textContent = displayWord;
 
-    // 🎯 MISSION MODE
-if (gameMode === "mission" && !missionCompleted && starScore >= missionTarget) {
-  missionCompleted = true;
-  showSuccessBanner("MISSION COMPLETE!");
-
-  setTimeout(() => {
-    if (!gameOver && !isDying) {
-      isDying = true;
-      createExplosion(player.x, player.y);
-    }
-  }, 500);
-}
+ 
 
  // 🔥 PROGRESSION VERS PROCHAIN PALIER
 
