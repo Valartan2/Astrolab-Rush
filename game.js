@@ -1790,7 +1790,7 @@ if (meteorToStarActive) {
 
   if (dist < player.radius + b.radius) {
     bigStarScore += 1;
-    starScore += 5;
+
     bubbles.splice(i, 1);
     continue;
   }
@@ -1802,8 +1802,7 @@ else if (shieldActive && dist < player.radius + b.radius) {
   createExplosion(b.x, b.y);
   meteorDestroyed++;
 
-  // 💥 BONUS → tu peux donner des étoiles aussi
-  starScore += 1; // optionnel
+
 
   bubbles.splice(i, 1);
   continue;
