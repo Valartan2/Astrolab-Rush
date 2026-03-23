@@ -640,7 +640,7 @@ const totalSpecial = getTotalSpecial();
 
     const currencyDisplay = document.getElementById("currencyDisplay");
 if (currencyDisplay) {
-  currencyDisplay.innerHTML = `⭐ ${getTotalStars()} &nbsp;&nbsp; ☄️ ${meteors}`;
+  currencyDisplay.innerHTML = `⭐ ${getTotalStars()} &nbsp;&nbsp; ☄️ ${getTotalDestroyed()}`;
 }
 
 const starsEl = document.getElementById("totalStarsDisplay");
@@ -1223,14 +1223,14 @@ function drawX2(b) {
     return;
   }
 
-  if (getTotalStars() < r.priceStars || meteors < r.priceMeteors) {
+  if (getTotalStars() < r.priceStars || getTotalDestroyed() < r.priceMeteors) {
     showSuccessBanner("Not enough resources ❌");
     return;
   }
 
   // 💸 paiement
   setTotalStars(getTotalStars() - r.priceStars);
-  meteors -= r.priceMeteors;
+  setTotalDestroyed(getTotalDestroyed() - r.priceMeteors);
 
   // ✅ DEVient owned
   r.owned = true;
