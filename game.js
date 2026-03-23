@@ -1566,7 +1566,7 @@ if (!focusMode && !gameOver) {
   let starRate = 0.02;
 
   if (gameMode === "time") {
-    starRate = 0.015; // 🔥 beaucoup plus d’étoiles
+    starRate = 0.03; // 🔥 beaucoup plus d’étoiles
   }
 
   if (Math.random() < starRate) {
