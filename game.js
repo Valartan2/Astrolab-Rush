@@ -1802,10 +1802,10 @@ for (let i = bubbles.length - 1; i >= 0; i--) {
       b.y += (dy / dist) * speed;
     }
 
-    if (meteorToStarActive) {
-
+    // ⭐ COLLECTE
   if (dist < player.radius + b.radius) {
     bigStarScore += 1;
+    starScore += 5; // 🔥 IMPORTANT
     bubbles.splice(i, 1);
     continue;
   }
