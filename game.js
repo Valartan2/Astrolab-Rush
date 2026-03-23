@@ -1258,7 +1258,7 @@ nextX2Distance = 900;
 nextMeteorBonusDistance = 1200;
 nextLetterDistance = 500;
 
-    nextBonusDistance = 400;
+    nextBonusDistance = 250;
   
 
  // 🛡️ SHIELD RESET
