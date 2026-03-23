@@ -2402,4 +2402,4 @@ localStorage.removeItem(STORAGE_KEYS.TOTAL_SPECIAL);
 
 }; 
   
- }());
+})();
