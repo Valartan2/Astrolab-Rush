@@ -490,6 +490,8 @@ function getRandomBonus() {
 
   let lastBonusType = null;
 
+let lastBonusType = null;
+
 function getRandomBonus() {
   const bonuses = ["magnet", "shield", "x2", "meteor"];
 
@@ -500,8 +502,6 @@ function getRandomBonus() {
 
   lastBonusType = choice;
   return choice;
-}
-  return bonuses[Math.floor(Math.random() * bonuses.length)];
 }
 
 let meteorToStarRemaining = 0;
