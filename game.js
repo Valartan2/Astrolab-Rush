@@ -473,7 +473,7 @@ let nextX2Distance = 900;
 let nextMeteorBonusDistance = 1200;
 let nextLetterDistance = 500;
 
-  let nextBonusDistance = 400;
+  let nextBonusDistance = 150;
 
 function getRandomBonus() {
   const bonuses = [
@@ -1568,7 +1568,7 @@ if (!gameOver && !isDying && !focusMode) {
     }
 
     // 🔥 IMPORTANT → prochain spawn aléatoire
-    nextBonusDistance = distance + getNextGap(400, 900);
+    nextBonusDistance = distance + getNextGap(150, 400);
 
   }
 }
