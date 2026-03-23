@@ -1396,6 +1396,13 @@ progressLabel.style.display = "none";
 
   resetGame();
 
+   // 🔥 AJOUT ICI
+  if (music && musicEnabled) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
+
+
   animationId = requestAnimationFrame(gameLoop);
 
   modeSelect.style.display = "none";
