@@ -634,7 +634,7 @@ const totalSpecial = getTotalSpecial();
 
     const currencyDisplay = document.getElementById("currencyDisplay");
 if (currencyDisplay) {
-  currencyDisplay.innerHTML = `⭐ ${playerStars} &nbsp;&nbsp; ☄️ ${meteors}`;
+  currencyDisplay.innerHTML = `⭐ ${getTotalStars()} &nbsp;&nbsp; ☄️ ${meteors}`;
 }
 
 const starsEl = document.getElementById("totalStarsDisplay");
@@ -748,7 +748,7 @@ if (shopList) {
 
     if (r.owned) {
       li.textContent = `🚀 ${r.name} — ✅ Owned`;
-    } else if (playerStars >= r.priceStars && meteors >= r.priceMeteors) {
+    } else if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
       li.innerHTML = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
         <button onclick="acheterShopRocket('${r.id}')">Buy</button>`;
     } else {
@@ -1184,19 +1184,16 @@ function drawX2(b) {
   }
 
   // 🛒 ACHAT FUSÉE SHOP
-function acheterShopRocket(id) {
-  const r = shopRockets.find(r => r.id === id);
+if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
 
-  if (!r || r.owned) return;
+  setTotalStars(getTotalStars() - r.priceStars);
+  meteors -= r.priceMeteors;
 
-  if (playerStars >= r.priceStars && meteors >= r.priceMeteors) {
-    playerStars -= r.priceStars;
-    meteors -= r.priceMeteors;
+  r.owned = true;
 
-    r.owned = true;
-
-    updateShopUI();
-  }
+  updateObjectifDisplay(); // refresh UI
+  showSuccessBanner("🚀 Rocket purchased!");
+}
 }
   
 
