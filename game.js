@@ -1082,10 +1082,14 @@ function createLetter(speed) {
 
   // 🔴 HIT FLASH (AJOUT ICI)
   if (hitFlashTimer > 0) {
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = "red";
-    ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
-  }
+  ctx.globalCompositeOperation = "source-atop";
+  ctx.globalAlpha = 0.6;
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
+
+  ctx.globalCompositeOperation = "source-over";
+}
 
   ctx.restore();
 }
