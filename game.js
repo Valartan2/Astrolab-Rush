@@ -23,6 +23,7 @@ const shopRockets = [
   {
     id: "neon",
     name: "Neon Rocket",
+    file: "rocket10.png",
     priceStars: 300,
     priceMeteors: 0,
     owned: false
@@ -30,6 +31,7 @@ const shopRockets = [
   {
     id: "retro",
     name: "Retro Rocket",
+     file: "rocket8.png",
     priceStars: 200,
     priceMeteors: 20,
     owned: false
@@ -757,17 +759,19 @@ if (shopList) {
       li.textContent = `🚀 ${r.name} — Equipped 🚀`;
     } else {
       li.innerHTML = `
-        🚀 ${r.name} — Owned
-        <button class="buy-btn" onclick="equiperRocket('${r.id}')">Equip</button>
-      `;
+  <img src="${r.file}" class="rocket-icon">
+  <span>${r.name} — owned</span>
+  <button class="buy-btn" onclick="equiperRocket('${r.id}')">Equip</button>
+`;
     }
 
   } else {
 
     li.innerHTML = `
-      🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
-      <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
-    `;
+  <img src="${r.file}" class="rocket-icon">
+  <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
+  <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
+`;
   }
 
   shopList.appendChild(li);
