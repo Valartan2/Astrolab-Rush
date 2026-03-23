@@ -2080,10 +2080,11 @@ else {
     progressBar.style.boxShadow = "none";
   }
 
+  // ⏱️ TEMPS = progressLabel
   progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
 
-  // 🔥 IMPORTANT → remplace le 0/500
-  progressText.textContent = `${timeLeft.toFixed(1)}s`;
+  // 🚀 DISTANCE = progressText (COMME TU VEUX)
+  progressText.textContent = `${Math.floor(distance)} / 500`;
 }
 
 // 🔥 BONUS VISUEL
