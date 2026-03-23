@@ -1543,7 +1543,11 @@ const effectiveDistance = Math.min(distance, maxDistanceCap);
 const speedLevel = Math.floor(effectiveDistance / 400);
 
 // 🚀 démarrage plus lent
-const baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
+let baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
+
+if (gameMode === "time") {
+  baseSpeed *= 1.2; // 🔥 plus rapide
+}
 
 // 🧠 limite propre
 const cappedSpeed = Math.min(baseSpeed, 26);
@@ -1574,12 +1578,23 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 }
 
  // ⭐ étoiles
-if (!focusMode && Math.random() < 0.02 && !gameOver) {
-  createStar(finalSpeed);
+if (!focusMode && !gameOver) {
+
+  let starRate = 0.02;
+
+  if (gameMode === "time") {
+    starRate = 0.05; // 🔥 beaucoup plus d’étoiles
+  }
+
+  if (Math.random() < starRate) {
+    createStar(finalSpeed);
+  }
 }
 
  
 if (!gameOver && !isDying && !focusMode) {
+
+  if (gameMode === "mission" || gameMode === "time") {
 
   if (distance > nextBonusDistance) {
 
