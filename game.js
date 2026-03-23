@@ -1953,7 +1953,7 @@ starSound.play().catch(()=>{});
 
   // ⏱️ TIME ATTACK
 if (gameMode === "time" && !gameOver && !isDying) {
-  timeLeft -= dt / 60;
+  timeLeft -= (dt / 60) * 1.5;
 
   if (timeLeft <= 0) {
     timeLeft = 0;
