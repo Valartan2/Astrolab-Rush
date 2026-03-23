@@ -1195,16 +1195,24 @@ function drawX2(b) {
   const r = shopRockets.find(x => x.id === id);
   if (!r) return;
 
-  if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
-
-    setTotalStars(getTotalStars() - r.priceStars);
-    meteors -= r.priceMeteors;
-
-    r.owned = true;
-
-    updateObjectifDisplay();
-    showSuccessBanner("🚀 Rocket purchased!");
+  if (r.owned) {
+    showSuccessBanner("Already owned 🚀");
+    return;
   }
+
+  if (getTotalStars() < r.priceStars || meteors < r.priceMeteors) {
+    showSuccessBanner("Not enough resources ❌");
+    return;
+  }
+
+  setTotalStars(getTotalStars() - r.priceStars);
+  meteors -= r.priceMeteors;
+
+  r.owned = true;
+
+  updateObjectifDisplay();
+  showSuccessBanner("🚀 Rocket purchased!");
+};
 }
   
 
