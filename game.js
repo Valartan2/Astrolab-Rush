@@ -1962,47 +1962,49 @@ if (gameMode === "time" && !gameOver && !isDying) {
   }
 }
       
-  if (!gameOver && !isDying) {
+if (!gameOver && !isDying) {
 
- if (!focusMode && gameMode !== "time") {
-  document.getElementById("starCount").textContent = starScore;
-  document.getElementById("destroyCount").textContent = meteorDestroyed;
-  document.getElementById("bigStarCount").textContent = bigStarScore;
-}
+  // HUD stats
+  if (!focusMode && gameMode !== "time") {
+    document.getElementById("starCount").textContent = starScore;
+    document.getElementById("destroyCount").textContent = meteorDestroyed;
+    document.getElementById("bigStarCount").textContent = bigStarScore;
+  }
 
-      
-     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
-player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
-player.y += player.velocityY * dt;
-player.velocityY *= Math.pow(0.87, dt);
+  // physics
+  player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
+  player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
+  player.y += player.velocityY * dt;
+  player.velocityY *= Math.pow(0.87, dt);
 
-      if (player.y < player.radius) {
-        player.y = player.radius;
-        player.velocityY = 0;
-      } else if (player.y > height - player.radius) {
-        player.y = height - player.radius;
-        player.velocityY = 0;
-      }
+  if (player.y < player.radius) {
+    player.y = player.radius;
+    player.velocityY = 0;
+  } else if (player.y > height - player.radius) {
+    player.y = height - player.radius;
+    player.velocityY = 0;
+  }
 
-      distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
-     if (gameMode === "time") {
+  distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
 
-  // 🟦 barre = temps
-  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+  // 🎯 DISPLAY PAR MODE (ICI ✅)
+  if (gameMode === "time") {
 
-  // 🟨 texte = distance
-  distanceDisplay.textContent =
-    `🚀 ${formatNumber(Math.floor(distance))} m`;
-}
+    progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
 
-} else if (gameMode === "mission") {
-  distanceDisplay.textContent =
-    `⭐ ${starScore} / ${missionTarget}`;
+    distanceDisplay.textContent =
+      `🚀 ${formatNumber(Math.floor(distance))} m`;
 
-} else {
-  // endless = comportement actuel
-  distanceDisplay.textContent =
-    `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+  } else if (gameMode === "mission") {
+
+    distanceDisplay.textContent =
+      `⭐ ${starScore} / ${missionTarget}`;
+
+  } else {
+
+    distanceDisplay.textContent =
+      `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+  }
 }
      
 
@@ -2322,7 +2324,7 @@ if (shieldActive && shieldRemaining < 1000) {
     resizeMenuCanvas();
     window.addEventListener("resize", resizeMenuCanvas);
 
-    function animateMenuStars() {
+    function animatemenuStars() {
       menuCtx.fillStyle = "#001122";
       menuCtx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
       menuCtx.fillStyle = "white";
