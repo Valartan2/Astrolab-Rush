@@ -2018,7 +2018,11 @@ if (gameMode === "mission") {
   }
 }
 
-     // 🔥 PROGRESSION VERS PROCHAIN PALIER
+ // 🔥 PROGRESSION VERS PROCHAIN PALIER
+
+const progressText = document.getElementById("progressText");
+
+// 🎯 MODE NORMAL (endless + mission)
 if (gameMode !== "time") {
 
   let currentThreshold = 0;
@@ -2038,25 +2042,29 @@ if (gameMode !== "time") {
   const percent = Math.max(0, Math.min(progress, 1)) * 100;
 
   progressBar.style.width = percent + "%";
+  progressBar.style.background = getFlashColor();
+  progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
 
+  const remaining = Math.floor(nextThreshold - distance);
+  progressLabel.textContent = `Next Grade : ${remaining} m`;
+
+  progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
 }
 
-    // ⏱️ TIME ATTACK BAR
-if (gameMode === "time") {
+// ⏱️ TIME ATTACK
+else {
 
   const percent = (timeLeft / 60) * 100;
   progressBar.style.width = percent + "%";
 
-  // 🎨 couleurs
   if (percent > 60) {
-    progressBar.style.background = "#00ccff"; // bleu
+    progressBar.style.background = "#00ccff";
   } else if (percent > 30) {
-    progressBar.style.background = "#ffd700"; // jaune
+    progressBar.style.background = "#ffd700";
   } else {
-    progressBar.style.background = "#ff3b3b"; // rouge
+    progressBar.style.background = "#ff3b3b";
   }
 
-  // ⚠️ effet danger
   if (percent <= 30) {
     progressBar.style.boxShadow = "0 0 10px red";
   } else if (percent <= 60) {
@@ -2065,7 +2073,10 @@ if (gameMode === "time") {
     progressBar.style.boxShadow = "none";
   }
 
-  progressLabel.textContent = `⏱️ ${timeLeft.toFixed(1)}s`;
+  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+
+  // 🔥 IMPORTANT → remplace le 0/500
+  progressText.textContent = `${timeLeft.toFixed(1)}s`;
 }
 
 // 🔥 BONUS VISUEL
