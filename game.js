@@ -731,7 +731,10 @@ rocketDefinitions.forEach(rocket => {
   ? " — unlocked" 
   : ` — ${progressText}`;
 
-li.textContent = `${rocket.label}${status}`;
+li.innerHTML = `
+  <img src="${rocket.file}" class="rocket-icon">
+  <span>${rocket.label}${status}</span>
+`;
 
   rocketItems.appendChild(li);
 
