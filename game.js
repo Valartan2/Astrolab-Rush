@@ -1791,7 +1791,7 @@ if (meteorToStarActive) {
   }
 
   if (dist < player.radius + b.radius) {
-    bigStarScore += 1;
+    starScore += 5;
 
     bubbles.splice(i, 1);
     continue;
