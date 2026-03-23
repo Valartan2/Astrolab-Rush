@@ -473,7 +473,7 @@ let nextX2Distance = 900;
 let nextMeteorBonusDistance = 1200;
 let nextLetterDistance = 500;
 
-  let nextBonusDistance = 150;
+  let nextBonusDistance = 250;
 
 function getRandomBonus() {
   const bonuses = [
