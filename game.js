@@ -1568,7 +1568,7 @@ if (!gameOver && !isDying && !focusMode) {
     }
 
     // 🔥 IMPORTANT → prochain spawn aléatoire
-    nextBonusDistance = distance + getNextGap(150, 400);
+    nextBonusDistance = distance + getNextGap(250, 250);
 
   }
 }
@@ -1585,7 +1585,7 @@ if (
 
     createLetter(finalSpeed);
 
-    nextLetterDistance = distance + getNextGap(500, 900);
+    nextLetterDistance = distance + getNextGap(400, 900);
 
   }
 }
