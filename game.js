@@ -2325,7 +2325,7 @@ if (shieldActive && shieldRemaining < 1000) {
     resizeMenuCanvas();
     window.addEventListener("resize", resizeMenuCanvas);
 
-    function animatemenuStars() {
+    function animateMenuStars() {
       menuCtx.fillStyle = "#001122";
       menuCtx.fillRect(0, 0, menuCanvas.width, menuCanvas.height);
       menuCtx.fillStyle = "white";
