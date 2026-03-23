@@ -1186,7 +1186,7 @@ function drawX2(b) {
   }
 
   
-}
+
 
   function acheterShopRocket(id) {
 
