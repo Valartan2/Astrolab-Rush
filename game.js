@@ -756,32 +756,18 @@ if (shopList) {
 
  shopRockets.forEach(r => {
 
-  const li = document.createElement("li");
-
   const isOwned = unlockedRocketKeys.includes(r.id);
 
-  if (isOwned) {
+  // ❌ si déjà acheté → on affiche rien
+  if (isOwned) return;
 
-    if (selectedRocketKey === r.id) {
-      li.innerHTML = `
-        <img src="${r.file}" class="rocket-icon">
-        <span>🚀 ${r.name} — Equipped 🚀</span>
-      `;
-    } else {
-      li.innerHTML = `
-        <img src="${r.file}" class="rocket-icon">
-        <span>${r.name} — owned ✅</span>
-      `;
-    }
+  const li = document.createElement("li");
 
-  } else {
-
-    li.innerHTML = `
-      <img src="${r.file}" class="rocket-icon">
-      <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
-      <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
-    `;
-  }
+  li.innerHTML = `
+    <img src="${r.file}" class="rocket-icon">
+    <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
+    <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
+  `;
 
   shopList.appendChild(li);
 });
