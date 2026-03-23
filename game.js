@@ -1986,8 +1986,14 @@ player.velocityY *= Math.pow(0.87, dt);
 
       distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
      if (gameMode === "time") {
+
+  // 🟦 barre = temps
+  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+
+  // 🟨 texte = distance
   distanceDisplay.textContent =
-    `⏱️ ${timeLeft.toFixed(1)}s 🚀 ${Math.floor(distance)} m`;
+    `🚀 ${formatNumber(Math.floor(distance))} m`;
+}
 
 } else if (gameMode === "mission") {
   distanceDisplay.textContent =
