@@ -534,6 +534,8 @@ function getRandomBonus() {
 let meteorToStarRemaining = 0;
 
   let missionCompleted = false;
+
+  let totalMeteorToStar = parseInt(localStorage.getItem("totalMeteorToStar")) || 0;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
