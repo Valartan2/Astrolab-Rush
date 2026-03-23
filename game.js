@@ -16,7 +16,7 @@ let missionTarget = 30;
 
 
   // 🛒 SHOP SYSTEM
-let stars = 0;
+let playerStars = 0;
 let meteors = 0;
 
 const shopRockets = [
@@ -634,7 +634,7 @@ const totalSpecial = getTotalSpecial();
 
     const currencyDisplay = document.getElementById("currencyDisplay");
 if (currencyDisplay) {
-  currencyDisplay.innerHTML = `⭐ ${stars} &nbsp;&nbsp; ☄️ ${meteors}`;
+  currencyDisplay.innerHTML = `⭐ ${playerStars} &nbsp;&nbsp; ☄️ ${meteors}`;
 }
 
 const starsEl = document.getElementById("totalStarsDisplay");
@@ -736,28 +736,33 @@ li.textContent = `${rocket.label}${status}`;
   rocketItems.appendChild(li);
 
 });
-  }
 
-  // 🛒 SHOP ROCKETS
+// 🛒 SHOP ROCKETS
 const shopList = document.getElementById("shopRocketItems");
-if (!shopList) return;
 
-shopList.innerHTML = "";
+if (shopList) {
+  shopList.innerHTML = "";
 
-shopRockets.forEach(r => {
-  const li = document.createElement("li");
+  shopRockets.forEach(r => {
+    const li = document.createElement("li");
 
-  if (r.owned) {
-    li.textContent = `🚀 ${r.name} — ✅ Owned`;
-  } else if (stars >= r.priceStars && meteors >= r.priceMeteors) {
-    li.innerHTML = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
-      <button onclick="acheterShopRocket('${r.id}')">Buy</button>`;
-  } else {
-    li.textContent = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}`;
+    if (r.owned) {
+      li.textContent = `🚀 ${r.name} — ✅ Owned`;
+    } else if (playerStars >= r.priceStars && meteors >= r.priceMeteors) {
+      li.innerHTML = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
+        <button onclick="acheterShopRocket('${r.id}')">Buy</button>`;
+    } else {
+      li.textContent = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}`;
+    }
+
+    shopList.appendChild(li);
+  });
+}
+
+    
   }
 
-  shopList.appendChild(li);
-});
+
 
   function unlockRocketsIfNeeded() {
 
@@ -1184,8 +1189,8 @@ function acheterShopRocket(id) {
 
   if (!r || r.owned) return;
 
-  if (stars >= r.priceStars && meteors >= r.priceMeteors) {
-    stars -= r.priceStars;
+  if (playerStars >= r.priceStars && meteors >= r.priceMeteors) {
+    playerStars -= r.priceStars;
     meteors -= r.priceMeteors;
 
     r.owned = true;
