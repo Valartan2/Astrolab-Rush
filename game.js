@@ -8,6 +8,8 @@
   const menu = document.getElementById("menu");
   const playButton = document.getElementById("playButton");
 
+  const buySound = new Audio("success_bell-6776.mp3");
+
   // 🔥 MODE SYSTEM
 let gameMode = "endless"; // "endless", "mission", "time"
   let focusMode = false;
@@ -753,21 +755,25 @@ if (shopList) {
   shopList.innerHTML = "";
 
  shopRockets.forEach(r => {
+
+   if (r.owned) return;
   const li = document.createElement("li");
 
   if (unlockedRocketKeys.includes(r.id)) {
 
-    if (selectedRocketKey === r.id) {
-      li.textContent = `🚀 ${r.name} — Equipped 🚀`;
-    } else {
-      li.innerHTML = `
-  <img src="${r.file}" class="rocket-icon">
-  <span>${r.name} — owned</span>
-  <button class="buy-btn" onclick="equiperRocket('${r.id}')">Equip</button>
-`;
-    }
-
+  if (selectedRocketKey === r.id) {
+    li.innerHTML = `
+      <img src="${r.file}" class="rocket-icon">
+      <span>🚀 ${r.name} — Equipped 🚀</span>
+    `;
   } else {
+    li.innerHTML = `
+      <img src="${r.file}" class="rocket-icon">
+      <span>${r.name} — owned</span>
+    `;
+  }
+
+} else {
 
     li.innerHTML = `
   <img src="${r.file}" class="rocket-icon">
@@ -1207,7 +1213,7 @@ function drawX2(b) {
   
 
 
-  window.acheterShopRocket = function(id) {
+ window.acheterShopRocket = function(id) {
 
   const r = shopRockets.find(x => x.id === id);
   if (!r) return;
@@ -1222,13 +1228,26 @@ function drawX2(b) {
     return;
   }
 
+  // 💸 paiement
   setTotalStars(getTotalStars() - r.priceStars);
   meteors -= r.priceMeteors;
 
+  // ✅ DEVient owned
+  r.owned = true;
+
+  // 🔥 IMPORTANT → unlock dans le vrai système
   if (!unlockedRocketKeys.includes(r.id)) {
-  unlockedRocketKeys.push(r.id);
-  saveUnlockedRockets(unlockedRocketKeys);
-}
+    unlockedRocketKeys.push(r.id);
+    saveUnlockedRockets(unlockedRocketKeys);
+  }
+
+  // 🚀 AUTO EQUIP
+  selectedRocketKey = r.id;
+  setSelectedRocketKey(r.id);
+
+  // 🔊 SON
+  buySound.currentTime = 0;
+  buySound.play().catch(()=>{});
 
   updateObjectifDisplay();
   showSuccessBanner("🚀 Rocket purchased!");
@@ -1783,12 +1802,14 @@ for (let i = bubbles.length - 1; i >= 0; i--) {
       b.y += (dy / dist) * speed;
     }
 
-    if (dist < player.radius + b.radius) {
-      bigStarScore += 1;
-      bubbles.splice(i, 1);
-      continue;
-    }
+    if (meteorToStarActive) {
+
+  if (dist < player.radius + b.radius) {
+    bigStarScore += 1;
+    bubbles.splice(i, 1);
+    continue;
   }
+}
 
   // 🛡️ SHIELD
   if (shieldActive && dist < player.radius + 80) {
