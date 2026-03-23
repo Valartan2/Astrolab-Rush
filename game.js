@@ -1639,7 +1639,7 @@ if (
   !gameOver &&
   !isDying &&
   letters.length === 0 &&
-  !focusMode
+  !focusMode &&
   gameMode !== "time"
 ) {
 
