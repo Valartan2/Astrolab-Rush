@@ -1621,6 +1621,8 @@ if (
 
   }
 }
+}
+  
    
     for (let i = bubbles.length - 1; i >= 0; i--) {
   const b = bubbles[i];
