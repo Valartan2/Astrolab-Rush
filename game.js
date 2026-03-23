@@ -498,6 +498,8 @@ function getRandomBonus() {
 }
   return bonuses[Math.floor(Math.random() * bonuses.length)];
 }
+
+let meteorToStarRemaining = 0;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -2005,8 +2007,12 @@ pressing = false;
 }
     // 🌟 METEOR RUSH TIMER (BON ENDROIT)
 if (meteorToStarActive) {
-  if (performance.now() - meteorToStarTimer > meteorToStarDuration) {
+
+  meteorToStarRemaining = meteorToStarDuration - (performance.now() - meteorToStarTimer);
+
+  if (meteorToStarRemaining <= 0) {
     meteorToStarActive = false;
+    meteorToStarRemaining = 0;
     showSuccessBanner("⚠️ RUSH OVER");
   }
 }
