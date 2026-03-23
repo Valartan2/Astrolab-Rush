@@ -65,6 +65,9 @@ const progressLabel = document.getElementById("progressLabel");
 
   const starSound = new Audio("starSound.mp3");
 starSound.volume = 0.4;
+
+const hitSound = new Audio("error-sound-39539.mp3");
+hitSound.volume = 0.4;
   
   const music = document.getElementById("gameMusic");
   if (music) music.volume = 0.3;
@@ -2128,6 +2131,10 @@ progressText.textContent =
   if (gameMode === "time") {
 
     timeLeft -= 3; // ⏱️ perte de temps
+
+    // 🔊 SON IMPACT
+  hitSound.currentTime = 0;
+  hitSound.play().catch(()=>{});
 
     flashScreen("red"); // feedback visuel
 
