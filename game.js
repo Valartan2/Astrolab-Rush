@@ -1578,7 +1578,7 @@ if (!focusMode && !gameOver) {
 }
 
  
-if (!gameOver && !isDying && !focusMode && gameMode !== "time") {
+if (!gameOver && !isDying && !focusMode) {
 
 
   // 🧲 TIME ATTACK → seulement magnet
@@ -1593,18 +1593,7 @@ if (gameMode === "time" && !gameOver && !isDying) {
     nextBonusDistance = distance + getNextGap(300, 600);
   }
 }
-  // 🧲 AIMANT uniquement en time attack
-if (gameMode === "time" && !gameOver && !isDying) {
-
-  if (distance > nextBonusDistance) {
-
-    if (!magnetActive && magnets.length === 0) {
-      createMagnet(finalSpeed);
-    }
-
-    nextBonusDistance = distance + getNextGap(300, 600);
-  }
-}
+  
 
   if (gameMode === "mission") {
 
