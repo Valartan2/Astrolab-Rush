@@ -1731,23 +1731,35 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
 
   // 💥 collision
 
- 
-  if (!shieldActive && dist < player.radius + o.size * 0.5) {
-   
-   
-   
+ if (!shieldActive && dist < player.radius + o.size * 0.5) {
 
+  if (gameMode === "time") {
+
+    // ⏱️ perte de temps (plus forte que météorite)
+    timeLeft -= 5;
+
+    // 🔊 son impact
+    hitSound.currentTime = 0;
+    hitSound.play().catch(()=>{});
+
+    // 🔴 feedback visuel
+    flashScreen("red");
+
+    specialObstacles.splice(i, 1);
+
+    continue;
+  }
+
+  // 💀 autres modes = mort normale
   isDying = true;
   createExplosion(player.x, player.y);
-
-  // 🔥 stop immédiat du gameplay
   pressing = false;
 
-    specialObstacles.splice(i, 1); // 🔥 MANQUANT
+  specialObstacles.splice(i, 1);
 
-
-  break; // 🚨 TRÈS IMPORTANT
+  break;
 }
+
 
   if (o.x < -100) {
     specialObstacles.splice(i, 1);
