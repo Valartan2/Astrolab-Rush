@@ -737,6 +737,23 @@ li.textContent = `${rocket.label}${status}`;
 
 });
 
+    function acheterShopRocket(id) {
+
+  const r = shopRockets.find(x => x.id === id);
+  if (!r) return;
+
+  if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
+
+    setTotalStars(getTotalStars() - r.priceStars);
+    meteors -= r.priceMeteors;
+
+    r.owned = true;
+
+    updateObjectifDisplay();
+    showSuccessBanner("🚀 Rocket purchased!");
+  }
+}
+
 // 🛒 SHOP ROCKETS
 const shopList = document.getElementById("shopRocketItems");
 
@@ -1183,17 +1200,7 @@ function drawX2(b) {
     });
   }
 
-  // 🛒 ACHAT FUSÉE SHOP
-if (getTotalStars() >= r.priceStars && meteors >= r.priceMeteors) {
-
-  setTotalStars(getTotalStars() - r.priceStars);
-  meteors -= r.priceMeteors;
-
-  r.owned = true;
-
-  updateObjectifDisplay(); // refresh UI
-  showSuccessBanner("🚀 Rocket purchased!");
-}
+  
 }
   
 
