@@ -1426,12 +1426,11 @@ progressLabel.style.display = "none";
 
   // 🎯 HUD
  document.getElementById("topHUD").style.display = "flex";
-
-if (focusMode) {
+if (focusMode || gameMode === "time") {
   document.getElementById("stats").style.display = "none";
 } else {
   document.getElementById("stats").style.display = "block";
- }
+}
 }
 
   /* -------------------- Start Screen -------------------- */
@@ -1965,11 +1964,11 @@ if (gameMode === "time" && !gameOver && !isDying) {
       
   if (!gameOver && !isDying) {
 
-  if (!focusMode) {
-    document.getElementById("starCount").textContent = starScore;
-    document.getElementById("destroyCount").textContent = meteorDestroyed;
-    document.getElementById("bigStarCount").textContent = bigStarScore;
-  }
+ if (!focusMode && gameMode !== "time") {
+  document.getElementById("starCount").textContent = starScore;
+  document.getElementById("destroyCount").textContent = meteorDestroyed;
+  document.getElementById("bigStarCount").textContent = bigStarScore;
+}
 
       
      player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
