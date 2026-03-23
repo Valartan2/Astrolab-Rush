@@ -1224,8 +1224,9 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     flamePulse = 0;
     gameOver = false;
     distance = 0;
-    if (gameMode === "time") {
+  if (gameMode === "time") {
   timeLeft = 60;
+  nextBonusDistance = 250;
 }
     progressBar.style.width = "5%";
     startTime = performance.now();
@@ -1457,6 +1458,15 @@ ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 // 🌌 BACKGROUND
 drawStars();
 
+  // ⚠️ écran rouge fin de temps
+if (gameMode === "time" && timeLeft < 10) {
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = "red";
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
+}
+
 // 💀 PHASE DE MORT (explosion uniquement)
 if (isDying) {
 
@@ -1566,7 +1576,21 @@ if (!focusMode && !gameOver) {
 }
 
  
-if (!gameOver && !isDying && !focusMode) {
+if (!gameOver && !isDying && !focusMode && gameMode !== "time") {
+
+
+  // 🧲 TIME ATTACK → seulement magnet
+if (gameMode === "time" && !gameOver && !isDying) {
+
+  if (distance > nextBonusDistance) {
+
+    if (!magnetActive && magnets.length === 0) {
+      createMagnet(finalSpeed);
+    }
+
+    nextBonusDistance = distance + getNextGap(300, 600);
+  }
+}
 
   if (gameMode === "mission" || gameMode === "time") {
 
@@ -1755,8 +1779,9 @@ if (dist < player.radius + s.size) {
   starScore += 1;
 
   if (gameMode === "time") {
-    timeLeft += 2; // ⭐ +2 secondes
-  }
+  timeLeft += 2;
+  timeLeft = Math.min(timeLeft, 60); // 🔥 limite max
+}
 
     starSound.currentTime = 0;
     starSound.play().catch(()=>{});
@@ -1994,24 +2019,55 @@ if (gameMode === "mission") {
   }
 }
 
-      // 🔥 PROGRESSION VERS PROCHAIN PALIER
-let currentThreshold = 0;
-let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
+     // 🔥 PROGRESSION VERS PROCHAIN PALIER
+if (gameMode !== "time") {
 
-for (let i = 0; i < gradeObjectifs.length; i++) {
-  if (distance >= gradeObjectifs[i].threshold) {
-    currentThreshold = gradeObjectifs[i].threshold;
+  let currentThreshold = 0;
+  let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
 
-    if (i + 1 < gradeObjectifs.length) {
-      nextThreshold = gradeObjectifs[i + 1].threshold;
+  for (let i = 0; i < gradeObjectifs.length; i++) {
+    if (distance >= gradeObjectifs[i].threshold) {
+      currentThreshold = gradeObjectifs[i].threshold;
+
+      if (i + 1 < gradeObjectifs.length) {
+        nextThreshold = gradeObjectifs[i + 1].threshold;
+      }
     }
   }
+
+  const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
+  const percent = Math.max(0, Math.min(progress, 1)) * 100;
+
+  progressBar.style.width = percent + "%";
+
 }
 
-const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
-const percent = Math.max(0, Math.min(progress, 1)) * 100;
+    // ⏱️ TIME ATTACK BAR
+if (gameMode === "time") {
 
-progressBar.style.width = percent + "%";
+  const percent = (timeLeft / 60) * 100;
+  progressBar.style.width = percent + "%";
+
+  // 🎨 couleurs
+  if (percent > 60) {
+    progressBar.style.background = "#00ccff"; // bleu
+  } else if (percent > 30) {
+    progressBar.style.background = "#ffd700"; // jaune
+  } else {
+    progressBar.style.background = "#ff3b3b"; // rouge
+  }
+
+  // ⚠️ effet danger
+  if (percent <= 30) {
+    progressBar.style.boxShadow = "0 0 10px red";
+  } else if (percent <= 60) {
+    progressBar.style.boxShadow = "0 0 10px yellow";
+  } else {
+    progressBar.style.boxShadow = "none";
+  }
+
+  progressLabel.textContent = `⏱️ ${timeLeft.toFixed(1)}s`;
+}
 
 // 🔥 BONUS VISUEL
   progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";      
