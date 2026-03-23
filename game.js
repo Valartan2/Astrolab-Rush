@@ -19,28 +19,6 @@ const endlessModeBtn = document.getElementById("endlessModeBtn");
 const missionModeBtn = document.getElementById("missionModeBtn");
 const timeModeBtn = document.getElementById("timeModeBtn");
 
-endlessModeBtn.onclick = () => {
-  playClick();
-  gameMode = "endless";
-  focusMode = false;
-  startGame();
-};
-
-missionModeBtn.onclick = () => {
-  playClick();
-  gameMode = "mission";
-  missionTarget = 30; // objectif étoiles
-   focusMode = false;
-  startGame();
-};
-
-timeModeBtn.onclick = () => {
-  playClick();
-  gameMode = "time";
-  timeLeft = 60;
-   focusMode = false;
-  startGame();
-};
   
   const shareBtn = document.getElementById("shareScore");
   const scoreBoard = document.getElementById("scoreBoard");
