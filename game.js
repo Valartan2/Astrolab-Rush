@@ -1079,7 +1079,7 @@ function createLetter(speed) {
 
   // 🔴 FLASH → on teinte directement l'image
   if (hitFlashTimer > 0) {
-    ctx.filter = "brightness(1) sepia(1) hue-rotate(-30deg) saturate(6)";
+    ctx.filter = "brightness(1) sepia(1) hue-rotate(-50deg) saturate(8)";
   }
 
   ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
