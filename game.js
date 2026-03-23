@@ -169,7 +169,7 @@ objectifList.style.display="flex";
 
 { key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"destroy", value:200} },
 
-{ key:"orange", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
+{ key:"Neon", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
 
 { key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:3000} }
 
