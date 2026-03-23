@@ -2113,8 +2113,16 @@ if (!gameOver && !isDying) {
 }
 
 if (meteorToStarActive) {
+
+  let alpha = 0.15;
+
+  // ⚠️ fin proche → clignotement
+  if (meteorToStarRemaining < 1000) {
+    alpha = Math.sin(performance.now() / 60) * 0.5 + 0.5;
+  }
+
   ctx.save();
-  ctx.globalAlpha = 0.15;
+  ctx.globalAlpha = alpha;
   ctx.fillStyle = "#ffff00";
   ctx.beginPath();
   ctx.arc(player.x, player.y, 100, 0, Math.PI * 2);
