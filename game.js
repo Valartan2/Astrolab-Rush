@@ -1224,7 +1224,7 @@ function drawX2(b) {
   updateObjectifDisplay();
   showSuccessBanner("🚀 Rocket purchased!");
 };
-}
+
   
 
   /* -------------------- Scoreboard -------------------- */
