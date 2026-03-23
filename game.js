@@ -2084,7 +2084,21 @@ else {
   progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
 
   // 🚀 DISTANCE = progressText (COMME TU VEUX)
-  progressText.textContent = `${Math.floor(distance)} / 500`;
+  let currentThreshold = 0;
+let nextThreshold = 500;
+
+for (let i = 0; i < gradeObjectifs.length; i++) {
+  if (distance >= gradeObjectifs[i].threshold) {
+    currentThreshold = gradeObjectifs[i].threshold;
+
+    if (i + 1 < gradeObjectifs.length) {
+      nextThreshold = gradeObjectifs[i + 1].threshold;
+    }
+  }
+}
+
+progressText.textContent =
+  `${Math.floor(distance)} / ${nextThreshold}`;
 }
 
 // 🔥 BONUS VISUEL
