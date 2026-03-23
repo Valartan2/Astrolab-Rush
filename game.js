@@ -1987,15 +1987,12 @@ if (!gameOver && !isDying) {
 
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
 
-  // 🎯 DISPLAY PAR MODE (ICI ✅)
- if (gameMode === "time") {
+  // 🎯 DISPLAY PAR MODE
+  if (gameMode === "time") {
 
-  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
-
-  distanceDisplay.textContent =
-    `🚀 ${formatNumber(Math.floor(distance))} m ⏱️ ${timeLeft.toFixed(1)}s`;
-
-}
+    progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+    distanceDisplay.textContent =
+      `🚀 ${formatNumber(Math.floor(distance))} m ⏱️ ${timeLeft.toFixed(1)}s`;
 
   } else if (gameMode === "mission") {
 
