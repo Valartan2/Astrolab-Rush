@@ -2070,17 +2070,7 @@ if (gameMode === "time") {
 }
 
 // 🔥 BONUS VISUEL
-  progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";      
 
-const remaining = Math.floor(nextThreshold - distance);
-progressLabel.textContent = `Next Grade : ${remaining} m`;
-
-progressBar.style.background = getFlashColor();     
-
-const progressText = document.getElementById("progressText");
-
-progressText.textContent =
-  Math.floor(distance) + " / " + nextThreshold;      
 
       if (
         nextGradeIndex < gradeObjectifs.length &&
