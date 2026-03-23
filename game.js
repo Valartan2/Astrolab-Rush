@@ -26,7 +26,7 @@ const shopRockets = [
     id: "neon",
     name: "Neon Rocket",
     file: "rocket10.png",
-    priceStars: 300,
+    priceStars: 50,
     priceMeteors: 0,
     owned: false
   },
