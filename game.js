@@ -1077,19 +1077,15 @@ function createLetter(speed) {
   ctx.save();
   ctx.translate(x, y);
 
-  // 🚀 fusée normale
+  // 🔴 FLASH → on teinte directement l'image
+  if (hitFlashTimer > 0) {
+    ctx.filter = "brightness(0) saturate(100%) sepia(1) hue-rotate(-50deg) saturate(5)";
+  }
+
   ctx.drawImage(currentRocket, -radius, -radius, radius * 2, radius * 2);
 
-  // 🔴 HIT FLASH (AJOUT ICI)
-  if (hitFlashTimer > 0) {
-  ctx.globalCompositeOperation = "source-atop";
-  ctx.globalAlpha = 0.6;
-
-  ctx.fillStyle = "red";
-  ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
-
-  ctx.globalCompositeOperation = "source-over";
-}
+  // reset filtre
+  ctx.filter = "none";
 
   ctx.restore();
 }
