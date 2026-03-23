@@ -632,6 +632,11 @@ let meteorToStarRemaining = 0;
 const totalGalaxy = getTotalGalaxy();
 const totalSpecial = getTotalSpecial();
 
+    const currencyDisplay = document.getElementById("currencyDisplay");
+if (currencyDisplay) {
+  currencyDisplay.innerHTML = `⭐ ${stars} &nbsp;&nbsp; ☄️ ${meteors}`;
+}
+
 const starsEl = document.getElementById("totalStarsDisplay");
 if (starsEl) {
   starsEl.textContent = `Total stars: ${totalStars} ⭐`;
@@ -732,6 +737,27 @@ li.textContent = `${rocket.label}${status}`;
 
 });
   }
+
+  // 🛒 SHOP ROCKETS
+const shopList = document.getElementById("shopRocketItems");
+if (!shopList) return;
+
+shopList.innerHTML = "";
+
+shopRockets.forEach(r => {
+  const li = document.createElement("li");
+
+  if (r.owned) {
+    li.textContent = `🚀 ${r.name} — ✅ Owned`;
+  } else if (stars >= r.priceStars && meteors >= r.priceMeteors) {
+    li.innerHTML = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}
+      <button onclick="acheterShopRocket('${r.id}')">Buy</button>`;
+  } else {
+    li.textContent = `🚀 ${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}`;
+  }
+
+  shopList.appendChild(li);
+});
 
   function unlockRocketsIfNeeded() {
 
