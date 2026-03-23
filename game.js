@@ -530,6 +530,8 @@ function getRandomBonus() {
 }
 
 let meteorToStarRemaining = 0;
+
+  let missionCompleted = false;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -1371,6 +1373,8 @@ nextMeteorBonusDistance = 1200;
 nextLetterDistance = 500;
 
     nextBonusDistance = 250;
+
+    missionCompleted = false;
   
 
  // 🛡️ SHIELD RESET
@@ -1802,6 +1806,29 @@ if (shieldActive && dist < player.radius + 80) {
   bubbles.splice(i, 1);
   continue;
 }
+
+// 💀 COLLISION NORMALE (IMPORTANT)
+if (!shieldActive && !meteorToStarActive && dist < player.radius + b.radius) {
+
+  if (gameMode === "time") {
+    timeLeft -= 3;
+
+    hitSound.currentTime = 0;
+    hitSound.play().catch(()=>{});
+    flashScreen("red");
+
+    bubbles.splice(i, 1);
+    continue;
+  }
+
+  isDying = true;
+  createExplosion(player.x, player.y);
+  pressing = false;
+
+  bubbles.splice(i, 1);
+  break;
+}
+      
   if (b.y > height - b.radius || b.y < b.radius) {
     b.direction *= -1;
   }
@@ -1810,6 +1837,7 @@ if (shieldActive && dist < player.radius + 80) {
     bubbles.splice(i, 1);
   }
 }
+  
 
 // 🛰️ SPECIAL OBSTACLES
 for (let i = specialObstacles.length - 1; i >= 0; i--) {
@@ -2137,15 +2165,16 @@ if (!gameOver && !isDying) {
 wordDisplay.textContent = displayWord;
 
     // 🎯 MISSION MODE
-if (gameMode === "mission") {
-  if (starScore >= missionTarget) {
-    showSuccessBanner("MISSION COMPLETE!");
+if (gameMode === "mission" && !missionCompleted && starScore >= missionTarget) {
+  missionCompleted = true;
+  showSuccessBanner("MISSION COMPLETE!");
 
-    setTimeout(() => {
+  setTimeout(() => {
+    if (!gameOver && !isDying) {
       isDying = true;
       createExplosion(player.x, player.y);
-    }, 500);
-  }
+    }
+  }, 500);
 }
 
  // 🔥 PROGRESSION VERS PROCHAIN PALIER
@@ -2244,34 +2273,6 @@ progressText.textContent =
         nextGradeIndex++;
       }
 
-      for (let i = 0; i < bubbles.length; i++) {
-    
-       if (!meteorToStarActive && !shieldActive && !isDying && isColliding(player, bubbles[i])) {
-
-  if (gameMode === "time") {
-
-    timeLeft -= 3; // ⏱️ perte de temps
-
-    // 🔊 SON IMPACT
-  hitSound.currentTime = 0;
-  hitSound.play().catch(()=>{});
-
-    flashScreen("red"); // feedback visuel
-
-    
-
-    bubbles.splice(i, 1);
-    continue;
-  }
-
-  // autres modes = mort normale
-  isDying = true;
-  createExplosion(player.x, player.y);
-  pressing = false;
-  bubbles.splice(i, 1);       
-  break;
-}   
-      }
     
 
    for (let i = particles.length - 1; i >= 0; i--) {
