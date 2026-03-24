@@ -1639,6 +1639,12 @@ tutorialBtn.onclick = () => {
 
   tutorialModal.style.display = "none";
 
+  // 🎵 lancer musique ici (AU BON MOMENT)
+if (music && musicEnabled) {
+  music.currentTime = 0;
+  music.play().catch(() => {});
+}
+
   // ✅ marquer comme fait ICI (au bon moment)
   setTutorialDone(gameMode);
 
