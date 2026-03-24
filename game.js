@@ -10,18 +10,28 @@
 
   const buySound = new Audio("success_bell-6776.mp3");
 
-  function getTutorialKey(mode) {
-  if (mode === "endless") return "tutorial_endless_done";
-  if (mode === "mission") return "tutorial_mission_done";
-  if (mode === "time") return "tutorial_time_done";
-}
+  const tutorialModal = document.getElementById("tutorialModal");
+const tutorialText = document.getElementById("tutorialText");
+const tutorialBtn = document.getElementById("tutorialBtn");
 
-function isTutorialDone(mode) {
-  return localStorage.getItem(getTutorialKey(mode)) === "true";
-}
+  function showTutorial(mode) {
 
-function setTutorialDone(mode) {
-  localStorage.setItem(getTutorialKey(mode), "true");
+  let text = "";
+
+  if (mode === "endless") {
+    text = "🚀 Hold to fly\nAvoid meteorites!";
+  }
+
+  if (mode === "mission") {
+    text = "⭐ Collect stars\nUse bonuses!";
+  }
+
+  if (mode === "time") {
+    text = "⏱️ Collect stars to gain time!";
+  }
+
+  tutorialText.innerText = text;
+  tutorialModal.style.display = "flex";
 }
 
   // 🔥 MODE SYSTEM
@@ -1437,6 +1447,15 @@ meteorToStarTimer = 0;
 };
 
   /* -------------------- Buttons -------------------- */
+
+tutorialBtn.onclick = () => {
+
+  tutorialModal.style.display = "none";
+
+  // 🔥 lancer le jeu après
+  animationId = requestAnimationFrame(gameLoop);
+};
+  
 playButton.onclick = () => {
   playClick();
 
@@ -1573,7 +1592,12 @@ if (!isTutorialDone(gameMode)) {
 }
 
 
+  if (!isTutorialDone(gameMode)) {
+  showTutorial(gameMode);
+  setTutorialDone(gameMode);
+} else {
   animationId = requestAnimationFrame(gameLoop);
+}
 
   modeSelect.style.display = "none";
 
