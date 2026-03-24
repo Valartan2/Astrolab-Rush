@@ -180,7 +180,14 @@ objectifList.style.display="flex";
   TOTAL_BIG_STARS: "totalBigStars",  
 };
 
-
+const timeGrades = [
+  { threshold: 0, label: "Rookie" },
+  { threshold: 10, label: "Pilot" },
+  { threshold: 20, label: "Skilled" },
+  { threshold: 30, label: "Elite" },
+  { threshold: 45, label: "Master" },
+  { threshold: 60, label: "Legend" }
+];
   
   /* -------------------- Grades -------------------- */
   const gradeObjectifs = [
@@ -623,6 +630,20 @@ let tutorialTimer = 0;
   }
 
   return currentGrade;
+}
+
+  function getTimeGrade(time) {
+  let grade = timeGrades[0].label;
+
+  for (let i = 0; i < timeGrades.length; i++) {
+    if (time >= timeGrades[i].threshold) {
+      grade = timeGrades[i].label;
+    } else {
+      break;
+    }
+  }
+
+  return grade;
 }
 
   function showMilestone(text) {
@@ -1312,31 +1333,38 @@ function drawX2(b) {
     const bestScore = Math.max(runScore, getBestScore());
     setBestScore(bestScore);
 
-    if (gameMode !== "time") {
+    if (gameMode === "endless") {
+
   const previousTotal = getTotalDistance();
   const newTotal = previousTotal + runScore;
   setTotalDistance(newTotal);
+
 }
 
     
 
 
     // ⭐ stars
-if (gameMode !== "time") {
+if (gameMode === "mission") {
+
   const totalStars = getTotalStars() + starScore;
   setTotalStars(totalStars);
+
 }
 
     const totalBigStars = getTotalBigStars() + bigStarScore;
 setTotalBigStars(totalBigStars);
 
 // 🔤 galaxy
-const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
-setTotalGalaxy(totalGalaxy);
+if (gameMode === "endless") {
 
-// 💥 destruction
-const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
-setTotalDestroyed(totalDestroyed);
+  const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
+  setTotalGalaxy(totalGalaxy);
+
+  const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
+  setTotalDestroyed(totalDestroyed);
+
+}
 
 const starsRunEl = document.getElementById("starsRun");
 if (starsRunEl) starsRunEl.textContent = starScore;
@@ -2264,16 +2292,21 @@ if (!gameOver && !isDying) {
     player.velocityY = 0;
   }
 
+  if (gameMode !== "time") {
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
+}
 
-  }
+  
 
   // 🎯 DISPLAY PAR MODE
 if (gameMode === "time") {
 
-  distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
+  const grade = getTimeGrade(timeSurvived);
 
-} else if (gameMode === "mission") {
+  distanceDisplay.textContent =
+    `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
+
+}else if (gameMode === "mission") {
 
   distanceDisplay.textContent =
     `⭐ ${starScore} / ${missionTarget}`;
@@ -2300,7 +2333,7 @@ wordDisplay.textContent = displayWord;
 const progressText = document.getElementById("progressText");
 
 // 🎯 MODE NORMAL (endless + mission)
-if (gameMode !== "time") {
+if (gameMode === "endless") {
 
   let currentThreshold = 0;
   let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
@@ -2593,6 +2626,20 @@ if (tutorialActive) {
   ctx.fillText(text, width / 2, height / 2);
 
   ctx.restore();
+}
+
+
+  if (gameMode === "mission" && starScore >= missionTarget && !gameOver) {
+
+  showSuccessBanner("🎯 MISSION COMPLETE!");
+
+  gameOver = true;
+  afficherTableauScore(distance);
+
+  rejouerBtn.style.display = "block";
+  shareBtn.style.display = "block";
+  backToMenuBtn.style.display = "block";
+
 }
 
     if ((!gameOver && !isDying) || particles.length > 0) {
