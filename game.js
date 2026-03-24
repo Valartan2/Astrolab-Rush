@@ -1670,6 +1670,15 @@ function gameLoop(timestamp) {
   dt = Math.min(dt, 1.5);
   lastTime = timestamp;
 
+  if (gameMode === "time" && !gameOver && !isDying) {
+
+  timeSurvived += dt / 60;
+  timeLeft -= dt / 60;
+
+  // sécurité
+  timeLeft = Math.max(0, Math.min(timeLeft, 60));
+}
+
   if (tutorialActive) {
   tutorialTimer -= 16;
 
@@ -2217,15 +2226,7 @@ starSound.play().catch(()=>{});
 }
 
   // ⏱️ TIME ATTACK
-if (gameMode === "time" && !gameOver && !isDying) {
 
-  // ⏱️ chrono (score)
-  timeSurvived += dt / 60;
-
-  // 🔻 jauge (survie)
-  timeLeft -= dt / 60;
-
-}
 
   if (timeLeft <= 0) {
     timeLeft = 0;
