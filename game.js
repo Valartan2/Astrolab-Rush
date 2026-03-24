@@ -2258,9 +2258,7 @@ if (!gameOver && !isDying) {
     if (gameMode === "time") {
   distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
 }
-  // 🕒 TIMER PRINCIPAL
-  distanceDisplay.textContent = `⏱️ ${timeLeft.toFixed(1)}s`;
-
+  
   // (optionnel) garder distance en petit ailleurs
 } else if (gameMode === "mission") {
 
