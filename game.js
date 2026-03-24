@@ -1007,7 +1007,8 @@ if (shopList) {
       ISS: false,
       Starman: false,
       Soyouz: false,
-      Ovni: false
+      Ovni: false,
+      astro: false
     };
   }
 }
@@ -1114,6 +1115,8 @@ function createLetter(speed) {
   } else if (image.src.includes("Soyouz")) {
     size = 38;
   } else if (image.src.includes("Starman")) {
+    size = 32;
+    } else if (image.src.includes("astro")) {
     size = 32;
   } else {
     size = 35;
@@ -1644,7 +1647,8 @@ meteorToStarTimer = 0;
   ISS: false,
   Starman: false,
   Soyouz: false,
-  Ovni: false
+  Ovni: false,
+    astro: false
 };
  }
   
@@ -2171,7 +2175,7 @@ if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
 if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
 if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
 if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
-    
+if (src.includes("astro")) specialDestroyedThisRun.astro = true;    
     createExplosion(o.x, o.y);
     specialObstacles.splice(i, 1);
     continue;
