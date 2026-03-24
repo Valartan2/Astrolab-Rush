@@ -2400,23 +2400,39 @@ else {
 
 // 🔥 BONUS VISUEL
 
+if (gameMode === "endless" &&
+  nextGradeIndex < gradeObjectifs.length &&
+  distance >= gradeObjectifs[nextGradeIndex].threshold
+) {
+  const grade = gradeObjectifs[nextGradeIndex];
 
-      if (
-        nextGradeIndex < gradeObjectifs.length &&
-        distance >= gradeObjectifs[nextGradeIndex].threshold
-      ) {
-        const grade = gradeObjectifs[nextGradeIndex];
+  distanceDisplay.classList.add("distancePulse");
+  setTimeout(() => {
+    distanceDisplay.classList.remove("distancePulse");
+  }, 400);
 
-        distanceDisplay.classList.add("distancePulse");
-        setTimeout(() => {
-          distanceDisplay.classList.remove("distancePulse");
-        }, 400);
+  showMilestone(grade.label);
+  flashScreen(getFlashColor());
 
-        showMilestone(grade.label);
-        flashScreen(getFlashColor());
+  nextGradeIndex++;
+}
 
-        nextGradeIndex++;
-      }
+if (gameMode === "time" &&
+  nextGradeIndex < timeGrades.length &&
+  timeSurvived >= timeGrades[nextGradeIndex].threshold
+) {
+  const grade = timeGrades[nextGradeIndex];
+
+  distanceDisplay.classList.add("distancePulse");
+  setTimeout(() => {
+    distanceDisplay.classList.remove("distancePulse");
+  }, 400);
+
+  showMilestone(grade.label);
+  flashScreen("#00ccff");
+
+  nextGradeIndex++;
+}
 
     
 
