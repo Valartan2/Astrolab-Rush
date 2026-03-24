@@ -812,6 +812,49 @@ font-weight:bold;
   height: 40px;
   margin-right: 10px;
 }
+
+    .tutorial-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 20, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.tutorial-box {
+  background: linear-gradient(145deg, #001122, #002244);
+  border: 2px solid #00ccff;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  color: white;
+  width: 300px;
+  box-shadow: 0 0 20px #00ccff;
+}
+
+.tutorial-box h2 {
+  margin-bottom: 15px;
+}
+
+.tutorial-box p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.tutorial-box button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #00ccff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
     
   </style>
 </head>
@@ -837,6 +880,18 @@ font-weight:bold;
 <button id="menuObjectivesBtn" class="menuBtn">Objectives</button>
 <button id="settingsBtn" class="menuBtn">Settings</button>
 
+</div>
+
+  <div id="tutorialModal" class="tutorial-modal">
+  <div class="tutorial-box">
+
+    <h2 id="tutorialTitle">🚀 How to play</h2>
+
+    <p id="tutorialText">...</p>
+
+    <button id="tutorialBtn">PLAY</button>
+
+  </div>
 </div>
 
   <!-- 🔥 MODE SELECT -->
