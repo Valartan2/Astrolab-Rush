@@ -446,7 +446,7 @@ const specialSources = [
   "Soyouz.png",
   "Ovni.png",
   "Starman.png",
-  "ISS.png"
+  "ISS.png",
   "astro.png"
 ];
 
