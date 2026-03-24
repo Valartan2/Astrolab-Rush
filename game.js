@@ -1384,81 +1384,131 @@ function drawX2(b) {
   
 
   /* -------------------- Scoreboard -------------------- */
-  function afficherTableauScore(score) {
-    const runScore = Math.floor(score);
-    const bestScore = Math.max(runScore, getBestScore());
-    setBestScore(bestScore);
+function afficherTableauScore(score) {
 
-    let newTotal = getTotalDistance();
+  const runScore = Math.floor(score);
+  const bestScore = Math.max(runScore, getBestScore());
+  setBestScore(bestScore);
 
-if (gameMode === "endless") {
-  newTotal += runScore;
-  setTotalDistance(newTotal);
-}
+  let newTotal = getTotalDistance();
 
-    // ⏱️ SAVE BEST TIME
-if (gameMode === "time") {
-  if (timeSurvived > bestTime) {
-    bestTime = timeSurvived;
-    localStorage.setItem("bestTime", bestTime);
+  // 🟢 ENDLESS → cumul distance
+  if (gameMode === "endless") {
+    newTotal += runScore;
+    setTotalDistance(newTotal);
   }
-}
 
-    
-
-
-    // ⭐ stars
-if (gameMode === "endless" || gameMode === "mission") {
-  const totalStars = getTotalStars() + starScore;
-  setTotalStars(totalStars);
-}
-
-    const totalBigStars = getTotalBigStars() + bigStarScore;
-setTotalBigStars(totalBigStars);
-
-// 🔤 galaxy
-if (gameMode !== "time") {
-  const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
-  setTotalGalaxy(totalGalaxy);
-
-  const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
-  setTotalDestroyed(totalDestroyed);
-}
-
-const starsRunEl = document.getElementById("starsRun");
-if (starsRunEl) starsRunEl.textContent = starScore;
-
-const starsTotalEl = document.getElementById("starsTotal");
-if (starsTotalEl) starsTotalEl.textContent = getTotalStars();
-
-const galaxyRunEl = document.getElementById("galaxyRun");
-if (galaxyRunEl) galaxyRunEl.textContent = galaxyCompletedThisRun;
-
-const galaxyTotalEl = document.getElementById("galaxyTotal");
-if (galaxyTotalEl) galaxyTotalEl.textContent = getTotalGalaxy();
-
-const specialTotalEl = document.getElementById("specialTotal");
-if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
-
-    const totalDistance = getTotalDistance();
-
-newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
-
-    currentScoreSpan.textContent = formatNumber(runScore);
-    bestScoreSpan.textContent = formatNumber(bestScore);
-    totalScoreSpan.textContent = formatNumber(newTotal);
-    gradeSpan.textContent = getGrade(bestScore);
-
-    updateObjectifDisplay();
-    scoreBoard.style.display = "block";
-
-    if (newlyUnlockedThisRun.length) {
-      const lastUnlocked = newlyUnlockedThisRun[newlyUnlockedThisRun.length - 1];
-      setTimeout(() => {
-        showSuccessBanner(`🚀 New rocket unlocked: ${lastUnlocked.label}`);
-      }, 250);
+  // 🔵 TIME → best time
+  if (gameMode === "time") {
+    if (timeSurvived > bestTime) {
+      bestTime = timeSurvived;
+      localStorage.setItem("bestTime", bestTime);
     }
   }
+
+  // ⭐ stars
+  if (gameMode === "endless" || gameMode === "mission") {
+    const totalStars = getTotalStars() + starScore;
+    setTotalStars(totalStars);
+  }
+
+  const totalBigStars = getTotalBigStars() + bigStarScore;
+  setTotalBigStars(totalBigStars);
+
+  // 🔤 galaxy + destruction
+  if (gameMode !== "time") {
+    const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
+    setTotalGalaxy(totalGalaxy);
+
+    const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
+    setTotalDestroyed(totalDestroyed);
+  }
+
+  // 🔄 UI secondaires (si présents)
+  const starsRunEl = document.getElementById("starsRun");
+  if (starsRunEl) starsRunEl.textContent = starScore;
+
+  const starsTotalEl = document.getElementById("starsTotal");
+  if (starsTotalEl) starsTotalEl.textContent = getTotalStars();
+
+  const galaxyRunEl = document.getElementById("galaxyRun");
+  if (galaxyRunEl) galaxyRunEl.textContent = galaxyCompletedThisRun;
+
+  const galaxyTotalEl = document.getElementById("galaxyTotal");
+  if (galaxyTotalEl) galaxyTotalEl.textContent = getTotalGalaxy();
+
+  const specialTotalEl = document.getElementById("specialTotal");
+  if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
+
+  const totalDistance = getTotalDistance();
+  newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
+
+  // 🎯 LABELS (HTML)
+  const label1 = document.getElementById("label1");
+  const label2 = document.getElementById("label2");
+  const label3 = document.getElementById("label3");
+  const label4 = document.getElementById("label4");
+
+  // 🟢 ENDLESS
+  if (gameMode === "endless") {
+
+    label1.textContent = "Distance:";
+    label2.textContent = "Best:";
+    label3.textContent = "Total Distance:";
+    label4.textContent = "Grade:";
+
+    currentScoreSpan.textContent = Math.floor(distance) + " m";
+    bestScoreSpan.textContent = bestScore + " m";
+    totalScoreSpan.textContent = getTotalDistance() + " m";
+    gradeSpan.textContent = getGrade(distance);
+
+    label3.parentElement.style.display = "block";
+  }
+
+  // 🟡 MISSION
+  if (gameMode === "mission") {
+
+    label1.textContent = "⭐ Stars:";
+    label2.textContent = "☄️ Meteors:";
+    label3.textContent = "⭐ Total Stars:";
+    label4.textContent = "☄️ Total Meteors:";
+
+    currentScoreSpan.textContent = starScore;
+    bestScoreSpan.textContent = meteorDestroyed;
+    totalScoreSpan.textContent = getTotalStars();
+    gradeSpan.textContent = getTotalDestroyed();
+
+    label3.parentElement.style.display = "block";
+  }
+
+  // 🔵 TIME ATTACK
+  if (gameMode === "time") {
+
+    label1.textContent = "⏱ Time:";
+    label2.textContent = "🏆 Best Time:";
+    label3.textContent = "";
+    label4.textContent = "🎖 Grade:";
+
+    currentScoreSpan.textContent = timeSurvived.toFixed(1) + " s";
+    bestScoreSpan.textContent = bestTime.toFixed(1) + " s";
+    totalScoreSpan.textContent = "";
+    gradeSpan.textContent = getTimeGrade(timeSurvived);
+
+    // cacher ligne inutile
+    label3.parentElement.style.display = "none";
+  }
+
+  updateObjectifDisplay();
+  scoreBoard.style.display = "block";
+
+  // 🚀 unlock visuel
+  if (newlyUnlockedThisRun.length) {
+    const lastUnlocked = newlyUnlockedThisRun[newlyUnlockedThisRun.length - 1];
+    setTimeout(() => {
+      showSuccessBanner(`🚀 New rocket unlocked: ${lastUnlocked.label}`);
+    }, 250);
+  }
+}
 
 
 
