@@ -1768,7 +1768,11 @@ if (isDying) {
     gameOverText.style.display = "block";
     distanceDisplay.style.display = "none";
 
-    afficherTableauScore(distance);
+    if (gameMode === "time") {
+  afficherTableauScore(timeSurvived);
+} else {
+  afficherTableauScore(distance);
+}
 
     rejouerBtn.style.display = "block";
     shareBtn.style.display = "block";
@@ -2634,7 +2638,11 @@ if (tutorialActive) {
   showSuccessBanner("🎯 MISSION COMPLETE!");
 
   gameOver = true;
+  if (gameMode === "time") {
+  afficherTableauScore(timeSurvived);
+} else {
   afficherTableauScore(distance);
+}
 
   rejouerBtn.style.display = "block";
   shareBtn.style.display = "block";
