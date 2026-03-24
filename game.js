@@ -10,6 +10,20 @@
 
   const buySound = new Audio("success_bell-6776.mp3");
 
+  const TUTORIAL_KEYS = {
+  ENDLESS: "tutorial_endless_done",
+  MISSION: "tutorial_mission_done",
+  TIME: "tutorial_time_done"
+};
+
+function isTutorialDone(mode) {
+  return localStorage.getItem(TUTORIAL_KEYS[mode]) === "true";
+}
+
+function setTutorialDone(mode) {
+  localStorage.setItem(TUTORIAL_KEYS[mode], "true");
+}
+
   // 🔥 MODE SYSTEM
 let gameMode = "endless"; // "endless", "mission", "time"
   let focusMode = false;
@@ -538,6 +552,9 @@ let meteorToStarRemaining = 0;
   let totalMeteorToStar = parseInt(localStorage.getItem("totalMeteorToStar")) || 0;
 
 let hitFlashTimer = 0;
+
+  let tutorialActive = false;
+let tutorialTimer = 0;
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -1071,6 +1088,38 @@ function createLetter(speed) {
     ctx.restore();
   }
 
+  if (tutorialActive) {
+
+  ctx.save();
+
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, height / 2 - 60, width, 120);
+
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.font = "20px Arial";
+
+  let text = "";
+
+  if (gameMode === "endless") {
+    text = "🚀 Hold to go up • Avoid meteorites";
+  }
+
+  if (gameMode === "mission") {
+    text = "⭐ Collect stars • Use bonuses";
+  }
+
+  if (gameMode === "time") {
+    text = "⏱️ Collect stars to gain time!";
+  }
+
+  ctx.fillText(text, width / 2, height / 2);
+
+  ctx.restore();
+}
+
   function drawRocket(x, y, radius) {
   const currentRocket = getCurrentRocketImage();
 
@@ -1546,6 +1595,13 @@ progressLabel.style.display = "none";
     music.play().catch(() => {});
   }
 
+   // 🎓 TUTORIAL
+if (!isTutorialDone(gameMode)) {
+  tutorialActive = true;
+  tutorialTimer = 3000; // 3 secondes
+  setTutorialDone(gameMode);
+}
+
 
   animationId = requestAnimationFrame(gameLoop);
 
@@ -1579,6 +1635,14 @@ function gameLoop(timestamp) {
   let dt = (timestamp - lastTime) / 16.67;
   dt = Math.min(dt, 1.5);
   lastTime = timestamp;
+
+  if (tutorialActive) {
+  tutorialTimer -= 16;
+
+  if (tutorialTimer <= 0) {
+    tutorialActive = false;
+  }
+}
 
   // 🧹 RESET
 ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1804,6 +1868,9 @@ if (meteorToStarActive) {
 
   if (dist < player.radius + b.radius) {
     starScore += 5;
+
+    starSound.currentTime = 0;
+starSound.play();
 
     bubbles.splice(i, 1);
     continue;
