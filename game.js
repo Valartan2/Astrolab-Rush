@@ -2253,23 +2253,21 @@ if (!gameOver && !isDying) {
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
 
   // 🎯 DISPLAY PAR MODE
-  
+if (gameMode === "time") {
 
-    if (gameMode === "time") {
   distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
-}
-  
-  // (optionnel) garder distance en petit ailleurs
+
 } else if (gameMode === "mission") {
 
-    distanceDisplay.textContent =
-      `⭐ ${starScore} / ${missionTarget}`;
+  distanceDisplay.textContent =
+    `⭐ ${starScore} / ${missionTarget}`;
 
-  } else {
+} else {
 
-    distanceDisplay.textContent =
-      `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
-  }
+  distanceDisplay.textContent =
+    `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
+
+}
 }
      
 
