@@ -2180,7 +2180,7 @@ if (gameMode === "time" && !gameOver && !isDying) {
     // 🔥 IMPORTANT → prochain spawn aléatoire
     nextBonusDistance = distance + getNextGap(250, 250);
 
-  }
+  
 }
 
 // 🔤 LETTERS
