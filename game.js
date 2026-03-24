@@ -2343,7 +2343,7 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dy = player.y - s.y;
   const dist = Math.sqrt(dx * dx + dy * dy);
 
-  const speed = dist < 80 ? 20 : 10;
+  const speed = dist < 80 ? (isMobile ? 12 : 20) : (isMobile ? 6 : 10);
 
   s.x += (dx / dist) * speed;
   s.y += (dy / dist) * speed;
