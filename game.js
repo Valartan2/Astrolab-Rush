@@ -1312,9 +1312,11 @@ function drawX2(b) {
     const bestScore = Math.max(runScore, getBestScore());
     setBestScore(bestScore);
 
-    const previousTotal = getTotalDistance();
-    const newTotal = previousTotal + runScore;
-    setTotalDistance(newTotal);
+    if (gameMode !== "time") {
+  const previousTotal = getTotalDistance();
+  const newTotal = previousTotal + runScore;
+  setTotalDistance(newTotal);
+}
 
     
 
@@ -1351,7 +1353,9 @@ if (galaxyTotalEl) galaxyTotalEl.textContent = getTotalGalaxy();
 const specialTotalEl = document.getElementById("specialTotal");
 if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 
-    newlyUnlockedThisRun = unlockRocketsIfNeeded(newTotal);
+    const totalDistance = getTotalDistance();
+
+newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
 
     currentScoreSpan.textContent = formatNumber(runScore);
     bestScoreSpan.textContent = formatNumber(bestScore);
