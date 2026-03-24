@@ -1088,37 +1088,7 @@ function createLetter(speed) {
     ctx.restore();
   }
 
-  if (tutorialActive) {
-
-  ctx.save();
-
-  ctx.globalAlpha = 0.85;
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, height / 2 - 60, width, 120);
-
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.font = "20px Arial";
-
-  let text = "";
-
-  if (gameMode === "endless") {
-    text = "🚀 Hold to go up • Avoid meteorites";
-  }
-
-  if (gameMode === "mission") {
-    text = "⭐ Collect stars • Use bonuses";
-  }
-
-  if (gameMode === "time") {
-    text = "⏱️ Collect stars to gain time!";
-  }
-
-  ctx.fillText(text, width / 2, height / 2);
-
-  ctx.restore();
-}
+ 
 
   function drawRocket(x, y, radius) {
   const currentRocket = getCurrentRocketImage();
@@ -2511,6 +2481,39 @@ if (shieldActive && shieldRemaining < 1000) {
 
   if (hitFlashTimer > 0) {
   hitFlashTimer -= 16; // simple et stable
+}
+
+// 🎓 TUTORIAL DRAW (DOIT ETRE EN DERNIER)
+if (tutorialActive) {
+
+  ctx.save();
+
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, height / 2 - 60, width, 120);
+
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.font = "22px Arial";
+
+  let text = "";
+
+  if (gameMode === "endless") {
+    text = "🚀 Hold to fly • Avoid meteorites";
+  }
+
+  if (gameMode === "mission") {
+    text = "⭐ Collect stars • Use bonuses";
+  }
+
+  if (gameMode === "time") {
+    text = "⏱️ Collect stars to gain time!";
+  }
+
+  ctx.fillText(text, width / 2, height / 2);
+
+  ctx.restore();
 }
 
     if ((!gameOver && !isDying) || particles.length > 0) {
