@@ -209,27 +209,39 @@ objectifList.style.display="flex";
 
 const timeGrades = [
   { threshold: 0, label: "Rookie" },
-  { threshold: 10, label: "Survivor" },
-  { threshold: 20, label: "Pilot" },
+  { threshold: 5, label: "Survivor" },
+  { threshold: 10, label: "Pilot" },
+  { threshold: 20, label: "Ace" },
   { threshold: 30, label: "Elite" },
   { threshold: 45, label: "Master" },
-  { threshold: 60, label: "Legend" }
+  { threshold: 60, label: "Legend" },
+
+  // 🔥 mid / high skill
+  { threshold: 90, label: "Champion" },
+  { threshold: 120, label: "Titan" },
+  { threshold: 180, label: "Immortal" },
+  { threshold: 240, label: "Mythic" },
+  { threshold: 300, label: "God of Space" } // 5 min
 ];
   
   /* -------------------- Grades -------------------- */
-  const gradeObjectifs = [
-    { threshold: 0, label: "Interstellar Recruit" },
-    { threshold: 500, label: "Space Adventurer" },
-    { threshold: 1000, label: "Meteorite Hunter" },
-    { threshold: 1500, label: "Cosmic Explorer" },
-    { threshold: 2000, label: "Legendary  Pilot" },
-    { threshold: 2500, label: "Stellar Commander" },
-    { threshold: 3000, label: "Galactic Hero" },
-    { threshold: 3500, label: "Astral Veteran" },
-    { threshold: 4000, label: "Space Ace" },
-    { threshold: 4500, label: "Star Guardian" },
-    { threshold: 5000, label: "Legend of the Universe" }
-  ];
+  const gradeObjectives = [
+  { threshold: 0, label: "Interstellar Recruit" },
+  { threshold: 300, label: "Space Adventurer" },
+  { threshold: 800, label: "Meteorite Hunter" },
+  { threshold: 1400, label: "Cosmic Explorer" },
+  { threshold: 2000, label: "Legendary Pilot" },
+
+  // 🔥 mid game
+  { threshold: 2700, label: "Stellar Commander" },
+  { threshold: 3500, label: "Galactic Hero" },
+  { threshold: 4500, label: "Astral Veteran" },
+
+  // 🔥 late game
+  { threshold: 6000, label: "Space Ace" },
+  { threshold: 8000, label: "Star Guardian" },
+  { threshold: 10000, label: "Legend of the Universe" }
+];
 
   /* -------------------- Rockets -------------------- */
   const rocketDefinitions = [
