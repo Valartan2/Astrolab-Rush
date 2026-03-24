@@ -2268,7 +2268,7 @@ if (gameMode === "time") {
     `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
 
 }
-}
+
      
 
       const displayWord = word.map((letter, index) => {
