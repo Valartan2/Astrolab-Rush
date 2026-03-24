@@ -10,18 +10,18 @@
 
   const buySound = new Audio("success_bell-6776.mp3");
 
-  const TUTORIAL_KEYS = {
-  ENDLESS: "tutorial_endless_done",
-  MISSION: "tutorial_mission_done",
-  TIME: "tutorial_time_done"
-};
+  function getTutorialKey(mode) {
+  if (mode === "endless") return "tutorial_endless_done";
+  if (mode === "mission") return "tutorial_mission_done";
+  if (mode === "time") return "tutorial_time_done";
+}
 
 function isTutorialDone(mode) {
-  return localStorage.getItem(TUTORIAL_KEYS[mode]) === "true";
+  return localStorage.getItem(getTutorialKey(mode)) === "true";
 }
 
 function setTutorialDone(mode) {
-  localStorage.setItem(TUTORIAL_KEYS[mode], "true");
+  localStorage.setItem(getTutorialKey(mode), "true");
 }
 
   // 🔥 MODE SYSTEM
