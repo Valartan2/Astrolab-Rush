@@ -2233,7 +2233,7 @@ starSound.play().catch(()=>{});
     isDying = true;
     createExplosion(player.x, player.y);
   }
-}
+
       
 if (!gameOver && !isDying) {
 
