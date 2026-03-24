@@ -2062,17 +2062,19 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 }
 
  // ⭐ étoiles
-if (!focusMode && !gameOver) {
+const MAX_STARS = isMobile ? 8 : 14;
 
-  let starRate = 0.02; // Endless (équilibré)
+if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
 
-if (gameMode === "mission") {
-  starRate = 0.035; // ⭐ plus d’étoiles
-}
+  let starRate = 0.02;
 
-if (gameMode === "time") {
-  starRate = 0.05; // ⭐⭐⭐ beaucoup plus
-}
+  if (gameMode === "mission") {
+    starRate = 0.035;
+  }
+
+  if (gameMode === "time") {
+    starRate = 0.05;
+  }
 
   if (Math.random() < starRate) {
     createStar(finalSpeed);
