@@ -268,18 +268,18 @@ const timeGrades = [
   /* -------------------- Grades -------------------- */
   const gradeObjectives = [
   { threshold: 0, label: "Interstellar Recruit" },
-  { threshold: 300, label: "Space Adventurer" },
-  { threshold: 800, label: "Meteorite Hunter" },
-  { threshold: 1400, label: "Cosmic Explorer" },
+  { threshold: 500, label: "Space Adventurer" },
+  { threshold: 1000, label: "Meteorite Hunter" },
+  { threshold: 1500, label: "Cosmic Explorer" },
   { threshold: 2000, label: "Legendary Pilot" },
 
   // 🔥 mid game
-  { threshold: 2700, label: "Stellar Commander" },
+  { threshold: 2500, label: "Stellar Commander" },
   { threshold: 3500, label: "Galactic Hero" },
-  { threshold: 4500, label: "Astral Veteran" },
+  { threshold: 5000, label: "Astral Veteran" },
 
   // 🔥 late game
-  { threshold: 6000, label: "Space Ace" },
+  { threshold: 6500, label: "Space Ace" },
   { threshold: 8000, label: "Star Guardian" },
   { threshold: 10000, label: "Legend of the Universe" }
 ];
