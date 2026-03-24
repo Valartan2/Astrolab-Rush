@@ -41,7 +41,7 @@ Avoid meteorites ☄️<br>
 Go as far as possible<br><br>
 🏆 Unlock grades
 `;
-
+}
 if (mode === "mission") {
   text = `
 ⭐ <b>How to play</b><br><br>
@@ -51,7 +51,7 @@ Collect stars ⭐<br>
 Complete objectives<br><br>
 🚀 Unlock rewards
 `;
-
+}
 
  if (mode === "time") {
   text = `
