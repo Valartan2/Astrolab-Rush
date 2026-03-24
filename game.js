@@ -248,23 +248,23 @@ const timeGrades = [
 
 { key:"classic", label:"Classic Rocket", file:"rocket2.png", unlock:{type:"distance", value:0} },
 
-{ key:"white", label:"White Rocket", file:"rocket3.png", unlock:{type:"distance", value:500} },
+{ key:"white", label:"White Rocket", file:"rocket3.png", unlock:{type:"distance", value:5000} },
 
-{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"stars", value:50} },
+{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"distance", value:10000} },
 
 { key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:1} },
 
-{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"stars", value:150} },
+{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"distance", value:50000} },
 
 { key:"blue", label:"Blue Rocket", file:"rocket7.png", unlock:{type:"distance", value:10000} },
 
 { key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"galaxy", value:10} },
 
-{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"destroy", value:200} },
+{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"run", value:2500} },
 
 { key:"neon", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
 
-{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:3000} }
+{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:5000} }
 
 ];
 
