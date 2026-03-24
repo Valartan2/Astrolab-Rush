@@ -2343,7 +2343,7 @@ starSound.play().catch(()=>{});
 if (!gameOver && !isDying) {
 
   // HUD stats
-  // HUD stats
+  
 
 if (gameMode === "endless") {
 
