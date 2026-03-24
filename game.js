@@ -662,11 +662,11 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
   }
 
   function getGrade(score) {
-  let currentGrade = gradeObjectifs[0].label;
+  let currentGrade = gradeObjectives[0].label;
 
-  for (let i = 0; i < gradeObjectifs.length; i++) {
-    if (score >= gradeObjectifs[i].threshold) {
-      currentGrade = gradeObjectifs[i].label;
+  for (let i = 0; i < gradeObjectives.length; i++) {
+    if (score >= gradeObjectives[i].threshold) {
+      currentGrade = gradeObjectives[i].label;
     } else {
       break;
     }
