@@ -2058,7 +2058,20 @@ const maxDistanceCap = isMobile ? 1000 : 1500;
 const effectiveDistance = Math.min(distance, maxDistanceCap);
 
 // 👉 UTILISE effectiveDistance PARTOUT
-const speedLevel = Math.floor(effectiveDistance / 400);
+let baseSpeed;
+
+if (gameMode === "endless") {
+
+  // 🔥 difficulté progressive
+  const speedLevel = Math.floor(effectiveDistance / 400);
+  baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
+
+} else {
+
+  // 🎯 mission + time → vitesse FIXE
+  baseSpeed = 12 * speedFactor;
+
+}
 
 // 🚀 démarrage plus lent
 let baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
