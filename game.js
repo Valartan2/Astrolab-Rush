@@ -59,6 +59,8 @@ let gameMode = "endless"; // "endless", "mission", "time"
 let timeLeft = 60;
 let missionTarget = 30;
 
+  let timeSurvived = 0;
+
 
   // 🛒 SHOP SYSTEM
 let playerStars = 0;
@@ -1431,7 +1433,8 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     progressBar.parentElement.style.display = "block";
 progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
-
+   timeSurvived = 0;
+    
     isDying = false;
 
     nextMagnetDistance = 300;
@@ -2214,7 +2217,8 @@ starSound.play().catch(()=>{});
 
   // ⏱️ TIME ATTACK
 if (gameMode === "time" && !gameOver && !isDying) {
-  timeLeft -= (dt / 60) * 2;
+  timeSurvived += dt / 60;
+}
 
   if (timeLeft <= 0) {
     timeLeft = 0;
@@ -2252,7 +2256,8 @@ if (!gameOver && !isDying) {
   
 
     if (gameMode === "time") {
-
+  distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
+}
   // 🕒 TIMER PRINCIPAL
   distanceDisplay.textContent = `⏱️ ${timeLeft.toFixed(1)}s`;
 
