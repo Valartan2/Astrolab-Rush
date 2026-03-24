@@ -1599,18 +1599,15 @@ progressLabel.style.display = "none";
   }
 
    // 🎓 TUTORIAL
+
 if (!isTutorialDone(gameMode)) {
-  tutorialActive = true;
-  tutorialTimer = 3000; // 3 secondes
-  setTutorialDone(gameMode);
-}
-
-
-  if (!isTutorialDone(gameMode)) {
   showTutorial(gameMode);
   setTutorialDone(gameMode);
-} else {
-  animationId = requestAnimationFrame(gameLoop);
+  return; // 🔥 STOP le jeu ici
+}
+
+// 🚀 sinon → jeu direct
+animationId = requestAnimationFrame(gameLoop);
 }
 
   modeSelect.style.display = "none";
