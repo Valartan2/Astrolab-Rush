@@ -91,7 +91,7 @@ const shopRockets = [
     id: "neon",
     name: "Neon Rocket",
     file: "rocket10.png",
-    priceStars: 50,
+    priceStars: 100,
     priceMeteors: 0,
     owned: false
   },
@@ -99,8 +99,8 @@ const shopRockets = [
     id: "retro",
     name: "Retro Rocket",
      file: "rocket8.png",
-    priceStars: 200,
-    priceMeteors: 20,
+    priceStars: 500,
+    priceMeteors: 50,
     owned: false
   }
 ];
