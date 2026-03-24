@@ -1464,12 +1464,31 @@ meteorToStarTimer = 0;
   
 
   /* -------------------- Buttons -------------------- */
-
 tutorialBtn.onclick = () => {
 
   tutorialModal.style.display = "none";
 
-  // 🔥 lancer le jeu après
+  // ✅ marquer comme fait ICI (au bon moment)
+  setTutorialDone(gameMode);
+
+  // ✅ afficher le jeu correctement
+  modeSelect.style.display = "none";
+
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "none";
+
+  wordDisplay.style.display = "block";
+  distanceDisplay.style.display = "block";
+
+  document.getElementById("topHUD").style.display = "flex";
+
+  if (focusMode || gameMode === "time") {
+    document.getElementById("stats").style.display = "none";
+  } else {
+    document.getElementById("stats").style.display = "block";
+  }
+
+  // 🚀 lancer le jeu
   animationId = requestAnimationFrame(gameLoop);
 };
   
@@ -1603,8 +1622,8 @@ progressLabel.style.display = "none";
   // 🎓 TUTORIAL
   if (!isTutorialDone(gameMode)) {
     showTutorial(gameMode);
-    setTutorialDone(gameMode);
-    return;
+    
+    return; // ❗ ne PAS set ici
   }
 
   // 🚀 LANCEMENT
