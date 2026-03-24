@@ -593,6 +593,8 @@ let hitFlashTimer = 0;
 
   let tutorialActive = false;
 let tutorialTimer = 0;
+
+let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;  
   
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
@@ -755,6 +757,31 @@ gradeObjectifs.forEach(obj => {
   const status = unlocked ? " — unlocked" : ` — locked (${formatNumber(obj.threshold)} m)`;
 
   li.textContent = `${obj.label}${status}`;
+
+  objectifItems.appendChild(li);
+
+});
+
+    // ⏱️ TIME ATTACK OBJECTIFS
+timeGrades.forEach(obj => {
+
+  const li = document.createElement("li");
+
+  const unlocked = bestTime >= obj.threshold;
+
+  li.className = "rocket-item";
+
+  if (unlocked) {
+    li.classList.add("rocket-unlocked");
+  } else {
+    li.classList.add("rocket-locked");
+  }
+
+  const status = unlocked
+    ? " — unlocked"
+    : ` — locked (${obj.threshold}s)`;
+
+  li.textContent = `⏱️ ${obj.label}${status}`;
 
   objectifItems.appendChild(li);
 
@@ -1340,6 +1367,14 @@ if (gameMode === "endless") {
   setTotalDistance(newTotal);
 }
 
+    // ⏱️ SAVE BEST TIME
+if (gameMode === "time") {
+  if (timeSurvived > bestTime) {
+    bestTime = timeSurvived;
+    localStorage.setItem("bestTime", bestTime);
+  }
+}
+
     
 
 
@@ -1488,6 +1523,7 @@ nextLetterDistance = 500;
     missionCompleted = false;
   
 hitFlashTimer = 0;
+    
     
  // 🛡️ SHIELD RESET
 shields = [];
