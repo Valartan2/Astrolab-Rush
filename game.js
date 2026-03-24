@@ -220,7 +220,7 @@ const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
 
 const wordDisplay = document.getElementById("wordDisplay");
   
-const GAME_ZOOM = isMobile ? 0.8 : 1;
+const GAME_ZOOM = isMobile ? 0.9 : 1;
 
 
 
