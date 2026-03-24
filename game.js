@@ -33,18 +33,23 @@ const tutorialBtn = document.getElementById("tutorialBtn");
   let text = "";
 
   if (mode === "endless") {
-    text = "🚀 Hold to fly\nAvoid meteorites!";
+    text = "🚀 Hold to fly<br>Avoid meteorites!";
   }
 
   if (mode === "mission") {
-    text = "⭐ Collect stars\nUse bonuses!";
+    text = "⭐ Collect stars<br>Use bonuses!";
   }
 
   if (mode === "time") {
     text = "⏱️ Collect stars to gain time!";
   }
 
-  tutorialText.innerText = text;
+  const el = document.getElementById("tutorialText");
+
+  if (el) {
+    el.innerHTML = text; // 🔥 IMPORTANT
+  }
+
   tutorialModal.style.display = "flex";
 }
 
