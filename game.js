@@ -2876,19 +2876,25 @@ toggleMusicBtn.onclick = () => {
 
   if(!confirmReset) return;
 
-  localStorage.removeItem(STORAGE_KEYS.BEST_SCORE);
-  localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
-  localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
-  localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
-   localStorage.removeItem(STORAGE_KEYS.TOTAL_STARS);
+  // 🔥 RESET COMPLET
+localStorage.removeItem(STORAGE_KEYS.BEST_SCORE);
+localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
+localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
+localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
+localStorage.removeItem(STORAGE_KEYS.TOTAL_STARS);
 localStorage.removeItem(STORAGE_KEYS.TOTAL_GALAXY);
 localStorage.removeItem(STORAGE_KEYS.TOTAL_DESTROYED);
 localStorage.removeItem(STORAGE_KEYS.TOTAL_SPECIAL);
 
-    // 🔥 AJOUT ICI
-  localStorage.removeItem("tutorial_endless_done");
-  localStorage.removeItem("tutorial_mission_done");
-  localStorage.removeItem("tutorial_time_done");
+// 🔥 MANQUANTS
+localStorage.removeItem("bestTime");
+localStorage.removeItem("totalBigStars");
+localStorage.removeItem("totalMeteorToStar");
+
+// 🔥 TUTORIELS
+localStorage.removeItem("tutorial_endless_done");
+localStorage.removeItem("tutorial_mission_done");
+localStorage.removeItem("tutorial_time_done");
 
   location.reload();
 
