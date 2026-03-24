@@ -794,30 +794,62 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
     }, 2200);
   }
 
-  function getFlashColor() {
-    if (distance < 500) return "cyan";
-    if (distance < 1000) return "#b366ff";
-    if (distance < 1500) return "#ff6b4a";
-    if (distance < 2000) return "#ffffff";
-    return "#7df9ff";
-  }
+ function getFlashColor() {
+
+  if (distance < 500) return "#00ccff";        // bleu clair
+  if (distance < 1000) return "#b366ff";       // violet
+  if (distance < 1500) return "#ff6b4a";       // orange / rouge
+  if (distance < 2000) return "#ffffff";       // blanc (impact)
+
+  // 🔥 MID GAME
+  if (distance < 2500) return "#00ffcc";       // turquoise néon
+  if (distance < 3500) return "#ffd700";       // or
+  if (distance < 5000) return "#ff00ff";       // magenta
+
+  // 🔥 LATE GAME
+  if (distance < 6500) return "#00ffff";       // cyan électrique
+  if (distance < 8000) return "#ff3300";       // rouge intense
+  if (distance < 10000) return "#7df9ff";      // bleu cosmique
+
+  // 🔥 END GAME (wow effect)
+  return "#ffffff"; // blanc pur (god mode)
+}
 
   function getSpaceColor() {
-    if (distance < 500) return "#001122";
-    if (distance < 1000) return "#1a0033";
-    if (distance < 1500) return "#330000";
-    if (distance < 2000) return "#000000";
-    return "#000814";
-  }
+
+  if (distance < 500) return "#001122";
+  if (distance < 1000) return "#1a0033";
+  if (distance < 1500) return "#330000";
+  if (distance < 2000) return "#000000";
+
+  if (distance < 2500) return "#001a1a";
+  if (distance < 3500) return "#1a1a00";
+  if (distance < 5000) return "#1a001a";
+
+  if (distance < 6500) return "#001f2f";
+  if (distance < 8000) return "#2f0000";
+  if (distance < 10000) return "#000814";
+
+  return "#000000";
+}
 
   function getStarColor() {
-    if (distance < 500) return "white";
-    if (distance < 1000) return "#d8c4ff";
-    if (distance < 1500) return "#ffd0c4";
-    if (distance < 2000) return "#dff7ff";
-    return "#7df9ff";
-  }
 
+  if (distance < 500) return "white";
+  if (distance < 1000) return "#d8c4ff";
+  if (distance < 1500) return "#ffd0c4";
+  if (distance < 2000) return "#dff7ff";
+
+  if (distance < 2500) return "#00ffcc";
+  if (distance < 3500) return "#fff4b3";
+  if (distance < 5000) return "#ffb3ff";
+
+  if (distance < 6500) return "#b3ffff";
+  if (distance < 8000) return "#ff9999";
+  if (distance < 10000) return "#7df9ff";
+
+  return "#ffffff";
+}
   function updateObjectifDisplay() {
     const bestScore = getBestScore();
     const totalDistance = getTotalDistance();
