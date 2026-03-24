@@ -1299,7 +1299,9 @@ function createLetter(speed) {
 }
 
  function createExplosion(x, y) {
+if (particles.length < (isMobile ? 3 : 10)) {
   particles.push(new SpriteExplosion(x, y));
+}
 }
 
   /* -------------------- Drawing -------------------- */
@@ -1396,7 +1398,7 @@ function createLetter(speed) {
 
   ctx.save();
 
-  ctx.shadowBlur = 15;
+  ctx.shadowBlur = isMobile ? 0 : 15;
   ctx.shadowColor = "#ffd700"; // glow gold
 
   ctx.drawImage(
@@ -1415,7 +1417,7 @@ function createLetter(speed) {
 
   ctx.save();
 
-  ctx.shadowBlur = 15;
+  ctx.shadowBlur = isMobile ? 0 : 15;
   ctx.shadowColor = "#00ffcc"; // couleur du shield (turquoise)
 
   ctx.drawImage(
@@ -1433,7 +1435,7 @@ function drawX2(b) {
   if (!x2Image.complete) return;
 
   ctx.save();
-  ctx.shadowBlur = 15;
+  ctx.shadowBlur = isMobile ? 0 : 15;
   ctx.shadowColor = "#ffd700";
 
   ctx.drawImage(
@@ -2108,6 +2110,7 @@ if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
     starRate = 0.05;
   }
 
+  if (starsCollectibles.length < (isMobile ? 10 : 25)) {
   if (Math.random() < starRate) {
     createStar(finalSpeed);
   }
@@ -2116,7 +2119,16 @@ if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
  
 if (!gameOver && !isDying && !focusMode) {
 
+  // 🔥 limite bonus mobile
+  const totalBonuses =
+    magnets.length +
+    shields.length +
+    x2s.length +
+    meteorToStarBonuses.length;
 
+  if (totalBonuses < (isMobile ? 2 : 5)) {
+
+    
   // 🧲 TIME ATTACK → seulement magnet
 if (gameMode === "time" && !gameOver && !isDying) {
 
@@ -2129,6 +2141,7 @@ if (gameMode === "time" && !gameOver && !isDying) {
     nextBonusDistance = distance + getNextGap(800, 1400);
   }
 }
+}    
   
 
   if (gameMode === "mission") {
