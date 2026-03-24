@@ -858,6 +858,7 @@ if (shopList) {
   const totalGalaxy = getTotalGalaxy();
   const totalDestroyed = getTotalDestroyed();
   const totalSpecial = getTotalSpecial();
+    const bestScore = getBestScore(); // 🔥 AJOUT 
 
   const newUnlocks = [];
 
@@ -1383,7 +1384,7 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 
     const totalDistance = getTotalDistance();
 
-newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
+newlyUnlockedThisRun = unlockRocketsIfNeeded();
 
     currentScoreSpan.textContent = formatNumber(runScore);
     bestScoreSpan.textContent = formatNumber(bestScore);
