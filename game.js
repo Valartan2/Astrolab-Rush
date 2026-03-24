@@ -2228,11 +2228,11 @@ starSound.play().catch(()=>{});
   // ⏱️ TIME ATTACK
 
 
-  if (timeLeft <= 0) {
-    timeLeft = 0;
-    isDying = true;
-    createExplosion(player.x, player.y);
-  }
+  if (timeLeft <= 0 && !isDying && !gameOver) {
+  timeLeft = 0;
+  isDying = true;
+  createExplosion(player.x, player.y);
+}
 
       
 if (!gameOver && !isDying) {
