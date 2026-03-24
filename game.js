@@ -299,7 +299,7 @@ const timeGrades = [
 
 { key:"blue", label:"Blue Rocket", file:"rocket7.png", unlock:{type:"distance", value:10000} },
 
-{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"galaxy", value:10} },
+{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"shop", value:10} },
 
 { key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"run", value:2500} },
 
