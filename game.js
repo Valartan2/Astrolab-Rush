@@ -182,8 +182,8 @@ objectifList.style.display="flex";
 
 const timeGrades = [
   { threshold: 0, label: "Rookie" },
-  { threshold: 10, label: "Pilot" },
-  { threshold: 20, label: "Skilled" },
+  { threshold: 10, label: "Survivor" },
+  { threshold: 20, label: "Pilot" },
   { threshold: 30, label: "Elite" },
   { threshold: 45, label: "Master" },
   { threshold: 60, label: "Legend" }
@@ -858,7 +858,6 @@ if (shopList) {
   const totalGalaxy = getTotalGalaxy();
   const totalDestroyed = getTotalDestroyed();
   const totalSpecial = getTotalSpecial();
-    const bestScore = getBestScore(); // 🔥 AJOUT 
 
   const newUnlocks = [];
 
@@ -1335,36 +1334,30 @@ function drawX2(b) {
     setBestScore(bestScore);
 
     if (gameMode === "endless") {
-
   const previousTotal = getTotalDistance();
   const newTotal = previousTotal + runScore;
   setTotalDistance(newTotal);
-
 }
 
     
 
 
     // ⭐ stars
-if (gameMode === "mission") {
-
+if (gameMode === "endless" || gameMode === "mission") {
   const totalStars = getTotalStars() + starScore;
   setTotalStars(totalStars);
-
 }
 
     const totalBigStars = getTotalBigStars() + bigStarScore;
 setTotalBigStars(totalBigStars);
 
 // 🔤 galaxy
-if (gameMode === "endless") {
-
+if (gameMode !== "time") {
   const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
   setTotalGalaxy(totalGalaxy);
 
   const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
   setTotalDestroyed(totalDestroyed);
-
 }
 
 const starsRunEl = document.getElementById("starsRun");
@@ -1384,11 +1377,11 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
 
     const totalDistance = getTotalDistance();
 
-newlyUnlockedThisRun = unlockRocketsIfNeeded();
+newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
 
     currentScoreSpan.textContent = formatNumber(runScore);
     bestScoreSpan.textContent = formatNumber(bestScore);
-   totalScoreSpan.textContent = formatNumber(getTotalDistance());
+    totalScoreSpan.textContent = formatNumber(newTotal);
     gradeSpan.textContent = getGrade(bestScore);
 
     updateObjectifDisplay();
@@ -1465,8 +1458,13 @@ newlyUnlockedThisRun = unlockRocketsIfNeeded();
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    progressBar.parentElement.style.display = "block";
-progressLabel.style.display = "block";
+    if (gameMode === "endless") {
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
+} else {
+  progressBar.parentElement.style.display = "none";
+  progressLabel.style.display = "none";
+}
     lastSpecialSpawn = 0;
    
 timeSurvived = 0;
@@ -1769,11 +1767,7 @@ if (isDying) {
     gameOverText.style.display = "block";
     distanceDisplay.style.display = "none";
 
-    if (gameMode === "time") {
-  afficherTableauScore(timeSurvived);
-} else {
-  afficherTableauScore(distance);
-}
+    afficherTableauScore(distance);
 
     rejouerBtn.style.display = "block";
     shareBtn.style.display = "block";
@@ -1840,7 +1834,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 }
 
  // ⭐ étoiles
-if (!gameOver) {
+if (!focusMode && !gameOver) {
 
   let starRate = 0.02;
 
@@ -1854,54 +1848,58 @@ if (!gameOver) {
 }
 
  
-if (!gameOver && !isDying) {
+if (!gameOver && !isDying && !focusMode) {
+
+
+  // 🧲 TIME ATTACK → seulement magnet
+if (gameMode === "time" && !gameOver && !isDying) {
 
   if (distance > nextBonusDistance) {
 
-    // 🧲 TIME ATTACK → seulement magnet
-    if (gameMode === "time") {
-
-      if (!magnetActive && magnets.length === 0) {
-        createMagnet(finalSpeed);
-      }
-
-      nextBonusDistance = distance + getNextGap(300, 600);
+    if (!magnetActive && magnets.length === 0) {
+      createMagnet(finalSpeed);
     }
 
-    // 🎯 MISSION → tous les bonus
-    else if (gameMode === "mission") {
+    nextBonusDistance = distance + getNextGap(300, 600);
+  }
+}
+  
 
-      const type = getRandomBonus();
+  if (gameMode === "mission") {
 
-      switch(type) {
+  if (distance > nextBonusDistance) {
 
-        case "magnet":
-          if (!magnetActive && magnets.length === 0) {
-            createMagnet(finalSpeed);
-          }
-          break;
+    const type = getRandomBonus();
 
-        case "shield":
-          if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
-            createShield(finalSpeed);
-          }
-          break;
+    switch(type) {
 
-        case "x2":
-          if (x2s.length === 0) {
-            createX2(finalSpeed);
-          }
-          break;
+      case "magnet":
+        if (!magnetActive && magnets.length === 0) {
+          createMagnet(finalSpeed);
+        }
+        break;
 
-        case "meteor":
-          if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
-            createMeteorToStarBonus(finalSpeed);
-          }
-          break;
-      }
+      case "shield":
+        if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
+          createShield(finalSpeed);
+        }
+        break;
 
-      nextBonusDistance = distance + getNextGap(250, 400);
+      case "x2":
+        if (x2s.length === 0) {
+          createX2(finalSpeed);
+        }
+        break;
+
+      case "meteor":
+        if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
+          createMeteorToStarBonus(finalSpeed);
+        }
+        break;
     }
+
+    // 🔥 IMPORTANT → prochain spawn aléatoire
+    nextBonusDistance = distance + getNextGap(250, 250);
 
   }
 }
@@ -1911,7 +1909,7 @@ if (
   !gameOver &&
   !isDying &&
   letters.length === 0 &&
-  
+  !focusMode &&
   gameMode !== "time"
 ) {
 
@@ -2273,7 +2271,7 @@ starSound.play().catch(()=>{});
 if (!gameOver && !isDying) {
 
   // HUD stats
-  if (gameMode !== "time") {
+  if (gameMode === "endless") {
     document.getElementById("starCount").textContent = starScore;
     document.getElementById("destroyCount").textContent = meteorDestroyed;
    
@@ -2293,21 +2291,15 @@ if (!gameOver && !isDying) {
     player.velocityY = 0;
   }
 
-  if (gameMode !== "time") {
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
-}
 
-  
+  }
 
   // 🎯 DISPLAY PAR MODE
 if (gameMode === "time") {
-
   const grade = getTimeGrade(timeSurvived);
-
-  distanceDisplay.textContent =
-    `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
-
-}else if (gameMode === "mission") {
+  distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
+} else if (gameMode === "mission") {
 
   distanceDisplay.textContent =
     `⭐ ${starScore} / ${missionTarget}`;
@@ -2331,17 +2323,10 @@ wordDisplay.textContent = displayWord;
 
  // 🔥 PROGRESSION VERS PROCHAIN PALIER
 
-  if (gameMode === "time") {
-  // uniquement logique temps
-  progressText.textContent = `${timeSurvived.toFixed(1)}s`;
-} else {
-  // logique distance normale
-}
-
 const progressText = document.getElementById("progressText");
 
 // 🎯 MODE NORMAL (endless + mission)
-if (gameMode === "endless") {
+if (gameMode !== "time") {
 
   let currentThreshold = 0;
   let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
@@ -2477,10 +2462,10 @@ if (shieldActive) {
    
 
     // ⭐ étoiles
-
+if (!focusMode) {
   starsCollectibles.forEach(drawStar);
   magnets.forEach(drawMagnet);
-
+}
 
 // ⭐ METEOR RUSH VISUEL
 
@@ -2634,24 +2619,6 @@ if (tutorialActive) {
   ctx.fillText(text, width / 2, height / 2);
 
   ctx.restore();
-}
-
-
-  if (gameMode === "mission" && starScore >= missionTarget && !gameOver && !isDying) {
-
-  showSuccessBanner("🎯 MISSION COMPLETE!");
-
-  gameOver = true;
-  if (gameMode === "time") {
-  afficherTableauScore(timeSurvived);
-} else {
-  afficherTableauScore(distance);
-}
-
-  rejouerBtn.style.display = "block";
-  shareBtn.style.display = "block";
-  backToMenuBtn.style.display = "block";
-
 }
 
     if ((!gameOver && !isDying) || particles.length > 0) {
