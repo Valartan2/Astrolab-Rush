@@ -2073,12 +2073,7 @@ if (gameMode === "endless") {
 
 }
 
-// 🚀 démarrage plus lent
-let baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
 
-if (gameMode === "time") {
-  baseSpeed *= 1; // 🔥 plus rapide
-}
 
 // 🧠 limite propre
 const cappedSpeed = Math.min(baseSpeed, 26);
