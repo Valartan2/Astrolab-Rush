@@ -781,7 +781,7 @@ if (distanceEl) {
 
     objectifItems.innerHTML = "";
 
-gradeObjectifs.forEach(obj => {
+gradeObjectives.forEach(obj => {
 
   const li = document.createElement("li");
 
@@ -2495,14 +2495,14 @@ const progressText = document.getElementById("progressText");
 if (gameMode === "endless") {
 
   let currentThreshold = 0;
-  let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
+  let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
 
-  for (let i = 0; i < gradeObjectifs.length; i++) {
-    if (distance >= gradeObjectifs[i].threshold) {
-      currentThreshold = gradeObjectifs[i].threshold;
+  for (let i = 0; i < gradeObjectives.length; i++) {
+    if (distance >= gradeObjectives[i].threshold) {
+      currentThreshold = gradeObjectives[i].threshold;
 
-      if (i + 1 < gradeObjectifs.length) {
-        nextThreshold = gradeObjectifs[i + 1].threshold;
+      if (i + 1 < gradeObjectives.length) {
+        nextThreshold = gradeObjectives[i + 1].threshold;
       }
     }
   }
@@ -2566,10 +2566,10 @@ else {
 // 🔥 BONUS VISUEL
 
 if (gameMode === "endless" &&
-  nextGradeIndex < gradeObjectifs.length &&
-  distance >= gradeObjectifs[nextGradeIndex].threshold
+  nextGradeIndex < gradeObjectives.length &&
+  distance >= gradeObjectives[nextGradeIndex].threshold
 ) {
-  const grade = gradeObjectifs[nextGradeIndex];
+  const grade = gradeObjectives[nextGradeIndex];
 
   distanceDisplay.classList.add("distancePulse");
   setTimeout(() => {
