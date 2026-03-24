@@ -2654,7 +2654,7 @@ if (tutorialActive) {
     if ((!gameOver && !isDying) || particles.length > 0) {
   animationId = requestAnimationFrame(gameLoop);
 }
-  }
+  
   
 
 
