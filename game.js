@@ -1,4 +1,18 @@
 (() => {
+
+  function getTutorialKey(mode) {
+  if (mode === "endless") return "tutorial_endless_done";
+  if (mode === "mission") return "tutorial_mission_done";
+  if (mode === "time") return "tutorial_time_done";
+}
+
+function isTutorialDone(mode) {
+  return localStorage.getItem(getTutorialKey(mode)) === "true";
+}
+
+function setTutorialDone(mode) {
+  localStorage.setItem(getTutorialKey(mode), "true");
+}
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
