@@ -2251,11 +2251,13 @@ if (!gameOver && !isDying) {
   // 🎯 DISPLAY PAR MODE
   if (gameMode === "time") {
 
-    progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
-    distanceDisplay.textContent =
-      `🚀 ${formatNumber(Math.floor(distance))} m ⏱️ ${timeLeft.toFixed(1)}s`;
+    if (gameMode === "time") {
 
-  } else if (gameMode === "mission") {
+  // 🕒 TIMER PRINCIPAL
+  distanceDisplay.textContent = `⏱️ ${timeLeft.toFixed(1)}s`;
+
+  // (optionnel) garder distance en petit ailleurs
+} else if (gameMode === "mission") {
 
     distanceDisplay.textContent =
       `⭐ ${starScore} / ${missionTarget}`;
