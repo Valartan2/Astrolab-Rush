@@ -1627,7 +1627,7 @@ progressLabel.style.display = "none";
   // 🎓 TUTORIAL
   if (!isTutorialDone(gameMode)) {
   showTutorial(gameMode);
-  setTutorialDone(gameMode); // 🔥 AJOUT ICI
+  
   return;
 }
 
