@@ -56,7 +56,7 @@ const tutorialBtn = document.getElementById("tutorialBtn");
   // 🔥 MODE SYSTEM
 let gameMode = "endless"; // "endless", "mission", "time"
   let focusMode = false;
-let timeLeft = 60;
+let timeLeft = 60; 
 let missionTarget = 30;
 
   let timeSurvived = 0;
@@ -1433,7 +1433,8 @@ if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
     progressBar.parentElement.style.display = "block";
 progressLabel.style.display = "block";
     lastSpecialSpawn = 0;
-   timeSurvived = 0;
+   
+timeSurvived = 0;
     
     isDying = false;
 
@@ -2217,7 +2218,13 @@ starSound.play().catch(()=>{});
 
   // ⏱️ TIME ATTACK
 if (gameMode === "time" && !gameOver && !isDying) {
+
+  // ⏱️ chrono (score)
   timeSurvived += dt / 60;
+
+  // 🔻 jauge (survie)
+  timeLeft -= dt / 60;
+
 }
 
   if (timeLeft <= 0) {
