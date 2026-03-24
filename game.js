@@ -762,6 +762,15 @@ gradeObjectifs.forEach(obj => {
 
 });
 
+// ⏱️ TITRE TIME ATTACK
+const titleTime = document.createElement("li");
+titleTime.textContent = "⏱️ TIME ATTACK";
+titleTime.style.fontWeight = "bold";
+titleTime.style.marginTop = "10px";
+titleTime.style.opacity = "0.7";
+
+objectifItems.appendChild(titleTime);
+    
     // ⏱️ TIME ATTACK OBJECTIFS
 timeGrades.forEach(obj => {
 
