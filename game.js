@@ -33,16 +33,31 @@ const tutorialBtn = document.getElementById("tutorialBtn");
   let text = "";
 
   if (mode === "endless") {
-    text = "🚀 Hold to fly<br>Avoid meteorites!";
-  }
+  text = `
+  🚀 <b>Hold / Tap to fly</b><br><br>
+  Avoid meteorites ☄️<br>
+  Go as far as possible<br><br>
+  🏆 Unlock grades with distance
+  `;
+}
 
-  if (mode === "mission") {
-    text = "⭐ Collect stars<br>Use bonuses!";
-  }
+if (mode === "mission") {
+  text = `
+  ⭐ <b>Hold / Tap to fly</b><br><br>
+  Collect stars ⭐<br>
+  Complete objectives<br><br>
+  🚀 Unlock rewards
+  `;
+}
 
-  if (mode === "time") {
-    text = "⏱️ Collect stars to gain time!";
-  }
+if (mode === "time") {
+  text = `
+  ⏱️ <b>Hold / Tap to fly</b><br><br>
+  Survive as long as possible<br>
+  Avoid obstacles ☄️<br><br>
+  🏆 Unlock time grades
+  `;
+}
 
   const el = document.getElementById("tutorialText");
 
