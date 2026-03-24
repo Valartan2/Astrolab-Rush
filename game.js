@@ -159,6 +159,13 @@ starSound.volume = 0.4;
 
 const hitSound = new Audio("error-sound-39539.mp3");
 hitSound.volume = 0.4;
+
+// 🔥 AJOUT ICI
+function playSound(sound) {
+  const s = sound.cloneNode();
+  s.volume = sound.volume;
+  s.play().catch(()=>{});
+}
   
   const music = document.getElementById("gameMusic");
   if (music) music.volume = 0.3;
@@ -2067,8 +2074,7 @@ if (meteorToStarActive) {
   if (dist < player.radius + b.radius) {
     starScore += 5;
 
-    starSound.currentTime = 0;
-starSound.play();
+    playSound(starSound);
 
     bubbles.splice(i, 1);
     continue;
@@ -2092,8 +2098,7 @@ else if (dist < player.radius + b.radius) {
 
   if (gameMode === "time") {
     timeLeft -= 3;
-    hitSound.currentTime = 0;
-    hitSound.play().catch(()=>{});
+    playSound(hitSound);
     hitFlashTimer = 150; // ms
     bubbles.splice(i, 1);
     continue;
@@ -2154,8 +2159,7 @@ if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
     timeLeft -= 5;
 
     // 🔊 son impact
-    hitSound.currentTime = 0;
-    hitSound.play().catch(()=>{});
+    playSound(hitSound);
 
     // 🔴 feedback visuel
     hitFlashTimer = 150;
@@ -2211,8 +2215,7 @@ if (dist < player.radius + s.size) {
   timeLeft = Math.min(timeLeft, 60); // 🔥 limite max
 }
 
-    starSound.currentTime = 0;
-    starSound.play().catch(()=>{});
+    playSound(starSound);
 
   
     starsCollectibles.splice(i, 1);
@@ -2340,8 +2343,7 @@ for (let i = letters.length - 1; i >= 0; i--) {
   // 🎯 COLLISION
   if (dist < player.radius + l.size) {
 
-   starSound.currentTime = 0;
-starSound.play().catch(()=>{});
+   playSound(starSound);;
 
     currentLetterIndex++;
     letters.splice(i, 1);
