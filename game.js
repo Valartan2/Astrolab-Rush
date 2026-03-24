@@ -2327,7 +2327,7 @@ wordDisplay.textContent = displayWord;
 const progressText = document.getElementById("progressText");
 
 // 🎯 MODE NORMAL (endless + mission)
-if (gameMode === "endless")
+if (gameMode === "endless") {
 
   let currentThreshold = 0;
   let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
