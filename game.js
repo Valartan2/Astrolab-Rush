@@ -4,7 +4,7 @@
   if (mode === "endless") return "tutorial_endless_done";
   if (mode === "mission") return "tutorial_mission_done";
   if (mode === "time") return "tutorial_time_done";
-}
+    }
 
 function isTutorialDone(mode) {
   return localStorage.getItem(getTutorialKey(mode)) === "true";
@@ -1320,8 +1320,10 @@ function drawX2(b) {
 
 
     // ⭐ stars
-const totalStars = getTotalStars() + starScore;
-setTotalStars(totalStars);
+if (gameMode !== "time") {
+  const totalStars = getTotalStars() + starScore;
+  setTotalStars(totalStars);
+}
 
     const totalBigStars = getTotalBigStars() + bigStarScore;
 setTotalBigStars(totalBigStars);
