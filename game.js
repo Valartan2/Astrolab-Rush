@@ -1409,6 +1409,13 @@ newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
       animationId = null;
     }
 
+    // 🧼 RESET GLOBAL CRITIQUE
+gameOver = false;
+isDying = false;
+particles = [];
+timeSurvived = 0;
+timeLeft = 60;
+
    
 
     if (isMobile) {
@@ -1434,10 +1441,8 @@ newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
     flamePulse = 0;
     gameOver = false;
     distance = 0;
-  if (gameMode === "time") {
-  timeLeft = 60;
-  nextBonusDistance = 250;
-}
+   timeLeft = 60;
+nextBonusDistance = 250;
     progressBar.style.width = "5%";
     startTime = performance.now();
     newlyUnlockedThisRun = [];
@@ -1482,7 +1487,8 @@ nextLetterDistance = 500;
 
     missionCompleted = false;
   
-
+hitFlashTimer = 0;
+    
  // 🛡️ SHIELD RESET
 shields = [];
 shieldActive = false;
