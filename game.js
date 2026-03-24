@@ -586,7 +586,8 @@ const letterInterval = 10000; // 10 secondes
   ISS: false,
   Starman: false,
   Soyouz: false,
-  Ovni: false
+  Ovni: false,
+  astro: false
 };
 
   let meteorToStarActive = false;
