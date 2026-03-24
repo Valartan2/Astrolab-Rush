@@ -1937,7 +1937,7 @@ const speedLevel = Math.floor(effectiveDistance / 400);
 let baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
 
 if (gameMode === "time") {
-  baseSpeed *= 1.2; // 🔥 plus rapide
+  baseSpeed *= 1; // 🔥 plus rapide
 }
 
 // 🧠 limite propre
