@@ -2358,6 +2358,7 @@ if (gameMode === "endless") {
 // ⏱️ TIME ATTACK
 else {
 
+  // 🧠 BARRE = vie (timeLeft)
   const percent = (timeLeft / 60) * 100;
   progressBar.style.width = percent + "%";
 
@@ -2369,34 +2370,26 @@ else {
     progressBar.style.background = "#ff3b3b";
   }
 
-  if (percent <= 30) {
-    progressBar.style.boxShadow = "0 0 10px red";
-  } else if (percent <= 60) {
-    progressBar.style.boxShadow = "0 0 10px yellow";
-  } else {
-    progressBar.style.boxShadow = "none";
-  }
+  // 🏆 GRADE TEMPS
+  const grade = getTimeGrade(timeSurvived);
 
-  // ⏱️ TEMPS = progressLabel
-  progressLabel.textContent = `${timeSurvived.toFixed(1)}s`;
+  // 🔜 PROCHAIN PALIER TEMPS
+  let nextTimeThreshold = timeGrades[timeGrades.length - 1].threshold;
 
-  // 🚀 DISTANCE = progressText (COMME TU VEUX)
-  let currentThreshold = 0;
-let nextThreshold = 500;
-
-for (let i = 0; i < gradeObjectifs.length; i++) {
-  if (distance >= gradeObjectifs[i].threshold) {
-    currentThreshold = gradeObjectifs[i].threshold;
-
-    if (i + 1 < gradeObjectifs.length) {
-      nextThreshold = gradeObjectifs[i + 1].threshold;
+  for (let i = 0; i < timeGrades.length; i++) {
+    if (timeSurvived < timeGrades[i].threshold) {
+      nextTimeThreshold = timeGrades[i].threshold;
+      break;
     }
   }
+
+  const remaining = Math.max(0, nextTimeThreshold - timeSurvived);
+
+  // 🎯 UI
+  progressLabel.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
+  progressText.textContent = `Next: ${remaining.toFixed(1)}s`;
+
 }
-
-progressText.textContent = `${timeSurvived.toFixed(1)}s`;
-
-  }
 
 // 🔥 BONUS VISUEL
 
