@@ -2001,7 +2001,7 @@ if (gameMode === "time" && !gameOver && !isDying) {
       createMagnet(finalSpeed);
     }
 
-    nextBonusDistance = distance + getNextGap(300, 600);
+    nextBonusDistance = distance + getNextGap(800, 1400);
   }
 }
   
