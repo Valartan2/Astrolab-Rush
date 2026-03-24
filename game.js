@@ -1621,10 +1621,10 @@ progressLabel.style.display = "none";
 
   // 🎓 TUTORIAL
   if (!isTutorialDone(gameMode)) {
-    showTutorial(gameMode);
-    
-    return; // ❗ ne PAS set ici
-  }
+  showTutorial(gameMode);
+  setTutorialDone(gameMode); // 🔥 AJOUT ICI
+  return;
+}
 
   // 🚀 LANCEMENT
   animationId = requestAnimationFrame(gameLoop);
