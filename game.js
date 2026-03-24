@@ -2345,7 +2345,7 @@ else {
   }
 
   // ⏱️ TEMPS = progressLabel
-  progressLabel.textContent = `${timeLeft.toFixed(1)}s`;
+  progressLabel.textContent = `${timeSurvived.toFixed(1)}s`;
 
   // 🚀 DISTANCE = progressText (COMME TU VEUX)
   let currentThreshold = 0;
