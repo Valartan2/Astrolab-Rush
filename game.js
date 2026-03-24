@@ -618,7 +618,7 @@ height = (canvas.height / dpr) / GAME_ZOOM;
 
   let magnetActive = false;
   let magnetTimer = 0;
-  let magnetDuration = 15000;
+  let magnetDuration = 7500;
   let magnets = [];
 
   let lastMagnetSpawn = 0;
