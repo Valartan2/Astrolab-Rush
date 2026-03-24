@@ -102,6 +102,46 @@ const shopRockets = [
     priceStars: 500,
     priceMeteors: 50,
     owned: false
+  },
+  {
+    id: "rocket16",
+    name: "Teddy Rocket",
+     file: "rocket16.png",
+    priceStars: 1000,
+    priceMeteors: 0,
+    owned: false
+  },
+  {
+    id: "rocket21",
+    name: "Teddy Rocket",
+     file: "rocket21.png",
+    priceStars: 0,
+    priceMeteors: 350,
+    owned: false
+  },
+  {
+    id: "rocket24",
+    name: "Watermelon Rocket",
+     file: "rocket24.png",
+    priceStars: 1500,
+    priceMeteors: 500,
+    owned: false
+  },
+  {
+    id: "rocket26",
+    name: "Retro Rocket",
+     file: "rocket26.png",
+    priceStars: 250,
+    priceMeteors: 30,
+    owned: false
+  },
+  {
+    id: "rocket27",
+    name: "Eiffel Tower Rocket",
+     file: "rocket27.png",
+    priceStars: 5000,
+    priceMeteors: 1000,
+    owned: false
   }
 ];
 
@@ -264,8 +304,38 @@ const timeGrades = [
 
 { key:"neon", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
 
-{ key:"gold", label:"Golden Rocket", file:"rocket11.png", unlock:{type:"run", value:5000} }
 
+{ key:"rocket12", label:"Shadow Rocket", file:"rocket12.png", unlock:{type:"distance", value:75000} },
+
+{ key:"rocket13", label:"Alien Rocket", file:"rocket13.png", unlock:{type:"run", value:6000} },
+
+{ key:"rocket14", label:"Army Rocket", file:"rocket14.png", unlock:{type:"distance", value:100000} },
+
+{ key:"rocket15", label:"Plasma Rocket", file:"rocket15.png", unlock:{type:"distance", value:150000} },
+
+{ key:"rocket16", label:"Burger Rocket", file:"rocket16.png", unlock:{type:"shop", value:1200} },
+
+{ key:"rocket17", label:"Pirates Rocket", file:"rocket17.png", unlock:{type:"run", value:7000} },
+
+{ key:"rocket18", label:"Pen Rocket", file:"rocket18.png", unlock:{type:"run", value:8000} },
+
+{ key:"rocket19", label:"Ice Cream Rocket", file:"rocket19.png", unlock:{type:"distance", value:150000} },
+
+{ key:"rocket20", label:"World Rocket", file:"rocket20.png", unlock:{type:"run", value:8000} },
+
+{ key:"rocket21", label:"Teddy Rocket", file:"rocket21.png", unlock:{type:"shop", value:75} },
+
+{ key:"rocket22", label:"Egg Rocket", file:"rocket22.png", unlock:{type:"distance", value:200000} },
+
+{ key:"rocket23", label:"Ovni", file:"rocket23.png", unlock:{type:"run", value:9000} },
+
+{ key:"rocket24", label:"watermelon Rocket", file:"rocket24.png", unlock:{type:"shop", value:100} },
+
+{ key:"rocket25", label:"Pizza Rocket", file:"rocket25.png", unlock:{type:"distance", value:300000} },
+
+{ key:"rocket26", label:"Mythic Rocket", file:"rocket26.png", unlock:{type:"shop", value:2500} },
+
+{ key:"rocket27", label:"Eiffel Tower Rocket", file:"rocket27.png", unlock:{type:"shop", value:10000} }
 ];
 
 
