@@ -34,7 +34,7 @@ const tutorialBtn = document.getElementById("tutorialBtn");
     
 if (mode === "endless") {
  text = `
-🚀 <b>How to play</b><br><br>
+
 💻 Press <b>SPACE</b><br>
 📱 Tap screen<br><br>
 Avoid meteorites ☄️<br>
