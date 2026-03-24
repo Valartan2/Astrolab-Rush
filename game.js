@@ -2350,9 +2350,7 @@ for (let i = 0; i < gradeObjectifs.length; i++) {
   }
 }
 
-progressText.textContent =
-  `${Math.floor(distance)} / ${nextThreshold}`;
-}
+progressText.textContent = `${timeLeft.toFixed(1)}s`;
 
 // 🔥 BONUS VISUEL
 
