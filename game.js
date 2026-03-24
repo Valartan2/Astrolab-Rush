@@ -1387,7 +1387,7 @@ newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
 
     currentScoreSpan.textContent = formatNumber(runScore);
     bestScoreSpan.textContent = formatNumber(bestScore);
-    totalScoreSpan.textContent = formatNumber(newTotal);
+   totalScoreSpan.textContent = formatNumber(getTotalDistance());
     gradeSpan.textContent = getGrade(bestScore);
 
     updateObjectifDisplay();
