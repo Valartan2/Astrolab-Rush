@@ -1791,10 +1791,7 @@ progressLabel.style.display = "none";
 
   resetGame();
 
-  if (music && musicEnabled) {
-    music.currentTime = 0;
-    music.play().catch(() => {});
-  }
+ 
 
   // 🎓 TUTORIAL
   if (!isTutorialDone(gameMode)) {
@@ -1802,6 +1799,11 @@ progressLabel.style.display = "none";
   
   return;
 }
+
+    if (music && musicEnabled) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
 
   // 🚀 LANCEMENT
   animationId = requestAnimationFrame(gameLoop);
