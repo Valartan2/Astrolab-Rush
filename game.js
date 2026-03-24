@@ -1595,24 +1595,22 @@ progressLabel.style.display = "none";
 
   resetGame();
 
-   // 🔥 AJOUT ICI
   if (music && musicEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
 
-   // 🎓 TUTORIAL
+  // 🎓 TUTORIAL
+  if (!isTutorialDone(gameMode)) {
+    showTutorial(gameMode);
+    setTutorialDone(gameMode);
+    return;
+  }
 
-if (!isTutorialDone(gameMode)) {
-  showTutorial(gameMode);
-  setTutorialDone(gameMode);
-  return; // 🔥 STOP le jeu ici
-}
+  // 🚀 LANCEMENT
+  animationId = requestAnimationFrame(gameLoop);
 
-// 🚀 sinon → jeu direct
-animationId = requestAnimationFrame(gameLoop);
-}
-
+  // ✅ 👉 CE BLOC DOIT ÊTRE ICI
   modeSelect.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
@@ -1621,13 +1619,13 @@ animationId = requestAnimationFrame(gameLoop);
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
 
-  // 🎯 HUD
- document.getElementById("topHUD").style.display = "flex";
-if (focusMode || gameMode === "time") {
-  document.getElementById("stats").style.display = "none";
-} else {
-  document.getElementById("stats").style.display = "block";
-}
+  document.getElementById("topHUD").style.display = "flex";
+
+  if (focusMode || gameMode === "time") {
+    document.getElementById("stats").style.display = "none";
+  } else {
+    document.getElementById("stats").style.display = "block";
+  }
 }
 
   /* -------------------- Start Screen -------------------- */
