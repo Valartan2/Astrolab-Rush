@@ -44,7 +44,7 @@ Go as far as possible<br><br>
 }
 if (mode === "mission") {
   text = `
-⭐ <b>How to play</b><br><br>
+
 💻 Press <b>SPACE</b><br>
 📱 Tap screen<br><br>
 Collect stars ⭐<br>
@@ -55,7 +55,7 @@ Complete objectives<br><br>
 
  if (mode === "time") {
   text = `
-  ⏱️ <b>How to play</b><br><br>
+ 
   💻 Press <b>SPACE</b><br>
   📱 Tap screen<br><br>
   Survive as long as possible<br>
