@@ -1840,7 +1840,7 @@ if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
 }
 
  // ⭐ étoiles
-if (!focusMode && !gameOver) {
+if (!gameOver) {
 
   let starRate = 0.02;
 
@@ -1854,58 +1854,54 @@ if (!focusMode && !gameOver) {
 }
 
  
-if (!gameOver && !isDying && !focusMode) {
-
-
-  // 🧲 TIME ATTACK → seulement magnet
-if (gameMode === "time" && !gameOver && !isDying) {
+if (!gameOver && !isDying) {
 
   if (distance > nextBonusDistance) {
 
-    if (!magnetActive && magnets.length === 0) {
-      createMagnet(finalSpeed);
+    // 🧲 TIME ATTACK → seulement magnet
+    if (gameMode === "time") {
+
+      if (!magnetActive && magnets.length === 0) {
+        createMagnet(finalSpeed);
+      }
+
+      nextBonusDistance = distance + getNextGap(300, 600);
     }
 
-    nextBonusDistance = distance + getNextGap(300, 600);
-  }
-}
-  
+    // 🎯 MISSION → tous les bonus
+    else if (gameMode === "mission") {
 
-  if (gameMode === "mission") {
+      const type = getRandomBonus();
 
-  if (distance > nextBonusDistance) {
+      switch(type) {
 
-    const type = getRandomBonus();
+        case "magnet":
+          if (!magnetActive && magnets.length === 0) {
+            createMagnet(finalSpeed);
+          }
+          break;
 
-    switch(type) {
+        case "shield":
+          if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
+            createShield(finalSpeed);
+          }
+          break;
 
-      case "magnet":
-        if (!magnetActive && magnets.length === 0) {
-          createMagnet(finalSpeed);
-        }
-        break;
+        case "x2":
+          if (x2s.length === 0) {
+            createX2(finalSpeed);
+          }
+          break;
 
-      case "shield":
-        if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
-          createShield(finalSpeed);
-        }
-        break;
+        case "meteor":
+          if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
+            createMeteorToStarBonus(finalSpeed);
+          }
+          break;
+      }
 
-      case "x2":
-        if (x2s.length === 0) {
-          createX2(finalSpeed);
-        }
-        break;
-
-      case "meteor":
-        if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
-          createMeteorToStarBonus(finalSpeed);
-        }
-        break;
+      nextBonusDistance = distance + getNextGap(250, 400);
     }
-
-    // 🔥 IMPORTANT → prochain spawn aléatoire
-    nextBonusDistance = distance + getNextGap(250, 250);
 
   }
 }
@@ -1915,7 +1911,7 @@ if (
   !gameOver &&
   !isDying &&
   letters.length === 0 &&
-  !focusMode &&
+  
   gameMode !== "time"
 ) {
 
@@ -2277,7 +2273,7 @@ starSound.play().catch(()=>{});
 if (!gameOver && !isDying) {
 
   // HUD stats
-  if (!focusMode && gameMode !== "time") {
+  if (gameMode !== "time") {
     document.getElementById("starCount").textContent = starScore;
     document.getElementById("destroyCount").textContent = meteorDestroyed;
    
@@ -2334,6 +2330,13 @@ wordDisplay.textContent = displayWord;
  
 
  // 🔥 PROGRESSION VERS PROCHAIN PALIER
+
+  if (gameMode === "time") {
+  // uniquement logique temps
+  progressText.textContent = `${timeSurvived.toFixed(1)}s`;
+} else {
+  // logique distance normale
+}
 
 const progressText = document.getElementById("progressText");
 
@@ -2474,10 +2477,10 @@ if (shieldActive) {
    
 
     // ⭐ étoiles
-if (!focusMode) {
+
   starsCollectibles.forEach(drawStar);
   magnets.forEach(drawMagnet);
-}
+
 
 // ⭐ METEOR RUSH VISUEL
 
@@ -2634,7 +2637,7 @@ if (tutorialActive) {
 }
 
 
-  if (gameMode === "mission" && starScore >= missionTarget && !gameOver) {
+  if (gameMode === "mission" && starScore >= missionTarget && !gameOver && !isDying) {
 
   showSuccessBanner("🎯 MISSION COMPLETE!");
 
