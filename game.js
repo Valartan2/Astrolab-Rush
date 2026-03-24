@@ -2352,6 +2352,8 @@ for (let i = 0; i < gradeObjectifs.length; i++) {
 
 progressText.textContent = `${timeLeft.toFixed(1)}s`;
 
+  }
+
 // 🔥 BONUS VISUEL
 
 
