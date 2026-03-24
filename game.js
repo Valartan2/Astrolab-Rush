@@ -1452,13 +1452,16 @@ meteorToStarTimer = 0;
 
     x2s = [];
     
-  }
+  
   specialDestroyedThisRun = {
   ISS: false,
   Starman: false,
   Soyouz: false,
   Ovni: false
 };
+ }
+  
+  
 
   /* -------------------- Buttons -------------------- */
 
