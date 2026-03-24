@@ -2041,7 +2041,7 @@ const speedRamp = 1 + (effectiveDistance / 3000);
 
 const finalSpeed = cappedSpeed * speedRamp;
     const spawnRate = 25;
-    const maxMeteorites = isMobile ? 20 : 20;
+    const maxMeteorites = isMobile ? 8 : 14;
 
     frameCount += dt;
 
