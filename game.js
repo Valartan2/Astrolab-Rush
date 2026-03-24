@@ -2249,7 +2249,7 @@ if (!gameOver && !isDying) {
   distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
 
   // 🎯 DISPLAY PAR MODE
-  if (gameMode === "time") {
+  
 
     if (gameMode === "time") {
 
