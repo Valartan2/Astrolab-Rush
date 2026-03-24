@@ -2343,11 +2343,21 @@ starSound.play().catch(()=>{});
 if (!gameOver && !isDying) {
 
   // HUD stats
-  if (gameMode === "endless") {
-    document.getElementById("starCount").textContent = starScore;
-    document.getElementById("destroyCount").textContent = meteorDestroyed;
-   
-  }
+  // HUD stats
+
+if (gameMode === "endless") {
+
+  document.getElementById("starCount").textContent = starScore;
+  document.getElementById("destroyCount").textContent = meteorDestroyed;
+
+}
+
+if (gameMode === "mission") {
+
+  document.getElementById("starCount").textContent = starScore;
+  document.getElementById("destroyCount").textContent = meteorDestroyed;
+
+}
 
   // physics
   player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
