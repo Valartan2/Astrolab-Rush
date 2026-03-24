@@ -447,6 +447,7 @@ const specialSources = [
   "Ovni.png",
   "Starman.png",
   "ISS.png"
+  "astro.png
 ];
 
 specialSources.forEach(src => {
