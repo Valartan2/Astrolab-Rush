@@ -202,9 +202,10 @@ hitSound.volume = 0.4;
 
 // 🔥 AJOUT ICI
 function playSound(sound) {
-  const s = sound.cloneNode();
-  s.volume = sound.volume;
-  s.play().catch(()=>{});
+  try {
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+  } catch (e) {}
 }
   
   const music = document.getElementById("gameMusic");
