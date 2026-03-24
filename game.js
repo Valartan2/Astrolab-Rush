@@ -991,7 +991,9 @@ if (shopList) {
     specialDestroyedThisRun.ISS &&
     specialDestroyedThisRun.Starman &&
     specialDestroyedThisRun.Soyouz &&
-    specialDestroyedThisRun.Ovni
+    specialDestroyedThisRun.Ovni &&
+    specialDestroyedThisRun.asto
+    
   ) {
 
     showSuccessBanner("🛰️ ALL SPECIAL DESTROYED!");
