@@ -1333,9 +1333,10 @@ function drawX2(b) {
     const bestScore = Math.max(runScore, getBestScore());
     setBestScore(bestScore);
 
-    if (gameMode === "endless") {
-  const previousTotal = getTotalDistance();
-  const newTotal = previousTotal + runScore;
+    let newTotal = getTotalDistance();
+
+if (gameMode === "endless") {
+  newTotal += runScore;
   setTotalDistance(newTotal);
 }
 
@@ -1458,12 +1459,12 @@ newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
     scoreBoard.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    if (gameMode === "endless") {
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
-} else {
+    if (gameMode === "mission") {
   progressBar.parentElement.style.display = "none";
   progressLabel.style.display = "none";
+} else {
+  progressBar.parentElement.style.display = "block";
+  progressLabel.style.display = "block";
 }
     lastSpecialSpawn = 0;
    
@@ -2326,7 +2327,7 @@ wordDisplay.textContent = displayWord;
 const progressText = document.getElementById("progressText");
 
 // 🎯 MODE NORMAL (endless + mission)
-if (gameMode !== "time") {
+if (gameMode === "endless")
 
   let currentThreshold = 0;
   let nextThreshold = gradeObjectifs[gradeObjectifs.length - 1].threshold;
