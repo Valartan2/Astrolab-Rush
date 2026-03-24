@@ -2752,6 +2752,11 @@ localStorage.removeItem(STORAGE_KEYS.TOTAL_GALAXY);
 localStorage.removeItem(STORAGE_KEYS.TOTAL_DESTROYED);
 localStorage.removeItem(STORAGE_KEYS.TOTAL_SPECIAL);
 
+    // 🔥 AJOUT ICI
+  localStorage.removeItem("tutorial_endless_done");
+  localStorage.removeItem("tutorial_mission_done");
+  localStorage.removeItem("tutorial_time_done");
+
   location.reload();
 
 }; 
