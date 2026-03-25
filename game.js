@@ -1,5 +1,18 @@
 (() => {
 
+  function checkOrientation() {
+
+  const rotateMessage = document.getElementById("rotateMessage");
+
+  if (window.innerWidth > window.innerHeight) {
+    rotateMessage.style.display = "flex";
+    gamePaused = true;
+  } else {
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+  }
+}
+
   function getTutorialKey(mode) {
   if (mode === "endless") return "tutorial_endless_done";
   if (mode === "mission") return "tutorial_mission_done";
