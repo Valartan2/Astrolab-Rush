@@ -28,9 +28,21 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
-  function checkOrientation() {
+  function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
 
+  // 👉 Si desktop → on ne fait rien
+  if (!isMobile()) {
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+    return;
+  }
+
+  // 👉 Mobile seulement
   if (window.innerWidth > window.innerHeight) {
     // paysage
     rotateMessage.style.display = "flex";
@@ -45,7 +57,7 @@ const tutorialBtn = document.getElementById("tutorialBtn");
 window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 
-// au lancement
+// lancement
 checkOrientation();
 
   function showTutorial(mode) {
