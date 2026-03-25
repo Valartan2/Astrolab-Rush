@@ -1,8 +1,19 @@
 (() => {
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
 
-  function checkOrientation() {
+function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
 
+  // 👉 Si desktop → on ne fait rien
+  if (!isMobile()) {
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+    return;
+  }
+
+  // 👉 Mobile seulement
   if (window.innerWidth > window.innerHeight) {
     // paysage
     rotateMessage.style.display = "flex";
@@ -17,7 +28,7 @@
 window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
 
-// au lancement
+// lancement
 checkOrientation();
 
   function getTutorialKey(mode) {
