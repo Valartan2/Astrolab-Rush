@@ -3,33 +3,47 @@ function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
+
+ let wasPausedByRotation = false;
+
 function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
+  if (!rotateMessage) return;
 
-  // 👉 Si desktop → on ne fait rien
+  // Desktop = jamais bloqué
   if (!isMobile()) {
     rotateMessage.style.display = "none";
-    gamePaused = false;
+
+    if (wasPausedByRotation) {
+      gamePaused = false;
+      wasPausedByRotation = false;
+      lastTime = performance.now();
+    }
     return;
   }
 
-  // 👉 Mobile seulement
+  // Mobile paysage
   if (window.innerWidth > window.innerHeight) {
-    // paysage
     rotateMessage.style.display = "flex";
-    gamePaused = true;
+
+    if (!gamePaused) {
+      gamePaused = true;
+      wasPausedByRotation = true;
+    }
   } else {
-    // portrait
+    // Mobile portrait
     rotateMessage.style.display = "none";
-    gamePaused = false;
+
+    if (wasPausedByRotation) {
+      gamePaused = false;
+      wasPausedByRotation = false;
+      lastTime = performance.now();
+    }
   }
 }
-
-window.addEventListener("resize", checkOrientation);
+  window.addEventListener("resize", checkOrientation);
 window.addEventListener("orientationchange", checkOrientation);
-
-// lancement
-checkOrientation();
+window.addEventListener("load", checkOrientation);
 
   function getTutorialKey(mode) {
   if (mode === "endless") return "tutorial_endless_done";
@@ -2001,7 +2015,11 @@ function gameLoop(timestamp) {
   dt = Math.min(dt, 1.5);
   lastTime = timestamp;
 
-  if (gamePaused) return;
+  if (gamePaused) {
+  lastTime = time;
+  requestAnimationFrame(gameLoop);
+  return;
+}
   
   if (gameMode === "time" && !gameOver && !isDying) {
 
