@@ -1136,13 +1136,15 @@ if (shopList) {
   }
 
 function createStar(speed) {
-  const size = 20;
+
+  const isBig = gameMode === "time" && Math.random() < 0.15; // 🔥 rare
 
   starsCollectibles.push({
-    x: width + size + 200,
-    y: Math.random() * (height - size * 2) + size,
-    size: size,
-    speed: speed * 0.8
+    x: width + 40,
+    y: Math.random() * (height - 80) + 40,
+    size: 20,
+    speed: speed * 0.8,
+    big: isBig // 🔥 clé
   });
 }
   
@@ -1349,20 +1351,23 @@ if (particles.length < (isMobile ? 3 : 10)) {
 }
 
   function drawStar(star) {
-  if (!starImage.complete || starImage.naturalWidth === 0) return;
+  if (!starImage.complete) return;
+
+  const scale = star.big ? 1.8 : 1; // 🔥 grosse étoile
 
   ctx.save();
-  ctx.shadowBlur = 0;
-  ctx.shadowColor = "transparent";
-  ctx.globalAlpha = 1;
-  ctx.filter = "none";
+
+  if (star.big) {
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = "#ffd700";
+  }
 
   ctx.drawImage(
     starImage,
-    star.x - star.size,
-    star.y - star.size,
-    star.size * 2,
-    star.size * 2
+    star.x - star.size * scale,
+    star.y - star.size * scale,
+    star.size * 2 * scale,
+    star.size * 2 * scale
   );
 
   ctx.restore();
@@ -2357,19 +2362,26 @@ for (let i = starsCollectibles.length - 1; i >= 0; i--) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
 if (dist < player.radius + s.size) {
-  starScore += 1;
+
+  starScore += s.big ? 5 : 1;
 
   if (gameMode === "time") {
-  timeLeft += 2;
-  timeLeft = Math.min(timeLeft, 60); // 🔥 limite max
-}
 
-    playSound(starSound);
+    if (s.big) {
+      timeLeft += 5; // 🔥 grosse étoile
+      showSuccessBanner("⭐ +5s!");
+    } else {
+      timeLeft += 2.5;
+    }
 
-  
-    starsCollectibles.splice(i, 1);
-    continue;
+    timeLeft = Math.min(timeLeft, 60);
   }
+
+  playSound(starSound);
+
+  starsCollectibles.splice(i, 1);
+  continue;
+}
 
   if (s.x < -50) {
     starsCollectibles.splice(i, 1);
