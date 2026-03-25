@@ -28,9 +28,7 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
-  function isMobile() {
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
+ 
 
 function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
