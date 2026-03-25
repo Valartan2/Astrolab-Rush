@@ -28,6 +28,8 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 
   function showTutorial(mode) {
 
