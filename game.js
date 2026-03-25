@@ -555,6 +555,40 @@ height = (canvas.height / dpr) / GAME_ZOOM;
     }
   }
   window.addEventListener("resize", resize);
+  window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+
+  function checkOrientation() {
+
+  if (!isMobile) return; // 💻 desktop = rien
+
+  const isLandscape = window.innerWidth > window.innerHeight;
+
+  const rotateMsg = document.getElementById("rotateMessage");
+
+  if (isLandscape) {
+    canvas.style.display = "none";
+    if (rotateMsg) rotateMsg.style.display = "flex";
+
+    // 🔥 stop le jeu
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+
+  } else {
+    canvas.style.display = "block";
+    if (rotateMsg) rotateMsg.style.display = "none";
+
+    // 🔥 FIX BUG → recalcul canvas
+    resize();
+
+    // 🔥 relance si besoin
+    if (!animationId && !gameOver && !isDying) {
+      animationId = requestAnimationFrame(gameLoop);
+    }
+  }
+}
 
   /* -------------------- Player -------------------- */
   const player = {
@@ -569,6 +603,7 @@ height = (canvas.height / dpr) / GAME_ZOOM;
 
   resize();
   player.y = height / 2;
+  checkOrientation();
 
   /* -------------------- Input -------------------- */
   let pressing = false;
