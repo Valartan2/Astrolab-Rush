@@ -590,7 +590,12 @@ meteorToStarImage.src = "meteor_star.png";
     player.x = isMobile ? 75 : 150;
   }
 }
-  window.addEventListener("resize", resize);
+ window.addEventListener("resize", () => {
+  resize();
+  checkOrientation();
+});
+
+  window.addEventListener("orientationchange", checkOrientation);
 
   /* -------------------- Player -------------------- */
   const player = {
