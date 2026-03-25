@@ -28,9 +28,6 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-
   function showTutorial(mode) {
 
   let text = "";
@@ -215,7 +212,7 @@ function playSound(sound) {
   if (music) music.volume = 0.3;
 
   
-  
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
@@ -555,40 +552,6 @@ height = (canvas.height / dpr) / GAME_ZOOM;
     }
   }
   window.addEventListener("resize", resize);
-  window.addEventListener("resize", checkOrientation);
-window.addEventListener("orientationchange", checkOrientation);
-
-  function checkOrientation() {
-
-  if (!isMobile) return; // 💻 desktop = rien
-
-  const isLandscape = window.innerWidth > window.innerHeight;
-
-  const rotateMsg = document.getElementById("rotateMessage");
-
-  if (isLandscape) {
-    canvas.style.display = "none";
-    if (rotateMsg) rotateMsg.style.display = "flex";
-
-    // 🔥 stop le jeu
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-
-  } else {
-    canvas.style.display = "block";
-    if (rotateMsg) rotateMsg.style.display = "none";
-
-    // 🔥 FIX BUG → recalcul canvas
-    resize();
-
-    // 🔥 relance si besoin
-    if (!animationId && !gameOver && !isDying) {
-      animationId = requestAnimationFrame(gameLoop);
-    }
-  }
-}
 
   /* -------------------- Player -------------------- */
   const player = {
@@ -603,7 +566,6 @@ window.addEventListener("orientationchange", checkOrientation);
 
   resize();
   player.y = height / 2;
-  checkOrientation();
 
   /* -------------------- Input -------------------- */
   let pressing = false;
@@ -2974,7 +2936,6 @@ if (tutorialActive) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
-
   
 
 
