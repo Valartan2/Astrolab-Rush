@@ -28,6 +28,26 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
+  function checkOrientation() {
+  const rotateMessage = document.getElementById("rotateMessage");
+
+  if (window.innerWidth > window.innerHeight) {
+    // paysage
+    rotateMessage.style.display = "flex";
+    gamePaused = true;
+  } else {
+    // portrait
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+  }
+}
+
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+
+// au lancement
+checkOrientation();
+
   function showTutorial(mode) {
 
   let text = "";
@@ -2770,7 +2790,7 @@ if (shieldActive) {
   }
 }
 
-   
+   if (gamePaused) return;
 
     // ⭐ étoiles
 if (!focusMode) {
@@ -2936,6 +2956,7 @@ if (tutorialActive) {
   animationId = requestAnimationFrame(gameLoop);
 }
   }
+
   
 
 
