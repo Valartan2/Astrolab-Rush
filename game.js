@@ -28,28 +28,55 @@ function setTutorialDone(mode) {
 const tutorialText = document.getElementById("tutorialText");
 const tutorialBtn = document.getElementById("tutorialBtn");
 
- 
+ function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+
+let wasPausedByRotation = false;
 
 function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
 
-  // 👉 Desktop = largeur > hauteur ET grand écran
   const isDesktop = window.innerWidth > 1024;
 
   if (isDesktop) {
     rotateMessage.style.display = "none";
-    gamePaused = false;
+    if (wasPausedByRotation) {
+      resumeGame();
+      wasPausedByRotation = false;
+    }
     return;
   }
 
-  // 👉 Mobile
+  // paysage → pause
   if (window.innerWidth > window.innerHeight) {
     rotateMessage.style.display = "flex";
-    gamePaused = true;
+
+    if (!gamePaused) {
+      pauseGame();
+      wasPausedByRotation = true;
+    }
+
   } else {
+    // retour portrait → reprise
     rotateMessage.style.display = "none";
-    gamePaused = false;
+
+    if (wasPausedByRotation) {
+      resumeGame();
+      wasPausedByRotation = false;
+    }
   }
+}
+  function pauseGame() {
+  gamePaused = true;
+}
+
+function resumeGame() {
+  gamePaused = false;
+
+  // 🔥 reset du timing pour éviter bug de vitesse / freeze
+  lastTime = performance.now();
 }
 
   function showTutorial(mode) {
@@ -2795,6 +2822,16 @@ if (shieldActive) {
 }
 
    if (gamePaused) return;
+
+  function gameLoop(time) {
+  const dt = (time - lastTime) / 16.67;
+  lastTime = time;
+
+  if (gamePaused) {
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+
 
     // ⭐ étoiles
 if (!focusMode) {
