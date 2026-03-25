@@ -1,5 +1,25 @@
 (() => {
 
+  function checkOrientation() {
+  const rotateMessage = document.getElementById("rotateMessage");
+
+  if (window.innerWidth > window.innerHeight) {
+    // paysage
+    rotateMessage.style.display = "flex";
+    gamePaused = true;
+  } else {
+    // portrait
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+  }
+}
+
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+
+// au lancement
+checkOrientation();
+
   function getTutorialKey(mode) {
   if (mode === "endless") return "tutorial_endless_done";
   if (mode === "mission") return "tutorial_mission_done";
@@ -1970,6 +1990,8 @@ function gameLoop(timestamp) {
   dt = Math.min(dt, 1.5);
   lastTime = timestamp;
 
+  if (gamePaused) return;
+  
   if (gameMode === "time" && !gameOver && !isDying) {
 
   timeSurvived += dt / 60;
