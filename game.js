@@ -1137,7 +1137,7 @@ if (shopList) {
 
 function createStar(speed) {
 
-  const isBig = gameMode === "time" && !starsCollectibles.some(s => s.big) && Math.random() < 0.08;
+  const isBig = gameMode === "time" && !starsCollectibles.some(s => s.big) && Math.random() < 0.05;
 
   starsCollectibles.push({
     x: width + 40,
