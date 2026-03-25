@@ -2122,7 +2122,7 @@ if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
   }
 
   if (gameMode === "time") {
-    starRate = 0.08;
+    starRate = 0.065;
   }
 
   if (starsCollectibles.length < (isMobile ? 10 : 25)) {
