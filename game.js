@@ -35,30 +35,24 @@ const tutorialBtn = document.getElementById("tutorialBtn");
 function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
 
-  // 👉 Si desktop → on ne fait rien
-  if (!isMobile()) {
+  // 👉 Desktop = largeur > hauteur ET grand écran
+  const isDesktop = window.innerWidth > 1024;
+
+  if (isDesktop) {
     rotateMessage.style.display = "none";
     gamePaused = false;
     return;
   }
 
-  // 👉 Mobile seulement
+  // 👉 Mobile
   if (window.innerWidth > window.innerHeight) {
-    // paysage
     rotateMessage.style.display = "flex";
     gamePaused = true;
   } else {
-    // portrait
     rotateMessage.style.display = "none";
     gamePaused = false;
   }
 }
-
-window.addEventListener("resize", checkOrientation);
-window.addEventListener("orientationchange", checkOrientation);
-
-// lancement
-checkOrientation();
 
   function showTutorial(mode) {
 
