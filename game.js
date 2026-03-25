@@ -2139,18 +2139,7 @@ if (!gameOver && !isDying && !focusMode) {
   if (totalBonuses < (isMobile ? 2 : 5)) {
 
     
-  // 🧲 TIME ATTACK → seulement magnet
-if (gameMode === "time" && !gameOver && !isDying) {
 
-  if (distance > nextBonusDistance) {
-
-    if (!magnetActive && magnets.length === 0) {
-      createMagnet(finalSpeed);
-    }
-
-    nextBonusDistance = distance + getNextGap(800, 1400);
-  }
-}
 }    
  } 
 
