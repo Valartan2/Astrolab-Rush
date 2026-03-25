@@ -572,7 +572,7 @@ meteorToStarImage.src = "meteor_star.png";
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
-    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = window.innerWidth + "px";
@@ -2032,7 +2032,7 @@ function gameLoop(timestamp) {
 ctx.setTransform(1, 0, 0, 1, 0, 0);
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
 ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 
 // 🌌 BACKGROUND
