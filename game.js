@@ -2371,7 +2371,7 @@ if (dist < player.radius + s.size) {
       timeLeft += 5; // 🔥 grosse étoile
       showSuccessBanner("⭐ +5s!");
     } else {
-      timeLeft += 2.5;
+      timeLeft += 2;
     }
 
     timeLeft = Math.min(timeLeft, 60);
