@@ -4,6 +4,12 @@
 
   const rotateMessage = document.getElementById("rotateMessage");
 
+  if (!isMobile) {
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+    return;
+  }
+
   if (window.innerWidth > window.innerHeight) {
     rotateMessage.style.display = "flex";
     gamePaused = true;
@@ -550,20 +556,40 @@ meteorToStarImage.src = "meteor_star.png";
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
-    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
-    width = (canvas.width / dpr) / GAME_ZOOM;
-height = (canvas.height / dpr) / GAME_ZOOM;
 
-    if (player) {
-      player.x = isMobile ? 75 : 150;
-    }
+  const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+
+  const baseWidth = 480;
+  const baseHeight = 800;
+
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  const scale = Math.min(screenWidth / baseWidth, screenHeight / baseHeight);
+
+  const newWidth = baseWidth * scale;
+  const newHeight = baseHeight * scale;
+
+  canvas.width = newWidth * dpr;
+  canvas.height = newHeight * dpr;
+
+  canvas.style.width = newWidth + "px";
+  canvas.style.height = newHeight + "px";
+
+  canvas.style.position = "absolute";
+  canvas.style.left = (screenWidth - newWidth) / 2 + "px";
+  canvas.style.top = (screenHeight - newHeight) / 2 + "px";
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr * scale, dpr * scale);
+
+  width = baseWidth;
+  height = baseHeight;
+
+  if (player) {
+    player.x = isMobile ? 75 : 150;
   }
+}
   window.addEventListener("resize", resize);
 
   /* -------------------- Player -------------------- */
