@@ -2074,14 +2074,16 @@ if (gameMode === "endless") {
 }
 
 
-
-// 🧠 limite propre
 const cappedSpeed = Math.min(baseSpeed, 26);
 
-// ⚡ accélération BLOQUÉE à 1500
-const speedRamp = 1 + (effectiveDistance / 3000);
+let finalSpeed;
 
-const finalSpeed = cappedSpeed * speedRamp;
+if (gameMode === "endless") {
+  const speedRamp = 1 + (effectiveDistance / 3000);
+  finalSpeed = cappedSpeed * speedRamp;
+} else {
+  finalSpeed = cappedSpeed; // 🔥 vitesse fixe mission + time
+}
     const spawnRate = 25;
     const maxMeteorites = isMobile ? 8 : 14;
 
