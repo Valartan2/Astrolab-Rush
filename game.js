@@ -10,34 +10,26 @@ function checkOrientation() {
   const rotateMessage = document.getElementById("rotateMessage");
   if (!rotateMessage) return;
 
-  // Desktop = jamais bloqué
-  if (!isMobile()) {
+  // 👉 PC → jamais bloqué
+  if (!isMobile) {
     rotateMessage.style.display = "none";
-
-    if (wasPausedByRotation) {
-      gamePaused = false;
-      wasPausedByRotation = false;
-      lastTime = performance.now();
-    }
+    gamePaused = false;
     return;
   }
 
-  // Mobile paysage
+  // 👉 Mobile paysage
   if (window.innerWidth > window.innerHeight) {
     rotateMessage.style.display = "flex";
-
-    if (!gamePaused) {
-      gamePaused = true;
-      wasPausedByRotation = true;
-    }
+    gamePaused = true;
+    wasPausedByRotation = true;
   } else {
-    // Mobile portrait
+    // 👉 retour portrait
     rotateMessage.style.display = "none";
 
     if (wasPausedByRotation) {
       gamePaused = false;
+      lastTime = performance.now(); // 🔥 évite bug
       wasPausedByRotation = false;
-      lastTime = performance.now();
     }
   }
 }
@@ -2016,7 +2008,7 @@ function gameLoop(timestamp) {
   lastTime = timestamp;
 
   if (gamePaused) {
-  lastTime = time;
+  lastTime = timestamp;
   requestAnimationFrame(gameLoop);
   return;
 }
