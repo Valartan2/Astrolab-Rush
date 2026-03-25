@@ -238,7 +238,7 @@ function playSound(sound) {
   if (music) music.volume = 0.3;
 
   
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  
 
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
