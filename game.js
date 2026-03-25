@@ -1954,6 +1954,8 @@ progressLabel.style.display = "none";
 
  function startGame() {
 
+  gamePaused = false; // 🔥 AJOUT CRITIQUE
+
   resetGame();
 
  
