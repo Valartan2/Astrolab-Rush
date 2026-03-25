@@ -1,40 +1,5 @@
 (() => {
 
-const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
- let wasPausedByRotation = false;
-
-function checkOrientation() {
-  const rotateMessage = document.getElementById("rotateMessage");
-  if (!rotateMessage) return;
-
-  // 👉 PC → jamais bloqué
-  if (!isMobile) {
-    rotateMessage.style.display = "none";
-    gamePaused = false;
-    return;
-  }
-
-  // 👉 Mobile paysage
-  if (window.innerWidth > window.innerHeight) {
-    rotateMessage.style.display = "flex";
-    gamePaused = true;
-    wasPausedByRotation = true;
-  } else {
-    // 👉 retour portrait
-    rotateMessage.style.display = "none";
-
-    if (wasPausedByRotation) {
-      gamePaused = false;
-      lastTime = performance.now(); // 🔥 évite bug
-      wasPausedByRotation = false;
-    }
-  }
-}
-  window.addEventListener("resize", checkOrientation);
-window.addEventListener("orientationchange", checkOrientation);
-window.addEventListener("load", checkOrientation);
-
   function getTutorialKey(mode) {
   if (mode === "endless") return "tutorial_endless_done";
   if (mode === "mission") return "tutorial_mission_done";
@@ -247,7 +212,7 @@ function playSound(sound) {
   if (music) music.volume = 0.3;
 
   
- 
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
  
 const menuObjectivesBtn = document.getElementById("menuObjectivesBtn");
@@ -572,7 +537,7 @@ meteorToStarImage.src = "meteor_star.png";
   /* -------------------- Canvas Resize -------------------- */
   let width, height;
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = window.innerWidth + "px";
@@ -1954,8 +1919,6 @@ progressLabel.style.display = "none";
 
  function startGame() {
 
-  gamePaused = false; // 🔥 AJOUT CRITIQUE
-
   resetGame();
 
  
@@ -2007,12 +1970,6 @@ function gameLoop(timestamp) {
   dt = Math.min(dt, 1.5);
   lastTime = timestamp;
 
-  if (gamePaused) {
-  lastTime = timestamp;
-  requestAnimationFrame(gameLoop);
-  return;
-}
-  
   if (gameMode === "time" && !gameOver && !isDying) {
 
   timeSurvived += dt / 60;
@@ -2034,7 +1991,7 @@ function gameLoop(timestamp) {
 ctx.setTransform(1, 0, 0, 1, 0, 0);
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const dpr = Math.min(window.devicePixelRatio || 1, 2);
+const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 
 // 🌌 BACKGROUND
