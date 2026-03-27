@@ -2275,7 +2275,7 @@ function gameLoop(timestamp) {
     // 💀 PRIORITÉ 3 : COLLISION NORMALE
     else if (distSq < hitRadius * hitRadius) {
       if (gameMode === "time") {
-        timeLeft -= 3;
+        timeLeft -= 2;
         playSound(hitSound);
         hitFlashTimer = 150;
         bubbles.splice(i, 1);
