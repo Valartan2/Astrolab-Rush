@@ -2064,15 +2064,15 @@ progressLabel.style.display = "none";
 
 const GAME_SETTINGS = {
   endless: {
-    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 3000 },
+    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 2500 },
     desktop: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 3000 }
   },
   mission: {
-    mobile: { baseSpeed: 11, accel: 0.4, step: 600, maxDist: 3000 },
-    desktop: { baseSpeed: 11, accel: 0.5, step: 500, maxDist: 5000 }
+    mobile: { baseSpeed: 10, accel: 1, step: 600, maxDist: 3000 },
+    desktop: { baseSpeed: 11, accel: 1, step: 500, maxDist: 5000 }
   },
   time: {
-    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 3000 },
+    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 2000 },
     desktop: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 4000 }
   }
 };
