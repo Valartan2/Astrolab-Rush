@@ -2150,7 +2150,7 @@ function gameLoop(timestamp) {
     }
 
     if (gameMode === "time") {
-      starRate = 0.06;
+      starRate = 0.08;
     }
 
     if (gameMode === "time") {
