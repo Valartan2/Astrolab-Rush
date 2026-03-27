@@ -2097,8 +2097,8 @@ function gameLoop(timestamp) {
 
 const GAME_SETTINGS = {
   endless: {
-    mobile: { baseSpeed: 10, accel: 0.6, step: 500, maxDist: 4000 },
-    desktop: { baseSpeed: 11, accel: 0.8, step: 400, maxDist: 10000 }
+    mobile: { baseSpeed: 10, accel: 0.8, step: 500, maxDist: 4000 },
+    desktop: { baseSpeed: 11, accel: 0.8, step: 500, maxDist: 3000 }
   },
   mission: {
     mobile: { baseSpeed: 9, accel: 0.4, step: 600, maxDist: 3000 },
