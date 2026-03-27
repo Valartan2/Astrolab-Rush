@@ -1181,7 +1181,7 @@ function createStar(speed) {
   const isBig = gameMode === "time" && !starsCollectibles.some(s => s.big) && Math.random() < 0.05;
 
   starsCollectibles.push({
-    x: player.x + (isMobile ? 200 : 300),
+    x: width + 40
     y: Math.random() * (height - 80) + 40,
     size: 20,
     speed: speed * 0.8,
