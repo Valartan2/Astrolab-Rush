@@ -1622,8 +1622,12 @@ function drawX2(b) {
 function afficherTableauScore(score) {
 
   const runScore = Math.floor(score);
-  const bestScore = Math.max(runScore, getBestScore());
+  let bestScore = getBestScore();
+
+if (gameMode === "endless") {
+  bestScore = Math.max(runScore, bestScore);
   setBestScore(bestScore);
+}
 
   let newTotal = getTotalDistance();
 
