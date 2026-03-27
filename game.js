@@ -2046,7 +2046,11 @@ const GAME_SETTINGS = {
   // time mode
   if (gameMode === "time" && !gameOver && !isDying) {
     timeSurvived += dt / 60;
-    timeLeft -= (dt / 60) * 2.5;
+    timeLeft -= (dt / 60) * 1.5;
+
+if (timeLeft < 20) {
+  timeLeft += (dt / 60) * 0.5;
+}
     timeLeft = Math.max(0, Math.min(timeLeft, 60));
   }
 
