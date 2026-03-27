@@ -875,17 +875,32 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
     return "#001122";
   }
 
-  // 🔵 TIME = couleur basée sur le temps
+  // 🔵 TIME = basé sur le temps
   if (gameMode === "time") {
-    if (timeSurvived < 5) return "#001122";
-    if (timeSurvived < 10) return "#001a33";
-    if (timeSurvived < 20) return "#002244";
-    if (timeSurvived < 30) return "#000814";
-    if (timeSurvived < 45) return "#001f2f";
-    if (timeSurvived < 60) return "#000000";
-
+    if (timeSurvived < 10) return "#001122";
+    if (timeSurvived < 20) return "#001a33";
+    if (timeSurvived < 30) return "#002244";
+    if (timeSurvived < 45) return "#000814";
+    if (timeSurvived < 60) return "#001f2f";
     return "#000000";
   }
+
+  // 🟢 ENDLESS = ton système actuel
+  if (distance < 500) return "#001122";
+  if (distance < 1000) return "#1a0033";
+  if (distance < 1500) return "#330000";
+  if (distance < 2000) return "#000000";
+
+  if (distance < 2500) return "#001a1a";
+  if (distance < 3500) return "#1a1a00";
+  if (distance < 5000) return "#1a001a";
+
+  if (distance < 6500) return "#001f2f";
+  if (distance < 8000) return "#2f0000";
+  if (distance < 10000) return "#000814";
+
+  return "#000000";
+}
 
   // 🟢 ENDLESS (inchangé)
   if (distance < 500) return "#001122";
