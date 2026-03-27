@@ -2068,12 +2068,12 @@ const GAME_SETTINGS = {
     desktop: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 3000 }
   },
   mission: {
-    mobile: { baseSpeed: 10, accel: 0.4, step: 600, maxDist: 3000 },
-    desktop: { baseSpeed: 10, accel: 0.5, step: 500, maxDist: 5000 }
+    mobile: { baseSpeed: 11, accel: 0.4, step: 600, maxDist: 3000 },
+    desktop: { baseSpeed: 11, accel: 0.5, step: 500, maxDist: 5000 }
   },
   time: {
-    mobile: { baseSpeed: 10, accel: 0.3, step: 700, maxDist: 3000 },
-    desktop: { baseSpeed: 10, accel: 0.4, step: 600, maxDist: 4000 }
+    mobile: { baseSpeed: 11, accel: 0.3, step: 700, maxDist: 3000 },
+    desktop: { baseSpeed: 11, accel: 0.4, step: 600, maxDist: 4000 }
   }
 };
 
