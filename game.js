@@ -2706,16 +2706,36 @@ if (timeLeft < 20) {
 
   // time / mission progress
   else {
-    const percent = (timeLeft / 60) * 100;
-    progressBar.style.width = percent + "%";
+    // 🔵 TIME
+if (gameMode === "time") {
 
-    if (percent > 60) {
-      progressBar.style.background = "#00ccff";
-    } else if (percent > 30) {
-      progressBar.style.background = "#ffd700";
-    } else {
-      progressBar.style.background = "#ff3b3b";
-    }
+  const percent = (timeLeft / 60) * 100;
+  progressBar.style.width = percent + "%";
+
+  if (timeSurvived < 10) {
+    progressBar.style.background = "#00ccff";
+  } else if (timeSurvived < 20) {
+    progressBar.style.background = "#ffd700";
+  } else if (timeSurvived < 30) {
+    progressBar.style.background = "#ff00ff";
+  } else if (timeSurvived < 45) {
+    progressBar.style.background = "#00ffff";
+  } else {
+    progressBar.style.background = "#ff3300";
+  }
+
+  progressLabel.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
+}
+
+// 🟡 MISSION
+else if (gameMode === "mission") {
+
+  progressBar.style.width = "100%";
+  progressBar.style.background = "#00ccff";
+  progressBar.style.boxShadow = "none";
+
+  progressLabel.textContent = `⭐ ${starScore} / ${missionTarget}`;
+}
 
     if (percent <= 30) {
       progressBar.style.boxShadow = "0 0 10px red";
