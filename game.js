@@ -1994,7 +1994,7 @@ progressLabel.style.display = "none";
   drawMenuRocket();
 
   /* -------------------- Main Loop -------------------- */
-function gameLoop(timestamp) 
+function gameLoop(timestamp) {
 
   if (gamePaused) {
   requestAnimationFrame(gameLoop);
