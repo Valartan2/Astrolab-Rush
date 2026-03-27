@@ -118,7 +118,7 @@ const shopRockets = [
   },
   {
     id: "rocket16",
-    name: "Teddy Rocket",
+    name: "Burger Rocket",
      file: "rocket16.png",
     priceStars: 1000,
     priceMeteors: 0,
