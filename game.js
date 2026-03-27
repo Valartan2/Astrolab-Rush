@@ -1215,8 +1215,8 @@ if (shopList) {
 
   /* -------------------- Bubble (Meteorite) -------------------- */
   function createBubble(speed) {
-    const base = isMobile ? 15 : 25;
-    const extra = isMobile ? 10 : 15;
+    const base = isMobile ? 22 : 25;
+    const extra = isMobile ? 18 : 15;
     const radius = Math.random() * extra + base;
     const y = radius + Math.random() * (height - 2 * radius);
     const image = meteoriteImages[Math.floor(Math.random() * meteoriteImages.length)];
