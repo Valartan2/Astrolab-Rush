@@ -2110,7 +2110,7 @@ if (gameMode === "endless") {
 } else {
 
   // 🎯 mission + time → vitesse FIXE
-  baseSpeed = 12 * speedFactor;
+  baseSpeed = 10 * speedFactor;
 
 }
 
