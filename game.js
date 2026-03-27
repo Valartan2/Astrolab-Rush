@@ -2026,8 +2026,7 @@ ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 
   const now = performance.now(); // 🔥 évite 50 calls
 
-  // 🧹 RESET OPTI (plus de scale inutile)
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
   // 🌌 BACKGROUND
   drawStars();
