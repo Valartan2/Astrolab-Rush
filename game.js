@@ -2012,568 +2012,100 @@ function gameLoop(timestamp) {
     return;
   }
 
+  // ⏱️ DELTA TIME
   let dt = (timestamp - lastTime) / 16.67;
-  dt = Math.min(dt, 1.5);
+  dt = Math.min(dt, isMobile ? 1.2 : 1.5);
   lastTime = timestamp;
 
+  // 🧹 CLEAR (⚠️ PLUS DE SCALE ICI)
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 🌌 BACKGROUND
+  drawStars();
+
+  // 🔥 CONFIG PERF
+  const PERF = isMobile
+    ? {
+        maxMeteorites: 5,
+        maxStars: 5,
+        maxBonuses: 2,
+        particleLimit: 1,
+        spawnRate: 30,
+        starDelay: 1400,
+        magnetPower: 6
+      }
+    : {
+        maxMeteorites: 14,
+        maxStars: 14,
+        maxBonuses: 5,
+        particleLimit: 6,
+        spawnRate: 25,
+        starDelay: 900,
+        magnetPower: 10
+      };
+
+  // ⏱️ TIME MODE
   if (gameMode === "time" && !gameOver && !isDying) {
     timeSurvived += dt / 60;
     timeLeft -= (dt / 60) * 2.5;
     timeLeft = Math.max(0, Math.min(timeLeft, 60));
   }
 
-  if (tutorialActive) {
-    tutorialTimer -= 16;
-    if (tutorialTimer <= 0) {
-      tutorialActive = false;
-    }
-  }
+  // 🔥 VITESSE
+  const settings = GAME_SETTINGS[gameMode][isMobile ? "mobile" : "desktop"];
+  const effectiveDistance = Math.min(distance, settings.maxDist);
+  const level = Math.floor(effectiveDistance / settings.step);
+  const baseSpeed = settings.baseSpeed + level * settings.accel;
+  const finalSpeed = baseSpeed * (isMobile ? 0.7 : 1);
 
-  // 🧹 RESET
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
-  ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
-
-  // 🌌 BACKGROUND
-  drawStars();
-
-  // ⚠️ écran rouge fin de temps
-  if (gameMode === "time" && timeLeft < 10) {
-    ctx.save();
-    ctx.globalAlpha = 0.15;
-    ctx.fillStyle = "red";
-    ctx.fillRect(0, 0, width, height);
-    ctx.restore();
-  }
-
-  // 💀 PHASE DE MORT
-  if (isDying) {
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const e = particles[i];
-      e.update();
-      e.draw();
-
-      if (e.isDead()) {
-        particles.splice(i, 1);
-      }
-    }
-
-    if (particles.length === 0) {
-      isDying = false;
-      gameOver = true;
-
-      wordDisplay.style.display = "none";
-      document.getElementById("topHUD").style.display = "none";
-
-      if (music) music.pause();
-
-      gameOverText.style.display = "block";
-      distanceDisplay.style.display = "none";
-
-      afficherTableauScore(distance);
-
-      rejouerBtn.style.display = "block";
-      shareBtn.style.display = "block";
-      objectifsBtn.style.display = "block";
-      backToMenuBtn.style.display = "block";
-    }
-
-    animationId = requestAnimationFrame(gameLoop);
-    return;
-  }
-
-  // 🎯 FOCUS MODE
-  if (focusMode) {
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, width, height);
-    ctx.restore();
-  }
-
- // 🔥 SYSTEME DE VITESSE CUSTOM
-
-const GAME_SETTINGS = {
-  endless: {
-    mobile: { baseSpeed: 10, accel: 1.1, step: 500, maxDist: 4000 },
-    desktop: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 3000 }
-  },
-  mission: {
-    mobile: { baseSpeed: 9, accel: 0.4, step: 600, maxDist: 3000 },
-    desktop: { baseSpeed: 10, accel: 0.5, step: 500, maxDist: 5000 }
-  },
-  time: {
-    mobile: { baseSpeed: 9, accel: 0.3, step: 700, maxDist: 3000 },
-    desktop: { baseSpeed: 10, accel: 0.4, step: 600, maxDist: 4000 }
-  }
-};
-
-const settings = GAME_SETTINGS[gameMode][isMobile ? "mobile" : "desktop"];
-
-const effectiveDistance = Math.min(distance, settings.maxDist);
-
-const level = Math.floor(effectiveDistance / settings.step);
-
-const speedFactor = isMobile ? 0.7 : 1;
-
-const baseSpeed = (settings.baseSpeed + level * settings.accel) * speedFactor;
-
-const finalSpeed = baseSpeed;
-
-  const spawnRate = 25;
-  const maxMeteorites = isMobile ? 8 : 14;
-
+  // ☄️ SPAWN METEORITES
   frameCount += dt;
 
-  if (frameCount >= spawnRate && bubbles.length < maxMeteorites && !gameOver) {
+  if (frameCount >= PERF.spawnRate && bubbles.length < PERF.maxMeteorites && !gameOver) {
     frameCount = 0;
     createBubble(finalSpeed);
   }
 
-  // 🛰️ SPAWN RARE
-  if (
-    !gameOver &&
-    !isDying &&
-    specialObstacles.length === 0 &&
-    performance.now() - lastSpecialSpawn > 8000
-  ) {
-    createSpecialObstacle(finalSpeed);
-    lastSpecialSpawn = performance.now();
-  }
+  // ⭐ SPAWN ÉTOILES (OPTIMISÉ)
+  if (!focusMode && !gameOver) {
 
-  // ⭐ étoiles
-  const MAX_STARS = isMobile ? 5 : 14;
+    const now = performance.now();
 
-  if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
-    let starRate = 0.02;
+    if (starsCollectibles.length < PERF.maxStars) {
 
-    if (gameMode === "mission") {
-      starRate = 0.035;
-    }
+      if (gameMode === "time") {
 
-    if (gameMode === "time") {
-      starRate = 0.15;
-    }
+        if (now - lastStarSpawn > PERF.starDelay) {
+          createStar(finalSpeed);
+          lastStarSpawn = now;
+        }
 
-    if (gameMode === "time") {
-      const now = performance.now();
+      } else {
 
-      // spawn garanti un peu moins agressif
-      if (now - lastStarSpawn > 1200) {
-        createStar(finalSpeed);
-        lastStarSpawn = now;
-      }
+        const rate = gameMode === "mission" ? 0.035 : 0.02;
 
-      if (Math.random() < 0.02) {
-        createStar(finalSpeed);
-        lastStarSpawn = now;
-      }
-    } else {
-      if (starsCollectibles.length < (isMobile ? 8 : 25)) {
-        if (Math.random() < starRate) {
+        if (Math.random() < rate) {
           createStar(finalSpeed);
         }
       }
     }
-
-    if (!gameOver && !isDying && !focusMode) {
-      const totalBonuses =
-        magnets.length +
-        shields.length +
-        x2s.length +
-        meteorToStarBonuses.length;
-
-      if (totalBonuses < (isMobile ? 2 : 5)) {
-      }
-    }
-
-    if (gameMode === "mission") {
-      if (distance > nextBonusDistance) {
-        const type = getRandomBonus();
-
-        switch (type) {
-          case "magnet":
-            if (!magnetActive && magnets.length === 0) {
-              createMagnet(finalSpeed);
-            }
-            break;
-
-          case "shield":
-            if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
-              createShield(finalSpeed);
-            }
-            break;
-
-          case "x2":
-            if (x2s.length === 0) {
-              createX2(finalSpeed);
-            }
-            break;
-
-          case "meteor":
-            if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
-              createMeteorToStarBonus(finalSpeed);
-            }
-            break;
-        }
-
-        nextBonusDistance = distance + getNextGap(250, 250);
-      }
-    }
-
-    // 🔤 LETTERS
-    if (
-      !gameOver &&
-      !isDying &&
-      letters.length === 0 &&
-      !focusMode &&
-      gameMode !== "time"
-    ) {
-      if (distance > nextLetterDistance) {
-        createLetter(finalSpeed);
-        nextLetterDistance = distance + getNextGap(400, 900);
-      }
-    }
   }
 
-  // ☄️ METEORITES
-  for (let i = bubbles.length - 1; i >= 0; i--) {
-    const b = bubbles[i];
-
-    b.x -= b.speed * Math.min(dt, 1.2);
-
-    const dx = player.x - b.x;
-    const dy = player.y - b.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + b.radius;
-
-    // 🌟 PRIORITÉ 1 : METEOR → STAR
-    if (meteorToStarActive) {
-      if (magnetActive) {
-        const dist = Math.sqrt(distSq);
-        if (dist > 0) {
-          const speed = dist < 80 ? 20 : 10;
-          b.x += (dx / dist) * speed;
-          b.y += (dy / dist) * speed;
-        }
-      }
-
-      if (distSq < hitRadius * hitRadius) {
-        starScore += 5;
-        playSound(starSound);
-        bubbles.splice(i, 1);
-        continue;
-      }
-    }
-
-    // 🛡️ PRIORITÉ 2 : SHIELD
-    else if (shieldActive && distSq < hitRadius * hitRadius) {
-      createExplosion(b.x, b.y);
-      meteorDestroyed++;
-      bubbles.splice(i, 1);
-      continue;
-    }
-
-    // 💀 PRIORITÉ 3 : COLLISION NORMALE
-    else if (distSq < hitRadius * hitRadius) {
-      if (gameMode === "time") {
-        timeLeft -= 2;
-        playSound(hitSound);
-        hitFlashTimer = 150;
-        bubbles.splice(i, 1);
-        continue;
-      }
-
-      isDying = true;
-      createExplosion(player.x, player.y);
-      pressing = false;
-      bubbles.splice(i, 1);
-      break;
-    }
-
-    if (b.y > height - b.radius || b.y < b.radius) {
-      b.direction *= -1;
-    }
-
-    if (b.x + b.radius < 0) {
-      bubbles.splice(i, 1);
-    }
-  }
-
-  // 🛰️ SPECIAL OBSTACLES
-  for (let i = specialObstacles.length - 1; i >= 0; i--) {
-    const o = specialObstacles[i];
-
-    o.x -= o.speed * dt * 0.6;
-
-    const dx = player.x - o.x;
-    const dy = player.y - o.y;
-    const distSq = dx * dx + dy * dy;
-    const shieldHitRadius = player.radius + o.size;
-    const normalHitRadius = player.radius + o.size * 0.5;
-
-    if (shieldActive && distSq < shieldHitRadius * shieldHitRadius) {
-      const src = o.image.src;
-
-      if (src.includes("ISS")) specialDestroyedThisRun.ISS = true;
-      if (src.includes("Starman")) specialDestroyedThisRun.Starman = true;
-      if (src.includes("Soyouz")) specialDestroyedThisRun.Soyouz = true;
-      if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
-      if (src.includes("astro")) specialDestroyedThisRun.astro = true;
-
-      createExplosion(o.x, o.y);
-      specialObstacles.splice(i, 1);
-      continue;
-    }
-
-    if (!shieldActive && distSq < normalHitRadius * normalHitRadius) {
-      if (gameMode === "time") {
-        timeLeft -= 5;
-        playSound(hitSound);
-        hitFlashTimer = 150;
-        specialObstacles.splice(i, 1);
-        continue;
-      }
-
-      isDying = true;
-      createExplosion(player.x, player.y);
-      pressing = false;
-      specialObstacles.splice(i, 1);
-      break;
-    }
-
-    if (o.x < -100) {
-      specialObstacles.splice(i, 1);
-    }
-  }
-
-  // ⭐ étoiles mouvement + collision
-  for (let i = starsCollectibles.length - 1; i >= 0; i--) {
-    const s = starsCollectibles[i];
-
-    if (magnetActive) {
-      const dxMag = player.x - s.x;
-      const dyMag = player.y - s.y;
-      const distSqMag = dxMag * dxMag + dyMag * dyMag;
-      const distMag = Math.sqrt(distSqMag);
-
-      const speed = distMag < 80 ? (isMobile ? 12 : 20) : (isMobile ? 6 : 10);
-
-      if (distMag > 0) {
-        s.x += (dxMag / distMag) * speed;
-        s.y += (dyMag / distMag) * speed;
-      }
-    } else {
-      s.x -= s.speed * dt * 0.6;
-    }
-
-    const dx = player.x - s.x;
-    const dy = player.y - s.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + s.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      starScore += s.big ? 5 : 1;
-
-      if (gameMode === "time") {
-        if (s.big) {
-          timeLeft += 10;
-          showSuccessBanner("⭐ +10s!");
-        } else {
-          timeLeft += 2;
-        }
-
-        timeLeft = Math.min(timeLeft, 60);
-      }
-
-      playSound(starSound);
-
-      starsCollectibles.splice(i, 1);
-      continue;
-    }
-
-    if (s.x < -50) {
-      starsCollectibles.splice(i, 1);
-    }
-  }
-
-  // 🧲 AIMANT
-  for (let i = magnets.length - 1; i >= 0; i--) {
-    const m = magnets[i];
-
-    m.x -= m.speed * dt * 0.6;
-
-    const dx = player.x - m.x;
-    const dy = player.y - m.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + m.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      magnetActive = true;
-      magnetTimer = performance.now();
-      lastMagnetSpawn = performance.now();
-      lastShieldSpawn = performance.now();
-
-      showSuccessBanner("🧲 MAGNET!");
-
-      magnets.splice(i, 1);
-      continue;
-    }
-
-    if (m.x < -50) {
-      magnets.splice(i, 1);
-    }
-  }
-
-  // 🛡️ SHIELD
-  for (let i = shields.length - 1; i >= 0; i--) {
-    const s = shields[i];
-
-    s.x -= s.speed * dt * 0.6;
-
-    const dx = player.x - s.x;
-    const dy = player.y - s.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + s.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      shieldActive = true;
-      shieldTimer = performance.now();
-
-      showSuccessBanner("🛡️ SHIELD!");
-
-      shields.splice(i, 1);
-      continue;
-    }
-
-    if (s.x < -50) {
-      shields.splice(i, 1);
-    }
-  }
-
-  // 💰 X2 BONUS
-  for (let i = x2s.length - 1; i >= 0; i--) {
-    const b = x2s[i];
-
-    b.x -= b.speed * dt * 0.6;
-
-    const dx = player.x - b.x;
-    const dy = player.y - b.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + b.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      starScore *= 2;
-      showSuccessBanner("💰 x2 COINS!");
-      x2s.splice(i, 1);
-      continue;
-    }
-
-    if (b.x < -50) {
-      x2s.splice(i, 1);
-    }
-  }
-
-  // 🌟 METEOR → STAR BONUS
-  for (let i = meteorToStarBonuses.length - 1; i >= 0; i--) {
-    const b = meteorToStarBonuses[i];
-
-    b.x -= b.speed * dt * 0.6;
-
-    const dx = player.x - b.x;
-    const dy = player.y - b.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + b.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      meteorToStarActive = true;
-      meteorToStarTimer = performance.now();
-
-      showSuccessBanner("🌟 METEOR RUSH!");
-
-      meteorToStarBonuses.splice(i, 1);
-      continue;
-    }
-
-    if (b.x < -50) {
-      meteorToStarBonuses.splice(i, 1);
-    }
-  }
-
-  // 🔤 LETTERS
-  for (let i = letters.length - 1; i >= 0; i--) {
-    const l = letters[i];
-
-    l.x -= l.speed * dt;
-
-    const dx = player.x - l.x;
-    const dy = player.y - l.y;
-    const distSq = dx * dx + dy * dy;
-    const hitRadius = player.radius + l.size;
-
-    if (distSq < hitRadius * hitRadius) {
-      playSound(starSound);
-
-      currentLetterIndex++;
-      letters.splice(i, 1);
-
-      if (currentLetterIndex >= word.length) {
-        galaxyCompletedThisRun++;
-
-        currentLetterIndex = 0;
-
-        showSuccessBanner("🌌 GALAXY COMPLETE!");
-
-        shieldActive = true;
-        shieldTimer = performance.now();
-      }
-
-      continue;
-    }
-
-    if (l.x < -50) {
-      letters.splice(i, 1);
-    }
-  }
-
-  if (magnetActive) {
-    ctx.save();
-    ctx.globalAlpha = 0.1;
-    ctx.fillStyle = "#00cfff";
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 120, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  if (timeLeft <= 0 && !isDying && !gameOver) {
-    timeLeft = 0;
-    isDying = true;
-    createExplosion(player.x, player.y);
-  }
-
+  // 🚀 PLAYER
   if (!gameOver && !isDying) {
-    if (gameMode === "endless") {
-      document.getElementById("starCount").textContent = starScore;
-      document.getElementById("destroyCount").textContent = meteorDestroyed;
-    }
-
-    if (gameMode === "mission") {
-      document.getElementById("starCount").textContent = starScore;
-      document.getElementById("destroyCount").textContent = meteorDestroyed;
-    }
 
     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
     player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
+
     player.y += player.velocityY * dt;
     player.velocityY *= Math.pow(0.87, dt);
 
     if (player.y < player.radius) {
       player.y = player.radius;
       player.velocityY = 0;
-    } else if (player.y > height - player.radius) {
+    }
+
+    if (player.y > height - player.radius) {
       player.y = height - player.radius;
       player.velocityY = 0;
     }
@@ -2581,298 +2113,114 @@ const finalSpeed = baseSpeed;
     distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
   }
 
-  // 🎯 DISPLAY PAR MODE
-  if (gameMode === "time") {
-    const grade = getTimeGrade(timeSurvived);
-    distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
-  } else if (gameMode === "mission") {
-    distanceDisplay.textContent = `⭐ ${starScore} / ${missionTarget}`;
-  } else {
-    distanceDisplay.textContent =
-      `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
-  }
+  // ☄️ METEORITES
+  for (let i = bubbles.length - 1; i >= 0; i--) {
 
-  const displayWord = word.map((letter, index) => {
-    return index < currentLetterIndex ? letter : "_";
-  }).join(" ");
+    const b = bubbles[i];
+    b.x -= b.speed * dt;
 
-  wordDisplay.textContent = displayWord;
+    const dx = player.x - b.x;
+    const dy = player.y - b.y;
+    const distSq = dx * dx + dy * dy;
+    const hit = player.radius + b.radius;
 
-  const progressText = document.getElementById("progressText");
+    // 🌟 METEOR → STAR
+    if (meteorToStarActive && distSq < hit * hit) {
+      starScore += 5;
+      playSound(starSound);
+      bubbles.splice(i, 1);
+      continue;
+    }
 
-  // 🎯 ENDLESS
-  if (gameMode === "endless") {
-    let currentThreshold = 0;
-    let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
-
-    for (let i = 0; i < gradeObjectives.length; i++) {
-      if (distance >= gradeObjectives[i].threshold) {
-        currentThreshold = gradeObjectives[i].threshold;
-
-        if (i + 1 < gradeObjectives.length) {
-          nextThreshold = gradeObjectives[i + 1].threshold;
-        }
+    // 🛡️ SHIELD
+    if (shieldActive && distSq < hit * hit) {
+      if (particles.length < PERF.particleLimit) {
+        createExplosion(b.x, b.y);
       }
+      meteorDestroyed++;
+      bubbles.splice(i, 1);
+      continue;
     }
 
-    const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
-    const percent = Math.max(0, Math.min(progress, 1)) * 100;
+    // 💀 COLLISION
+    if (distSq < hit * hit) {
 
-    progressBar.style.width = percent + "%";
-    progressBar.style.background = getFlashColor();
-    progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
-
-    const remaining = Math.floor(nextThreshold - distance);
-    progressLabel.textContent = `Next Grade : ${remaining} m`;
-
-    progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
-  }
-
-  // ⏱️ TIME / MISSION
-  else {
-    const percent = (timeLeft / 60) * 100;
-    progressBar.style.width = percent + "%";
-
-    if (percent > 60) {
-      progressBar.style.background = "#00ccff";
-    } else if (percent > 30) {
-      progressBar.style.background = "#ffd700";
-    } else {
-      progressBar.style.background = "#ff3b3b";
-    }
-
-    if (percent <= 30) {
-      progressBar.style.boxShadow = "0 0 10px red";
-    } else if (percent <= 60) {
-      progressBar.style.boxShadow = "0 0 10px yellow";
-    } else {
-      progressBar.style.boxShadow = "none";
-    }
-
-    const currentTimeGrade = getTimeGrade(timeSurvived);
-
-    let nextTimeThreshold = null;
-    for (let i = 0; i < timeGrades.length; i++) {
-      if (timeSurvived < timeGrades[i].threshold) {
-        nextTimeThreshold = timeGrades[i].threshold;
-        break;
+      if (gameMode === "time") {
+        timeLeft -= 2;
+        playSound(hitSound);
+        bubbles.splice(i, 1);
+        continue;
       }
+
+      isDying = true;
+      createExplosion(player.x, player.y);
+      bubbles.splice(i, 1);
+      break;
     }
 
-    progressLabel.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${currentTimeGrade}`;
+    if (b.x < -50) bubbles.splice(i, 1);
+  }
 
-    if (nextTimeThreshold !== null) {
-      const remaining = nextTimeThreshold - timeSurvived;
-      progressText.textContent = `Next Grade : ${remaining.toFixed(1)}s`;
+  // ⭐ ÉTOILES
+  for (let i = starsCollectibles.length - 1; i >= 0; i--) {
+
+    const s = starsCollectibles[i];
+
+    if (magnetActive) {
+      const dx = player.x - s.x;
+      const dy = player.y - s.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+      s.x += (dx / dist) * PERF.magnetPower;
+      s.y += (dy / dist) * PERF.magnetPower;
     } else {
-      progressText.textContent = `${currentTimeGrade} MAX`;
-    }
-  }
-
-  // 🔥 BONUS VISUEL
-  if (
-    gameMode === "endless" &&
-    nextGradeIndex < gradeObjectives.length &&
-    distance >= gradeObjectives[nextGradeIndex].threshold
-  ) {
-    const grade = gradeObjectives[nextGradeIndex];
-
-    distanceDisplay.classList.add("distancePulse");
-    setTimeout(() => {
-      distanceDisplay.classList.remove("distancePulse");
-    }, 400);
-
-    showMilestone(grade.label);
-    flashScreen(getFlashColor());
-
-    nextGradeIndex++;
-  }
-
-  if (
-    gameMode === "time" &&
-    nextGradeIndex < timeGrades.length &&
-    timeSurvived >= timeGrades[nextGradeIndex].threshold
-  ) {
-    const grade = timeGrades[nextGradeIndex];
-
-    distanceDisplay.classList.add("distancePulse");
-    setTimeout(() => {
-      distanceDisplay.classList.remove("distancePulse");
-    }, 400);
-
-    showMilestone(grade.label);
-    flashScreen("#00ccff");
-
-    nextGradeIndex++;
-  }
-
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const e = particles[i];
-    e.update();
-    e.draw();
-
-    if (e.isDead()) {
-      particles.splice(i, 1);
-    }
-  }
-
-  if (magnetActive) {
-    if (performance.now() - magnetTimer > magnetDuration) {
-      magnetActive = false;
-    }
-  }
-
-  if (meteorToStarActive) {
-    meteorToStarRemaining = meteorToStarDuration - (performance.now() - meteorToStarTimer);
-
-    if (meteorToStarRemaining <= 0) {
-      meteorToStarActive = false;
-      meteorToStarRemaining = 0;
-      showSuccessBanner("⚠️ RUSH OVER");
-    }
-  }
-
-  if (shieldActive) {
-    shieldRemaining = shieldDuration - (performance.now() - shieldTimer);
-
-    if (shieldRemaining <= 0) {
-      shieldActive = false;
-      shieldRemaining = 0;
-      showSuccessBanner("⚠️ SHIELD OFF");
-    }
-  }
-
-  if (!focusMode) {
-    starsCollectibles.forEach(drawStar);
-    magnets.forEach(drawMagnet);
-  }
-
-  bubbles.forEach(b => {
-    if (meteorToStarActive) {
-      ctx.drawImage(
-        starImage,
-        b.x - b.radius,
-        b.y - b.radius,
-        b.radius * 2,
-        b.radius * 2
-      );
-    } else {
-      drawMeteorite(b);
-    }
-  });
-
-  shields.forEach(drawShield);
-  specialObstacles.forEach(drawSpecialObstacle);
-  x2s.forEach(drawX2);
-
-  meteorToStarBonuses.forEach(b => {
-    if (!meteorToStarImage.complete) return;
-
-    ctx.drawImage(
-      meteorToStarImage,
-      b.x - b.size,
-      b.y - b.size,
-      b.size * 2,
-      b.size * 2
-    );
-  });
-
-  letters.forEach(l => {
-    const img = letterImages[l.letter];
-    if (!img.complete) return;
-
-    ctx.drawImage(
-      img,
-      l.x - l.size,
-      l.y - l.size,
-      l.size * 2,
-      l.size * 2
-    );
-  });
-
-  if (shieldActive) {
-    let alpha = 0.25;
-
-    if (shieldRemaining < 1000) {
-      alpha = Math.sin(performance.now() / 80) * 0.5 + 0.5;
+      s.x -= s.speed * dt;
     }
 
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = "#00ffcc";
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    const dx = player.x - s.x;
+    const dy = player.y - s.y;
+    const distSq = dx * dx + dy * dy;
+    const hit = player.radius + s.size;
+
+    if (distSq < hit * hit) {
+
+      starScore += s.big ? 5 : 1;
+
+      if (gameMode === "time") {
+        timeLeft += s.big ? 10 : 2;
+        timeLeft = Math.min(timeLeft, 60);
+      }
+
+      playSound(starSound);
+      starsCollectibles.splice(i, 1);
+      continue;
+    }
+
+    if (s.x < -50) starsCollectibles.splice(i, 1);
   }
+
+  // 🎨 DRAW (optimisé mobile)
+  starsCollectibles.forEach(drawStar);
+  bubbles.forEach(drawMeteorite);
 
   if (!gameOver && !isDying) {
     drawRocket(player.x, player.y, player.radius);
   }
 
-  if (meteorToStarActive) {
-    let alpha = 0.15;
-
-    if (meteorToStarRemaining < 1000) {
-      alpha = Math.sin(performance.now() / 60) * 0.5 + 0.5;
-    }
-
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = "#ffff00";
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 100, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+  // 🖥️ UI
+  if (gameMode === "time") {
+    distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s`;
+  } else if (gameMode === "mission") {
+    distanceDisplay.textContent = `⭐ ${starScore}`;
+  } else {
+    distanceDisplay.textContent =
+      `Distance: ${Math.floor(distance)} m ⭐ ${starScore}`;
   }
 
-  // garde seulement ce bloc shield visuel en plus du clignotement ci-dessus
-  if (shieldActive && shieldRemaining < 1000) {
-    ctx.save();
-    ctx.globalAlpha = Math.sin(performance.now() / 50) * 0.5 + 0.5;
-    ctx.fillStyle = "#00ffcc";
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 80, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  checkSpecialMission();
-  frameCount++;
-  flamePulse += 0.15;
-
-  if (hitFlashTimer > 0) {
-    hitFlashTimer -= 16;
-  }
-
-  if (tutorialActive) {
-    ctx.save();
-
-    ctx.globalAlpha = 0.85;
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, height / 2 - 60, width, 120);
-
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.font = "22px Arial";
-
-    let text = "";
-
-    if (gameMode === "endless") {
-      text = "🚀 Hold to fly • Avoid meteorites";
-    }
-
-    if (gameMode === "mission") {
-      text = "⭐ Collect stars • Use bonuses";
-    }
-
-    if (gameMode === "time") {
-      text = "⏱️ Collect stars to gain time!";
-    }
-
-    ctx.fillText(text, width / 2, height / 2);
-    ctx.restore();
+  // 💀 FIN
+  if (timeLeft <= 0 && !isDying && !gameOver) {
+    isDying = true;
+    createExplosion(player.x, player.y);
   }
 
   if ((!gameOver && !isDying) || particles.length > 0) {
