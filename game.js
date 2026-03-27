@@ -705,6 +705,9 @@ let nextLetterDistance = 500;
   let nextBonusDistance = 250;
 
 
+  let gamePaused = false;
+
+
 
  
 
@@ -1991,7 +1994,12 @@ progressLabel.style.display = "none";
   drawMenuRocket();
 
   /* -------------------- Main Loop -------------------- */
-function gameLoop(timestamp) {
+function gameLoop(timestamp) 
+
+  if (gamePaused) {
+  requestAnimationFrame(gameLoop);
+  return;
+}
 
   let dt = (timestamp - lastTime) / 16.67;
   dt = Math.min(dt, 1.5);
