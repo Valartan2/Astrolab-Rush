@@ -2326,7 +2326,7 @@ function gameLoop(timestamp) {
 
     if (!shieldActive && distSq < normalHitRadius * normalHitRadius) {
       if (gameMode === "time") {
-        timeLeft -= 10;
+        timeLeft -= 5;
         playSound(hitSound);
         hitFlashTimer = 150;
         specialObstacles.splice(i, 1);
