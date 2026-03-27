@@ -228,9 +228,18 @@ const hitSound = new Audio("error-sound-39539.mp3");
 hitSound.volume = 0.4;
 
 // 🔥 AJOUT ICI
+let lastStarSoundTime = 0;
+
 function playSound(sound) {
   try {
-    if (!sound.paused) return; // 🔥 évite spam
+    const now = performance.now();
+
+    // limite seulement le spam du son étoile
+    if (sound === starSound) {
+      if (now - lastStarSoundTime < 80) return; // ajuste 60 / 80 / 100
+      lastStarSoundTime = now;
+    }
+
     sound.currentTime = 0;
     sound.play().catch(() => {});
   } catch (e) {}
