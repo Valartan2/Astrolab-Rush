@@ -2357,7 +2357,7 @@ if (hitFlashTimer > 0) {
     // normal collision
     else if (distSq < hitRadius * hitRadius) {
       if (gameMode === "time") {
-        timeLeft -= 5;
+        timeLeft -= 30;
         playSound(hitSound);
         hitFlashTimer = 150;
         bubbles.splice(i, 1);
