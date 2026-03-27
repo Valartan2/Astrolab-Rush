@@ -230,6 +230,7 @@ hitSound.volume = 0.4;
 // 🔥 AJOUT ICI
 function playSound(sound) {
   try {
+    if (!sound.paused) return; // 🔥 évite spam
     sound.currentTime = 0;
     sound.play().catch(() => {});
   } catch (e) {}
