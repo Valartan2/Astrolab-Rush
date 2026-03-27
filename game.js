@@ -2399,7 +2399,7 @@ if (timeLeft < 20) {
 
     if (!shieldActive && distSq < normalHitRadius * normalHitRadius) {
       if (gameMode === "time") {
-        timeLeft -= 10;
+        timeLeft -= 20;
         playSound(hitSound);
         hitFlashTimer = 150;
         specialObstacles.splice(i, 1);
