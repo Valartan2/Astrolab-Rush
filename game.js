@@ -1,9 +1,23 @@
 (() => {
 
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+  // ✅ AJOUT ICI
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+  
   function checkOrientation() {
 
   const rotateMessage = document.getElementById("rotateMessage");
 
+  // 🔥 IMPORTANT : desktop jamais bloqué
+  if (!isMobile) {
+    rotateMessage.style.display = "none";
+    gamePaused = false;
+    return;
+  }
+
+  // 📱 MOBILE UNIQUEMENT
   if (window.innerWidth > window.innerHeight) {
     rotateMessage.style.display = "flex";
     gamePaused = true;
