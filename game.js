@@ -2158,7 +2158,7 @@ if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
   }
 
   if (gameMode === "time") {
-    starRate = 0.035;
+    starRate = 0.06;
   }
 
   // ⭐ TIME ATTACK → jamais de vide
