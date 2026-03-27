@@ -2375,8 +2375,8 @@ function gameLoop(timestamp) {
 
       if (gameMode === "time") {
         if (s.big) {
-          timeLeft += 5;
-          showSuccessBanner("⭐ +5s!");
+          timeLeft += 10;
+          showSuccessBanner("⭐ +10s!");
         } else {
           timeLeft += 2;
         }
