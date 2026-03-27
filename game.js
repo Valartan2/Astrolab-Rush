@@ -1234,7 +1234,9 @@ if (shopList) {
 
 function createStar(speed) {
 
-  const isBig = gameMode === "time" && !starsCollectibles.some(s => s.big) && Math.random() < 0.05;
+  const bigChance = Math.min(0.05 + timeSurvived * 0.002, 0.15);
+
+const isBig = gameMode === "time" && Math.random() < bigChance;
 
   starsCollectibles.push({
     x: width + 40,
