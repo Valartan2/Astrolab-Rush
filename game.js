@@ -837,27 +837,57 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
 
  function getFlashColor() {
 
-  if (distance < 500) return "#00ccff";        // bleu clair
-  if (distance < 1000) return "#b366ff";       // violet
-  if (distance < 1500) return "#ff6b4a";       // orange / rouge
-  if (distance < 2000) return "#ffffff";       // blanc (impact)
+  if (gameMode === "mission") {
+    return "#00ccff"; // ou rien si tu veux neutre
+  }
 
-  // 🔥 MID GAME
-  if (distance < 2500) return "#00ffcc";       // turquoise néon
-  if (distance < 3500) return "#ffd700";       // or
-  if (distance < 5000) return "#ff00ff";       // magenta
+  if (gameMode === "time") {
+    if (timeSurvived < 10) return "#00ccff";
+    if (timeSurvived < 20) return "#ffd700";
+    if (timeSurvived < 30) return "#ff00ff";
+    if (timeSurvived < 45) return "#00ffff";
+    if (timeSurvived < 60) return "#ff3300";
 
-  // 🔥 LATE GAME
-  if (distance < 6500) return "#00ffff";       // cyan électrique
-  if (distance < 8000) return "#ff3300";       // rouge intense
-  if (distance < 10000) return "#7df9ff";      // bleu cosmique
+    return "#ffffff";
+  }
 
-  // 🔥 END GAME (wow effect)
-  return "#ffffff"; // blanc pur (god mode)
+  // endless
+  if (distance < 500) return "#00ccff";
+  if (distance < 1000) return "#b366ff";
+  if (distance < 1500) return "#ff6b4a";
+  if (distance < 2000) return "#ffffff";
+
+  if (distance < 2500) return "#00ffcc";
+  if (distance < 3500) return "#ffd700";
+  if (distance < 5000) return "#ff00ff";
+
+  if (distance < 6500) return "#00ffff";
+  if (distance < 8000) return "#ff3300";
+  if (distance < 10000) return "#7df9ff";
+
+  return "#ffffff";
 }
 
   function getSpaceColor() {
 
+  // ❌ MISSION = couleur fixe
+  if (gameMode === "mission") {
+    return "#001122";
+  }
+
+  // 🔵 TIME = couleur basée sur le temps
+  if (gameMode === "time") {
+    if (timeSurvived < 5) return "#001122";
+    if (timeSurvived < 10) return "#001a33";
+    if (timeSurvived < 20) return "#002244";
+    if (timeSurvived < 30) return "#000814";
+    if (timeSurvived < 45) return "#001f2f";
+    if (timeSurvived < 60) return "#000000";
+
+    return "#000000";
+  }
+
+  // 🟢 ENDLESS (inchangé)
   if (distance < 500) return "#001122";
   if (distance < 1000) return "#1a0033";
   if (distance < 1500) return "#330000";
@@ -874,8 +904,23 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
   return "#000000";
 }
 
-  function getStarColor() {
+ function getStarColor() {
 
+  if (gameMode === "mission") {
+    return "white";
+  }
+
+  if (gameMode === "time") {
+    if (timeSurvived < 10) return "#ffffff";
+    if (timeSurvived < 20) return "#00ccff";
+    if (timeSurvived < 30) return "#ffd700";
+    if (timeSurvived < 45) return "#ff00ff";
+    if (timeSurvived < 60) return "#00ffff";
+
+    return "#ffffff";
+  }
+
+  // endless
   if (distance < 500) return "white";
   if (distance < 1000) return "#d8c4ff";
   if (distance < 1500) return "#ffd0c4";
