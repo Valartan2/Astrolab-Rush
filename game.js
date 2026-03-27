@@ -1634,9 +1634,9 @@ function afficherTableauScore(score) {
     label3.textContent = "Total Distance:";
     label4.textContent = "Grade:";
 
-    currentScoreSpan.textContent = Math.floor(distance) + " m";
-    bestScoreSpan.textContent = bestScore + " m";
-    totalScoreSpan.textContent = getTotalDistance() + " m";
+    currentScoreSpan.textContent = formatNumber(Math.floor(distance)) + " m";
+bestScoreSpan.textContent = formatNumber(bestScore) + " m";
+totalScoreSpan.textContent = formatNumber(getTotalDistance()) + " m";
     gradeSpan.textContent = getGrade(distance);
 
     label3.parentElement.style.display = "block";
