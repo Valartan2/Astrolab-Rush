@@ -13,7 +13,7 @@ window.addEventListener("orientationchange", checkOrientation);
   // 🔥 IMPORTANT : desktop jamais bloqué
   if (!isMobile) {
     rotateMessage.style.display = "none";
-    game Paused = false;
+    gamePaused = false;
     return;
   }
 
