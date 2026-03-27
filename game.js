@@ -884,8 +884,19 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
     if (timeSurvived < 45) return "#001f2f";
     if (timeSurvived < 60) return "#000000";
 
-    return "#000000";
-  }
+    // 🔥 MID GAME
+  if (timeSurvived < 90) return "#001a1a";   // turquoise sombre
+  if (timeSurvived < 120) return "#1a1a00";  // jaune sombre
+  if (timeSurvived < 180) return "#1a001a";  // violet sombre
+
+  // 🔥 HIGH SKILL
+  if (timeSurvived < 240) return "#002b36";  // bleu profond
+  if (timeSurvived < 300) return "#330000";  // rouge intense
+
+  // 🔥 GOD MODE
+  return "#000000";
+}
+  
 
   // 🟢 ENDLESS (inchangé)
   if (distance < 500) return "#001122";
