@@ -2121,6 +2121,15 @@ if (timeLeft < 20) {
   // background
   drawStars();
 
+   // 🔴 FLASH ROUGE HIT (mobile friendly)
+if (hitFlashTimer > 0) {
+  ctx.save();
+  ctx.globalAlpha = 0.25; // intensité (0.2 à 0.4)
+  ctx.fillStyle = "red";
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
+}
+
   // red warning in time mode
   if (gameMode === "time" && timeLeft < 10) {
     ctx.save();
