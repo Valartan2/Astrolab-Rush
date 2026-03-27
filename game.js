@@ -2093,30 +2093,34 @@ function gameLoop(timestamp) {
     ctx.restore();
   }
 
-  const speedFactor = isMobile ? 0.7 : 1;
-  const meteorSpeedFactor = 1;
+ // 🔥 SYSTEME DE VITESSE CUSTOM
 
-  const maxDistanceCap = isMobile ? 1000 : 1500;
-  const effectiveDistance = Math.min(distance, maxDistanceCap);
-
-  let baseSpeed;
-
-  if (gameMode === "endless") {
-    const speedLevel = Math.floor(effectiveDistance / 400);
-    baseSpeed = (11 + speedLevel * 0.8) * speedFactor;
-  } else {
-    baseSpeed = 10 * speedFactor;
+const GAME_SETTINGS = {
+  endless: {
+    mobile: { baseSpeed: 10, accel: 0.6, step: 500, maxDist: 4000 },
+    desktop: { baseSpeed: 11, accel: 0.8, step: 400, maxDist: 10000 }
+  },
+  mission: {
+    mobile: { baseSpeed: 9, accel: 0.4, step: 600, maxDist: 3000 },
+    desktop: { baseSpeed: 10, accel: 0.5, step: 500, maxDist: 5000 }
+  },
+  time: {
+    mobile: { baseSpeed: 9, accel: 0.3, step: 700, maxDist: 3000 },
+    desktop: { baseSpeed: 10, accel: 0.4, step: 600, maxDist: 4000 }
   }
+};
 
-  const cappedSpeed = Math.min(baseSpeed, 26);
+const settings = GAME_SETTINGS[gameMode][isMobile ? "mobile" : "desktop"];
 
-  let finalSpeed;
-  if (gameMode === "endless") {
-    const speedRamp = 1 + (effectiveDistance / 3000);
-    finalSpeed = cappedSpeed * speedRamp;
-  } else {
-    finalSpeed = cappedSpeed;
-  }
+const effectiveDistance = Math.min(distance, settings.maxDist);
+
+const level = Math.floor(effectiveDistance / settings.step);
+
+const speedFactor = isMobile ? 0.7 : 1;
+
+const baseSpeed = (settings.baseSpeed + level * settings.accel) * speedFactor;
+
+const finalSpeed = baseSpeed;
 
   const spawnRate = 25;
   const maxMeteorites = isMobile ? 8 : 14;
