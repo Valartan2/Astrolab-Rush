@@ -2072,7 +2072,7 @@ const GAME_SETTINGS = {
     desktop: { baseSpeed: 11, accel: 1, step: 500, maxDist: 5000 }
   },
   time: {
-    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 2000 },
+    mobile: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 1500 },
     desktop: { baseSpeed: 11, accel: 1.1, step: 500, maxDist: 4000 }
   }
 };
