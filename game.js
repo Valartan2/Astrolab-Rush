@@ -707,6 +707,7 @@ let nextLetterDistance = 500;
 
   let gamePaused = false;
 
+  let lastStarSpawn = 0;
 
 
  
@@ -2160,10 +2161,32 @@ if (!focusMode && !gameOver && starsCollectibles.length < MAX_STARS) {
     starRate = 0.035;
   }
 
-  if (starsCollectibles.length < (isMobile ? 10 : 25)) {
-  if (Math.random() < starRate) {
+  // ⭐ TIME ATTACK → jamais de vide
+if (gameMode === "time") {
+
+  const now = performance.now();
+
+  // 🔥 sécurité : spawn garanti toutes les X ms
+  if (now - lastStarSpawn > 900) { // 👈 ajuste (700 = intense, 1200 = easy)
     createStar(finalSpeed);
+    lastStarSpawn = now;
   }
+
+  // 🔥 + un peu de random pour naturel
+  if (Math.random() < 0.02) {
+    createStar(finalSpeed);
+    lastStarSpawn = now;
+  }
+
+} else {
+
+  // comportement normal autres modes
+  if (starsCollectibles.length < (isMobile ? 10 : 25)) {
+    if (Math.random() < starRate) {
+      createStar(finalSpeed);
+    }
+  }
+
 }
 
  
