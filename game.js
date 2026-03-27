@@ -2410,7 +2410,7 @@ if (hitFlashTimer > 0) {
 
     if (!shieldActive && distSq < normalHitRadius * normalHitRadius) {
       if (gameMode === "time") {
-        timeLeft -= 30;
+        timeLeft -= 20;
         playSound(hitSound);
         hitFlashTimer = 150;
         specialObstacles.splice(i, 1);
@@ -2462,7 +2462,7 @@ if (hitFlashTimer > 0) {
           timeLeft += 10;
           showSuccessBanner("⭐ +10s!");
         } else {
-          timeLeft += 2;
+          timeLeft += 2.5;
         }
 
         timeLeft = Math.min(timeLeft, 60);
