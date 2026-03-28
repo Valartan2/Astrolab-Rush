@@ -2194,7 +2194,7 @@ if (hitFlashTimer > 0) {
   const settings = GAME_SETTINGS[gameMode][isMobile ? "mobile" : "desktop"];
   const effectiveDistance = Math.min(distance, settings.maxDist);
   const level = Math.floor(effectiveDistance / settings.step);
-  const speedFactor = isMobile ? 0.7 : 1;
+  const speedFactor = isMobile ? 0.7 : 0.85;
   const baseSpeed = (settings.baseSpeed + level * settings.accel) * speedFactor;
   const finalSpeed = baseSpeed;
 
