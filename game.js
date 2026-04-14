@@ -1127,25 +1127,27 @@ function afficherBurnDashboard(sessionBurned) {
 
   if (burnBarEl) {
     burnBarEl.style.width = "0%";
-    setTimeout(() => { burnBarEl.style.width = burnPercent.toFixed(4) + "%"; }, 300);
+    setTimeout(() => {
+      burnBarEl.style.width = burnPercent.toFixed(4) + "%";
+    }, 300);
   }
 
+  // Reset burn now button state
   if (burnNowBtn) {
     burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
     burnNowBtn.disabled = false;
     burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
-    const provider = window.solana;
-    if (provider && provider.isPhantom && provider.isConnected) {
-      burnNowBtn.style.display = "inline-block";
-    }
+    burnNowBtn.style.display = "inline-block";
   }
   if (burnTxStatus) {
     burnTxStatus.style.display = "none";
     burnTxStatus.textContent = "";
   }
 
-  window._lastSessionBurn = sessionBurned;
-  if (window.setLastSessionBurn) window.setLastSessionBurn(sessionBurned);
+  // Notify wallet module of session burn amount
+  if (window.setLastSessionBurn) {
+    window.setLastSessionBurn(sessionBurned);
+  }
 
   if (burnShareBtn) {
     burnShareBtn.onclick = () => {
