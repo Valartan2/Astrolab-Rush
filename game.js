@@ -1144,6 +1144,17 @@ function afficherBurnDashboard(sessionBurned) {
   }
 
   // Notify wallet module of session burn amount
+  window._lastSessionBurn = sessionBurned;
+
+  // Show burnNowBtn if wallet already connected
+  const burnNowBtn2 = document.getElementById("burnNowBtn");
+  if (burnNowBtn2) {
+    const provider = window.solana;
+    if (provider && provider.isPhantom && provider.isConnected) {
+      burnNowBtn2.style.display = "inline-block";
+    }
+  }
+
   if (window.setLastSessionBurn) {
     window.setLastSessionBurn(sessionBurned);
   }
@@ -2193,7 +2204,7 @@ toggleMusicBtn.onclick = () => {
   // Expose session burn to wallet module
   window.setLastSessionBurn = (amount) => {
     lastSessionBurn = amount;
-    if (walletPublicKey && burnNowBtn) {
+    if (burnNowBtn) {
       burnNowBtn.style.display = "inline-block";
     }
   };
@@ -2233,6 +2244,9 @@ toggleMusicBtn.onclick = () => {
         return;
       }
 
+      if (lastSessionBurn <= 0) {
+        lastSessionBurn = window._lastSessionBurn || 0;
+      }
       if (lastSessionBurn <= 0) {
         alert("No $BURN to send — play a run first!");
         return;
