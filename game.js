@@ -1880,12 +1880,14 @@ if (hitFlashTimer > 0) {
     const cumul = getTotalDistance() + Math.floor(distance);
     let currentThreshold = 0;
     let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
+    let nextGradeName = gradeObjectives[gradeObjectives.length - 1].label;
 
     for (let i = 0; i < gradeObjectives.length; i++) {
       if (cumul >= gradeObjectives[i].threshold) {
         currentThreshold = gradeObjectives[i].threshold;
         if (i + 1 < gradeObjectives.length) {
           nextThreshold = gradeObjectives[i + 1].threshold;
+          nextGradeName = gradeObjectives[i + 1].label;
         }
       }
     }
@@ -1897,6 +1899,7 @@ if (hitFlashTimer > 0) {
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
     if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
+    if (progressLabel) progressLabel.textContent = nextGradeName;
   }
 
   // milestone — basé sur cumul total

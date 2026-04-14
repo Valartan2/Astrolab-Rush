@@ -563,38 +563,33 @@ font-weight:bold;
 #topHUD {
   position: absolute;
   top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  width: 100%;
-  max-width: 600px;
-
+  left: 10px;
+  right: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  padding: 0 10px;
+  gap: 8px;
   z-index: 20;
 }
 
-#stats {
-  font-size: 14px;
-  color: white;
-
-  background: rgba(0,0,0,0.5);
-  padding: 6px 10px;
-  border-radius: 10px;
-  border: 2px solid black;
+#distance {
+  background: #b6fcb6;
+  color: #003300;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 3px solid black;
+  box-shadow: 3px 3px 0 black;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #progressWrapper {
   flex: 1;
-  height: 22px;
-
+  height: 24px;
   background: rgba(255,255,255,0.2);
   border: 3px solid black;
   border-radius: 12px;
-
   position: relative;
   overflow: hidden;
 }
@@ -609,12 +604,20 @@ font-weight:bold;
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 0;
-  left: 0;
-
-  font-size: 12px;
+  top: 0; left: 0;
+  font-size: 11px;
   color: white;
   font-weight: bold;
+  line-height: 24px;
+}
+
+#progressLabel {
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 black;
+  white-space: nowrap;
+  flex-shrink: 0;
 }   
 
     .smallStar {
@@ -961,27 +964,15 @@ font-weight:bold;
 
 
 <div id="topHUD" style="display:none;">
-  <div id="stats">
-    <span class="smallStar">⭐</span> <span id="starCount">0</span>
-   
-    💥 <span id="destroyCount">0</span>
-  </div>
-
+  <div id="distance">🔥 0 $BURN</div>
   <div id="progressWrapper">
-     <div id="progressBar"></div>
+    <div id="progressBar"></div>
     <div id="progressText">0 / 500</div>
   </div>
-
-  <div id="distance">Distance: 0 m</div>
-  <div id="wordDisplay">G _ _ _ _ _</div>
-</div> <!-- ✅ TRÈS IMPORTANT : FERMÉ ICI -->
-
-<!-- 🔥 MAINTENANT EN DEHORS -->
-<div id="progressLabel">Next Grade</div>
-
-<div id="progressContainer">
-  <div id="progressBar"></div>
+  <div id="progressLabel">Next Grade</div>
 </div>
+
+<div id="wordDisplay" style="display:none;"></div>
   
 
   <!-- 🆕 Tableau de score -->
