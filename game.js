@@ -1137,7 +1137,7 @@ function afficherBurnDashboard(sessionBurned) {
     burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
     burnNowBtn.disabled = false;
     burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
-    burnNowBtn.style.display = "inline-block";
+    burnNowBtn.style.display = "block";
   }
   if (burnTxStatus) {
     burnTxStatus.style.display = "none";
