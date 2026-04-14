@@ -1269,10 +1269,10 @@ tutorialBtn.onclick = () => {
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
 
-  wordDisplay.style.display = "block";
+  
   distanceDisplay.style.display = "block";
   document.getElementById("topHUD").style.display = "flex";
-  document.getElementById("stats").style.display = "none";
+  
   progressBar.parentElement.style.display = "flex";
   progressLabel.style.display = "block";
 
@@ -1298,7 +1298,7 @@ playButton.onclick = () => {
     resetGame();
 
     document.getElementById("topHUD").style.display = "flex";
-    wordDisplay.style.display = "block";
+    
     progressBar.parentElement.style.display = "flex";
     progressLabel.style.display = "block";
     animationId = requestAnimationFrame(gameLoop);
@@ -1364,7 +1364,7 @@ playButton.onclick = () => {
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "block";
 
-  wordDisplay.style.display = "none";  
+    
   distanceDisplay.style.display = "none";
   progressBar.parentElement.style.display = "none";
 progressLabel.style.display = "none";  
@@ -1392,11 +1392,11 @@ progressLabel.style.display = "none";
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
 
-  wordDisplay.style.display = "block";
+  
   distanceDisplay.style.display = "block";
 
   document.getElementById("topHUD").style.display = "flex";
-  document.getElementById("stats").style.display = "none";
+  
 
   // 🔥 barre de progression
   progressBar.parentElement.style.display = "flex";
@@ -1483,7 +1483,7 @@ if (hitFlashTimer > 0) {
       isDying = false;
       gameOver = true;
 
-      wordDisplay.style.display = "none";
+      
       document.getElementById("topHUD").style.display = "none";
 
       if (music) music.pause();
@@ -1844,8 +1844,8 @@ if (hitFlashTimer > 0) {
   // time over — kept as safety but won't trigger in endless
   // player physics + HUD counters
   if (!gameOver && !isDying) {
-    document.getElementById("starCount").textContent = starScore;
-    document.getElementById("destroyCount").textContent = meteorDestroyed;
+    const scEl = document.getElementById("starCount"); if(scEl) scEl.textContent = starScore;
+    const dcEl = document.getElementById("destroyCount"); if(dcEl) dcEl.textContent = meteorDestroyed;
 
     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
     player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
@@ -1880,14 +1880,12 @@ if (hitFlashTimer > 0) {
     const cumul = getTotalDistance() + Math.floor(distance);
     let currentThreshold = 0;
     let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
-    let nextGradeName = gradeObjectives[gradeObjectives.length - 1].label;
 
     for (let i = 0; i < gradeObjectives.length; i++) {
       if (cumul >= gradeObjectives[i].threshold) {
         currentThreshold = gradeObjectives[i].threshold;
         if (i + 1 < gradeObjectives.length) {
           nextThreshold = gradeObjectives[i + 1].threshold;
-          nextGradeName = gradeObjectives[i + 1].label;
         }
       }
     }
@@ -1899,7 +1897,6 @@ if (hitFlashTimer > 0) {
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
     if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
-    if (progressLabel) progressLabel.textContent = nextGradeName;
   }
 
   // milestone — basé sur cumul total
