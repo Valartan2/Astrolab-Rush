@@ -101,83 +101,10 @@ Complete objectives<br><br>
 }
 
   // 🔥 MODE SYSTEM
-let gameMode = "endless"; // "endless", "mission", "time"
+let gameMode = "endless";
   let focusMode = false;
-let timeLeft = 60; 
-let missionTarget = 30;
-
-  let timeSurvived = 0;
 
 
-  // 🛒 SHOP SYSTEM
-let playerStars = 0;
-let meteors = 0;
-
-const shopRockets = [
-  {
-    id: "neon",
-    name: "Neon Rocket",
-    file: "rocket10.png",
-    priceStars: 100,
-    priceMeteors: 0,
-    owned: false
-  },
-  {
-    id: "retro",
-    name: "Retro Rocket",
-     file: "rocket8.png",
-    priceStars: 500,
-    priceMeteors: 50,
-    owned: false
-  },
-  {
-    id: "rocket16",
-    name: "Burger Rocket",
-     file: "rocket16.png",
-    priceStars: 1000,
-    priceMeteors: 0,
-    owned: false
-  },
-  {
-    id: "rocket21",
-    name: "Teddy Rocket",
-     file: "rocket21.png",
-    priceStars: 0,
-    priceMeteors: 350,
-    owned: false
-  },
-  {
-    id: "rocket24",
-    name: "Watermelon Rocket",
-     file: "rocket24.png",
-    priceStars: 1500,
-    priceMeteors: 500,
-    owned: false
-  },
-  {
-    id: "rocket26",
-    name: "Retro Rocket",
-     file: "rocket26.png",
-    priceStars: 250,
-    priceMeteors: 30,
-    owned: false
-  },
-  {
-    id: "rocket27",
-    name: "Eiffel Tower Rocket",
-     file: "rocket27.png",
-    priceStars: 5000,
-    priceMeteors: 1000,
-    owned: false
-  }
-];
-
-const modeSelect = document.getElementById("modeSelect");
-const endlessModeBtn = document.getElementById("endlessModeBtn");
-const missionModeBtn = document.getElementById("missionModeBtn");
-const timeModeBtn = document.getElementById("timeModeBtn");
-
-  
   const shareBtn = document.getElementById("shareScore");
   const scoreBoard = document.getElementById("scoreBoard");
   const currentScoreSpan = document.getElementById("currentScore");
@@ -185,13 +112,9 @@ const timeModeBtn = document.getElementById("timeModeBtn");
   const totalScoreSpan = document.getElementById("totalScore");
   const gradeSpan = document.getElementById("grade");
 
-  const menuRocketCanvas = document.getElementById("menuRocket");
-  const menuRocketCtx = menuRocketCanvas.getContext("2d");
-
   const objectifsBtn = document.getElementById("objectifsBtn");
   const objectifList = document.getElementById("objectifList");
   const objectifItems = document.getElementById("objectifItems");
-  const rocketItems = document.getElementById("rocketItems");
   const totalDistanceDisplay = document.getElementById("totalDistanceDisplay");
   const closeObjectifs = document.getElementById("closeObjectifs");
 
@@ -285,112 +208,38 @@ objectifList.style.display="flex";
   TOTAL_BIG_STARS: "totalBigStars",  
 };
 
-const timeGrades = [
-  { threshold: 0, label: "Rookie" },
-  { threshold: 5, label: "Survivor" },
-  { threshold: 10, label: "Pilot" },
-  { threshold: 20, label: "Ace" },
-  { threshold: 30, label: "Elite" },
-  { threshold: 45, label: "Master" },
-  { threshold: 60, label: "Legend" },
 
-  // 🔥 mid / high skill
-  { threshold: 90, label: "Champion" },
-  { threshold: 120, label: "Titan" },
-  { threshold: 180, label: "Immortal" },
-  { threshold: 240, label: "Mythic" },
-  { threshold: 300, label: "God of Space" } // 5 min
-];
-  
-  /* -------------------- Grades -------------------- */
+  /* -------------------- Grades / $BURN Ranks -------------------- */
   const gradeObjectives = [
-  { threshold: 0, label: "Interstellar Recruit" },
-  { threshold: 500, label: "Space Adventurer" },
-  { threshold: 1000, label: "Meteorite Hunter" },
-  { threshold: 1500, label: "Cosmic Explorer" },
-  { threshold: 2000, label: "Legendary Pilot" },
-
-  // 🔥 mid game
-  { threshold: 2500, label: "Stellar Commander" },
-  { threshold: 3500, label: "Galactic Hero" },
-  { threshold: 5000, label: "Astral Veteran" },
-
-  // 🔥 late game
-  { threshold: 6500, label: "Space Ace" },
-  { threshold: 8000, label: "Star Guardian" },
+  { threshold: 0,     label: "Interstellar Recruit" },
+  { threshold: 500,   label: "Space Adventurer" },
+  { threshold: 1000,  label: "Meteorite Hunter" },
+  { threshold: 1500,  label: "Cosmic Explorer" },
+  { threshold: 2000,  label: "Legendary Pilot" },
+  { threshold: 2500,  label: "Stellar Commander" },
+  { threshold: 3500,  label: "Galactic Hero" },
+  { threshold: 5000,  label: "Astral Veteran" },
+  { threshold: 6500,  label: "Space Ace" },
+  { threshold: 8000,  label: "Star Guardian" },
   { threshold: 10000, label: "Legend of the Universe" }
 ];
 
-  /* -------------------- Rockets -------------------- */
-  const rocketDefinitions = [
-
-{ key:"classic", label:"Classic Rocket", file:"rocket2.png", unlock:{type:"distance", value:0} },
-
-{ key:"white", label:"White Rocket", file:"rocket3.png", unlock:{type:"distance", value:5000} },
-
-{ key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"distance", value:10000} },
-
-{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:1} },
-
-{ key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"distance", value:50000} },
-
-{ key:"blue", label:"Blue Rocket", file:"rocket7.png", unlock:{type:"distance", value:10000} },
-
-{ key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"shop", value:10} },
-
-{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"run", value:2500} },
-
-{ key:"neon", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
-
-
-{ key:"rocket12", label:"Shadow Rocket", file:"rocket12.png", unlock:{type:"distance", value:75000} },
-
-{ key:"rocket13", label:"Alien Rocket", file:"rocket13.png", unlock:{type:"run", value:6000} },
-
-{ key:"rocket14", label:"Army Rocket", file:"rocket14.png", unlock:{type:"distance", value:100000} },
-
-{ key:"rocket15", label:"Plasma Rocket", file:"rocket15.png", unlock:{type:"distance", value:150000} },
-
-{ key:"rocket16", label:"Burger Rocket", file:"rocket16.png", unlock:{type:"shop", value:1200} },
-
-{ key:"rocket17", label:"Pirates Rocket", file:"rocket17.png", unlock:{type:"run", value:7000} },
-
-{ key:"rocket18", label:"Pen Rocket", file:"rocket18.png", unlock:{type:"run", value:8000} },
-
-{ key:"rocket19", label:"Ice Cream Rocket", file:"rocket19.png", unlock:{type:"distance", value:150000} },
-
-{ key:"rocket20", label:"World Rocket", file:"rocket20.png", unlock:{type:"run", value:8000} },
-
-{ key:"rocket21", label:"Teddy Rocket", file:"rocket21.png", unlock:{type:"shop", value:75} },
-
-{ key:"rocket22", label:"Egg Rocket", file:"rocket22.png", unlock:{type:"distance", value:200000} },
-
-{ key:"rocket23", label:"Ovni", file:"rocket23.png", unlock:{type:"run", value:9000} },
-
-{ key:"rocket24", label:"watermelon Rocket", file:"rocket24.png", unlock:{type:"shop", value:100} },
-
-{ key:"rocket25", label:"Pizza Rocket", file:"rocket25.png", unlock:{type:"distance", value:300000} },
-
-{ key:"rocket26", label:"Mythic Rocket", file:"rocket26.png", unlock:{type:"shop", value:2500} },
-
-{ key:"rocket27", label:"Eiffel Tower Rocket", file:"rocket27.png", unlock:{type:"shop", value:10000} }
-];
 
 
   
-  function getSavedUnlockedRockets() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
-      const parsed = raw ? JSON.parse(raw) : ["classic"];
-      return Array.isArray(parsed) && parsed.length ? parsed : ["classic"];
-    } catch {
-      return ["classic"];
-    }
-  }
+  function getSavedUnlockedRockets() { return ["classic"]; }
+  function saveUnlockedRockets() {}
+  function getSelectedRocketKey() { return "classic"; }
+  function setSelectedRocketKey() {}
 
-  function saveUnlockedRockets(list) {
-    localStorage.setItem(STORAGE_KEYS.UNLOCKED_ROCKETS, JSON.stringify(list));
-  }
+  let selectedRocketKey = "classic";
+
+  /* -------------------- Assets -------------------- */
+  const rocketImages = {};
+  const classicImg = new Image();
+  classicImg.src = "rocket2.png";
+  rocketImages["classic"] = classicImg;
+
 
   function getTotalDistance() {
     return parseInt(localStorage.getItem(STORAGE_KEYS.TOTAL_DISTANCE) || "0", 10);
@@ -439,54 +288,6 @@ function getTotalSpecial() {
 function setTotalSpecial(v) {
   localStorage.setItem(STORAGE_KEYS.TOTAL_SPECIAL, v);
 }
-
-  function getSelectedRocketKey() {
-    return localStorage.getItem(STORAGE_KEYS.SELECTED_ROCKET) || "classic";
-  }
-
-  function setSelectedRocketKey(key) {
-    localStorage.setItem(STORAGE_KEYS.SELECTED_ROCKET, key);
-  }
-
-  let unlockedRocketKeys = getSavedUnlockedRockets();
-  let selectedRocketKey = getSelectedRocketKey();
-
-  let rocketScrollIndex = 0
-  const rocketSpacing = 220;
-
-  if (!unlockedRocketKeys.includes("classic")) {
-    unlockedRocketKeys.unshift("classic");
-    saveUnlockedRockets(unlockedRocketKeys);
-  }
-
-  if (!unlockedRocketKeys.includes(selectedRocketKey)) {
-    selectedRocketKey = "classic";
-    setSelectedRocketKey(selectedRocketKey);
-  }
-
-  /* -------------------- Assets -------------------- */
-  const rocketImages = {};
-
-  rocketDefinitions.forEach(rocket => {
-
-  const img = new Image();
-
-  img.onload = () => {
-    drawMenuRocket();
-  };
-
-  img.src = rocket.file;
-
-  img.onerror = () => {
-    if (rocket.file !== "rocket2.png") {
-      img.src = "rocket2.png";
-    }
-  };
-
-  rocketImages[rocket.key] = img;
-
-});
-
 
   const meteoriteImages = [];
   const meteoriteImageSources = [
@@ -645,13 +446,11 @@ height = (canvas.height / dpr) / GAME_ZOOM;
   let nextGradeIndex = 1;
   let animationId = null;
   let particles = [];
-  let newlyUnlockedThisRun = [];
 
   let lastTime = 0;
 
   let starsCollectibles = [];
   let starScore = 0;
-  let bigStarScore = 0;
 
   let magnetActive = false;
   let magnetTimer = 0;
@@ -717,28 +516,9 @@ let nextLetterDistance = 500;
 
   let gamePaused = false;
 
-  let lastStarSpawn = 0;
-
-
- 
-
 let lastBonusType = null;
 
-function getRandomBonus() {
-  const bonuses = ["magnet", "shield", "x2", "meteor"];
-
-  let choice;
-  do {
-    choice = bonuses[Math.floor(Math.random() * bonuses.length)];
-  } while (choice === lastBonusType);
-
-  lastBonusType = choice;
-  return choice;
-}
-
 let meteorToStarRemaining = 0;
-
-  let missionCompleted = false;
 
   let totalMeteorToStar = parseInt(localStorage.getItem("totalMeteorToStar")) || 0;
 
@@ -747,8 +527,6 @@ let hitFlashTimer = 0;
   let tutorialActive = false;
 let tutorialTimer = 0;
 
-let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;  
-  
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
   const CONSTANT_SPEED = 14;
 
@@ -787,19 +565,6 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
   return currentGrade;
 }
 
-  function getTimeGrade(time) {
-  let grade = timeGrades[0].label;
-
-  for (let i = 0; i < timeGrades.length; i++) {
-    if (time >= timeGrades[i].threshold) {
-      grade = timeGrades[i].label;
-    } else {
-      break;
-    }
-  }
-
-  return grade;
-}
 
   function showMilestone(text) {
     milestoneMessage.textContent = text;
@@ -836,354 +601,72 @@ let bestTime = parseFloat(localStorage.getItem("bestTime")) || 0;
   }
 
  function getFlashColor() {
-
-  if (gameMode === "mission") {
-    return "#00ccff"; // ou rien si tu veux neutre
-  }
-
-  if (gameMode === "time") {
-    if (timeSurvived < 10) return "#00ccff";
-    if (timeSurvived < 20) return "#ffd700";
-    if (timeSurvived < 30) return "#ff00ff";
-    if (timeSurvived < 45) return "#00ffff";
-    if (timeSurvived < 60) return "#ff3300";
-
-    return "#ffffff";
-  }
-
-  // endless
   if (distance < 500) return "#00ccff";
   if (distance < 1000) return "#b366ff";
   if (distance < 1500) return "#ff6b4a";
   if (distance < 2000) return "#ffffff";
-
   if (distance < 2500) return "#00ffcc";
   if (distance < 3500) return "#ffd700";
   if (distance < 5000) return "#ff00ff";
-
   if (distance < 6500) return "#00ffff";
   if (distance < 8000) return "#ff3300";
   if (distance < 10000) return "#7df9ff";
-
   return "#ffffff";
 }
 
   function getSpaceColor() {
-
-  // ❌ MISSION = couleur fixe
-  if (gameMode === "mission") {
-    return "#001122";
-  }
-
-  // 🔵 TIME = couleur basée sur le temps
-  if (gameMode === "time") {
-    if (timeSurvived < 5) return "#001122";
-    if (timeSurvived < 10) return "#001a33";
-    if (timeSurvived < 20) return "#002244";
-    if (timeSurvived < 30) return "#000814";
-    if (timeSurvived < 45) return "#001f2f";
-    if (timeSurvived < 60) return "#000000";
-
-    // 🔥 MID GAME
-  if (timeSurvived < 90) return "#001a1a";   // turquoise sombre
-  if (timeSurvived < 120) return "#1a1a00";  // jaune sombre
-  if (timeSurvived < 180) return "#1a001a";  // violet sombre
-
-  // 🔥 HIGH SKILL
-  if (timeSurvived < 240) return "#002b36";  // bleu profond
-  if (timeSurvived < 300) return "#330000";  // rouge intense
-
-  // 🔥 GOD MODE
-  return "#000000";
-}
-  
-
-  // 🟢 ENDLESS (inchangé)
   if (distance < 500) return "#001122";
   if (distance < 1000) return "#1a0033";
   if (distance < 1500) return "#330000";
   if (distance < 2000) return "#000000";
-
   if (distance < 2500) return "#001a1a";
   if (distance < 3500) return "#1a1a00";
   if (distance < 5000) return "#1a001a";
-
   if (distance < 6500) return "#001f2f";
   if (distance < 8000) return "#2f0000";
   if (distance < 10000) return "#000814";
-
   return "#000000";
 }
 
  function getStarColor() {
-
-  if (gameMode === "mission") {
-    return "white";
-  }
-
-  if (gameMode === "time") {
-    if (timeSurvived < 10) return "#ffffff";
-    if (timeSurvived < 20) return "#00ccff";
-    if (timeSurvived < 30) return "#ffd700";
-    if (timeSurvived < 45) return "#ff00ff";
-    if (timeSurvived < 60) return "#00ffff";
-
-    return "#ffffff";
-  }
-
-  // endless
   if (distance < 500) return "white";
   if (distance < 1000) return "#d8c4ff";
   if (distance < 1500) return "#ffd0c4";
   if (distance < 2000) return "#dff7ff";
-
   if (distance < 2500) return "#00ffcc";
   if (distance < 3500) return "#fff4b3";
   if (distance < 5000) return "#ffb3ff";
-
   if (distance < 6500) return "#b3ffff";
   if (distance < 8000) return "#ff9999";
   if (distance < 10000) return "#7df9ff";
-
   return "#ffffff";
 }
   function updateObjectifDisplay() {
-    const bestScore = getBestScore();
     const totalDistance = getTotalDistance();
-    const totalStars = getTotalStars();
-const totalGalaxy = getTotalGalaxy();
-const totalSpecial = getTotalSpecial();
+    const bestScore = getBestScore();
 
-    const currencyDisplay = document.getElementById("currencyDisplay");
-if (currencyDisplay) {
-  currencyDisplay.innerHTML = `⭐ ${getTotalStars()} &nbsp;&nbsp; ☄️ ${getTotalDestroyed()}`;
-}
-
-const starsEl = document.getElementById("totalStarsDisplay");
-if (starsEl) {
-  starsEl.textContent = `Total stars: ${totalStars} ⭐`;
-}
-
-const galaxyEl = document.getElementById("totalGalaxyDisplay");
-if (galaxyEl) {
-  galaxyEl.textContent = `Galaxy completed: ${totalGalaxy}`;
-}
-
-const specialEl = document.getElementById("totalSpecialDisplay");
-if (specialEl) {
-  specialEl.textContent = `Special mission: ${totalSpecial} 🛰️`;
-}
-
-const distanceEl = document.getElementById("totalDistanceDisplay");
-if (distanceEl) {
-  distanceEl.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
-}
+    const distanceEl = document.getElementById("totalDistanceDisplay");
+    if (distanceEl) {
+      distanceEl.textContent = `💀 Total $BURN destroyed: ${formatNumber(totalDistance)}`;
+    }
 
     objectifItems.innerHTML = "";
 
-gradeObjectives.forEach(obj => {
-
-  const li = document.createElement("li");
-
-  const unlocked = bestScore >= obj.threshold;
-
-  li.className = "rocket-item";
-
-  if(unlocked){
-    li.classList.add("rocket-unlocked");
-  } else {
-    li.classList.add("rocket-locked");
+    gradeObjectives.forEach(obj => {
+      const li = document.createElement("li");
+      const unlocked = totalDistance >= obj.threshold;
+      li.className = "rocket-item";
+      li.classList.add(unlocked ? "rocket-unlocked" : "rocket-locked");
+      const status = unlocked
+        ? " — achieved ✅"
+        : ` — locked (${formatNumber(obj.threshold)} $BURN)`;
+      li.textContent = `${obj.label}${status}`;
+      objectifItems.appendChild(li);
+    });
   }
 
-  const status = unlocked ? " — unlocked" : ` — locked (${formatNumber(obj.threshold)} m)`;
+  function unlockRocketsIfNeeded() { return []; }
 
-  li.textContent = `${obj.label}${status}`;
-
-  objectifItems.appendChild(li);
-
-});
-
-// ⏱️ TITRE TIME ATTACK
-const titleTime = document.createElement("li");
-titleTime.textContent = "⏱️ TIME ATTACK";
-titleTime.style.fontWeight = "bold";
-titleTime.style.marginTop = "10px";
-titleTime.style.opacity = "0.7";
-
-objectifItems.appendChild(titleTime);
-    
-    // ⏱️ TIME ATTACK OBJECTIFS
-timeGrades.forEach(obj => {
-
-  const li = document.createElement("li");
-
-  const unlocked = bestTime >= obj.threshold;
-
-  li.className = "rocket-item";
-
-  if (unlocked) {
-    li.classList.add("rocket-unlocked");
-  } else {
-    li.classList.add("rocket-locked");
-  }
-
-  const status = unlocked
-    ? " — unlocked"
-    : ` — locked (${obj.threshold}s)`;
-
-  li.textContent = `⏱️ ${obj.label}${status}`;
-
-  objectifItems.appendChild(li);
-
-});
-
-    rocketItems.innerHTML = "";
-
-rocketDefinitions.forEach(rocket => {
-
-  const li = document.createElement("li");
-
-  const unlocked = unlockedRocketKeys.includes(rocket.key);
-
-  li.className = "rocket-item";
-  li.classList.add(unlocked ? "rocket-unlocked" : "rocket-locked");
-
-  const totalStars = getTotalStars();
-  const totalGalaxy = getTotalGalaxy();
-  const totalDestroyed = getTotalDestroyed();
-  const totalDistance = getTotalDistance();
-  const totalSpecial = getTotalSpecial();
-
-  let progressText = "";
-
-  switch(rocket.unlock.type){
-
-    case "distance":
-      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
-      break;
-
-    case "stars":
-      progressText = `${totalStars} / ${rocket.unlock.value} ⭐`;
-      break;
-
-    case "galaxy":
-  progressText = `Complete GALAXY`;
-  break;
-
-    case "destroy":
-      progressText = `${totalDestroyed} / ${rocket.unlock.value} 💥`;
-      break;
-
-    case "special":
-      progressText = `${totalSpecial} / ${rocket.unlock.value} 🛰️`;
-      break;
-
-      case "run":
-  progressText = `🚀 Reach ${formatNumber(rocket.unlock.value)} m in one run`;
-  break;
-  }
-
- const status = unlocked 
-  ? " — unlocked" 
-  : ` — ${progressText}`;
-
-li.innerHTML = `
-  <img src="${rocket.file}" class="rocket-icon">
-  <span>${rocket.label}${status}</span>
-`;
-
-  rocketItems.appendChild(li);
-
-});
-
-   
-
-// 🛒 SHOP ROCKETS
-const shopList = document.getElementById("shopRocketItems");
-
-if (shopList) {
-  shopList.innerHTML = "";
-
- shopRockets.forEach(r => {
-
-  const isOwned = unlockedRocketKeys.includes(r.id);
-
-  // ❌ si déjà acheté → on affiche rien
-  if (isOwned) return;
-
-  const li = document.createElement("li");
-
-  li.innerHTML = `
-    <img src="${r.file}" class="rocket-icon">
-    <span>${r.name} — ${r.priceStars}⭐ ${r.priceMeteors ? "+ " + r.priceMeteors + "☄️" : ""}</span>
-    <button class="buy-btn" onclick="acheterShopRocket('${r.id}')">Buy</button>
-  `;
-
-  shopList.appendChild(li);
-});
-}
-
-    
-  }
-
-
-
-  function unlockRocketsIfNeeded() {
-
-  const totalDistance = getTotalDistance();
-  const totalStars = getTotalStars();
-  const totalGalaxy = getTotalGalaxy();
-  const totalDestroyed = getTotalDestroyed();
-  const totalSpecial = getTotalSpecial();
-
-  const newUnlocks = [];
-
-  rocketDefinitions.forEach(rocket => {
-
-    if (unlockedRocketKeys.includes(rocket.key)) return;
-
-    let unlocked = false;
-
-    switch(rocket.unlock.type){
-
-      case "distance":
-        unlocked = totalDistance >= rocket.unlock.value;
-        break;
-
-      case "stars":
-        unlocked = totalStars >= rocket.unlock.value;
-        break;
-
-      case "galaxy":
-        unlocked = totalGalaxy >= rocket.unlock.value;
-        break;
-
-      case "destroy":
-        unlocked = totalDestroyed >= rocket.unlock.value;
-        break;
-
-      case "special":
-        unlocked = totalSpecial >= rocket.unlock.value;
-        break;
-
-        case "run":
-  unlocked = bestScore >= rocket.unlock.value;
-  break;
-    }
-
-    if (unlocked) {
-      unlockedRocketKeys.push(rocket.key);
-      newUnlocks.push(rocket);
-    }
-
-  });
-
-  if (newUnlocks.length) {
-    saveUnlockedRockets(unlockedRocketKeys);
-  }
-
-  return newUnlocks;
-}
 
   function checkSpecialMission() {
 
@@ -1233,17 +716,12 @@ if (shopList) {
   }
 
 function createStar(speed) {
-
-  const bigChance = Math.min(0.05 + timeSurvived * 0.002, 0.15);
-
-const isBig = gameMode === "time" && Math.random() < bigChance;
-
   starsCollectibles.push({
     x: width + 40,
     y: Math.random() * (height - 80) + 40,
     size: 20,
     speed: speed * 0.8,
-    big: isBig // 🔥 clé
+    big: false
   });
 }
   
@@ -1576,47 +1054,6 @@ function drawX2(b) {
   
 
 
- window.acheterShopRocket = function(id) {
-
-  const r = shopRockets.find(x => x.id === id);
-  if (!r) return;
-
-  if (r.owned) {
-    showSuccessBanner("Already owned 🚀");
-    return;
-  }
-
-  if (getTotalStars() < r.priceStars || getTotalDestroyed() < r.priceMeteors) {
-    showSuccessBanner("Not enough resources ❌");
-    return;
-  }
-
-  // 💸 paiement
-  setTotalStars(getTotalStars() - r.priceStars);
-  setTotalDestroyed(getTotalDestroyed() - r.priceMeteors);
-
-  // ✅ DEVient owned
-  r.owned = true;
-
-  // 🔥 IMPORTANT → unlock dans le vrai système
-  if (!unlockedRocketKeys.includes(r.id)) {
-    unlockedRocketKeys.push(r.id);
-    saveUnlockedRockets(unlockedRocketKeys);
-  }
-
-  // 🚀 AUTO EQUIP
-  selectedRocketKey = r.id;
-  setSelectedRocketKey(r.id);
-
-  // 🔊 SON
-  buySound.currentTime = 0;
-  buySound.play().catch(()=>{});
-
-  updateObjectifDisplay();
-  showSuccessBanner("🚀 Rocket purchased!");
-};
-
-  
 
   /* -------------------- Scoreboard -------------------- */
 function afficherTableauScore(score) {
@@ -1624,128 +1061,93 @@ function afficherTableauScore(score) {
   const runScore = Math.floor(score);
   let bestScore = getBestScore();
 
-if (gameMode === "endless") {
   bestScore = Math.max(runScore, bestScore);
   setBestScore(bestScore);
-}
 
   let newTotal = getTotalDistance();
+  newTotal += runScore;
+  setTotalDistance(newTotal);
 
-  // 🟢 ENDLESS → cumul distance
-  if (gameMode === "endless") {
-    newTotal += runScore;
-    setTotalDistance(newTotal);
-  }
+  const totalStars = getTotalStars() + starScore;
+  setTotalStars(totalStars);
 
-  // 🔵 TIME → best time
-  if (gameMode === "time") {
-    if (timeSurvived > bestTime) {
-      bestTime = timeSurvived;
-      localStorage.setItem("bestTime", bestTime);
-    }
-  }
+  const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
+  setTotalGalaxy(totalGalaxy);
 
-  // ⭐ stars
-  if (gameMode === "endless" || gameMode === "mission") {
-    const totalStars = getTotalStars() + starScore;
-    setTotalStars(totalStars);
-  }
+  const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
+  setTotalDestroyed(totalDestroyed);
 
-  const totalBigStars = getTotalBigStars() + bigStarScore;
-  setTotalBigStars(totalBigStars);
-
-  // 🔤 galaxy + destruction
-  if (gameMode !== "time") {
-    const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
-    setTotalGalaxy(totalGalaxy);
-
-    const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
-    setTotalDestroyed(totalDestroyed);
-  }
-
-  // 🔄 UI secondaires (si présents)
-  const starsRunEl = document.getElementById("starsRun");
-  if (starsRunEl) starsRunEl.textContent = starScore;
-
-  const starsTotalEl = document.getElementById("starsTotal");
-  if (starsTotalEl) starsTotalEl.textContent = getTotalStars();
-
-  const galaxyRunEl = document.getElementById("galaxyRun");
-  if (galaxyRunEl) galaxyRunEl.textContent = galaxyCompletedThisRun;
-
-  const galaxyTotalEl = document.getElementById("galaxyTotal");
-  if (galaxyTotalEl) galaxyTotalEl.textContent = getTotalGalaxy();
-
-  const specialTotalEl = document.getElementById("specialTotal");
-  if (specialTotalEl) specialTotalEl.textContent = getTotalSpecial();
-
-  const totalDistance = getTotalDistance();
-  newlyUnlockedThisRun = unlockRocketsIfNeeded(totalDistance);
-
-  // 🎯 LABELS (HTML)
+  // 🎯 LABELS — $BURN branding
   const label1 = document.getElementById("label1");
   const label2 = document.getElementById("label2");
   const label3 = document.getElementById("label3");
   const label4 = document.getElementById("label4");
 
-  // 🟢 ENDLESS
-  if (gameMode === "endless") {
+  if (label1) label1.textContent = "🔥 $BURN this run:";
+  if (label2) label2.textContent = "🏆 Best run:";
+  if (label3) label3.textContent = "💀 Total $BURN destroyed:";
+  if (label4) label4.textContent = "🎖 Rank:";
 
-    label1.textContent = "Distance:";
-    label2.textContent = "Best:";
-    label3.textContent = "Total Distance:";
-    label4.textContent = "Grade:";
-
-    currentScoreSpan.textContent = formatNumber(Math.floor(distance)) + " m";
-bestScoreSpan.textContent = formatNumber(bestScore) + " m";
-totalScoreSpan.textContent = formatNumber(getTotalDistance()) + " m";
-    gradeSpan.textContent = getGrade(distance);
-
-    label3.parentElement.style.display = "block";
-  }
-
-  // 🟡 MISSION
-  if (gameMode === "mission") {
-
-    label1.textContent = "⭐ Stars:";
-    label2.textContent = "☄️ Meteors:";
-    label3.textContent = "⭐ Total Stars:";
-    label4.textContent = "☄️ Total Meteors:";
-
-    currentScoreSpan.textContent = starScore;
-    bestScoreSpan.textContent = meteorDestroyed;
-    totalScoreSpan.textContent = getTotalStars();
-    gradeSpan.textContent = getTotalDestroyed();
-
-    label3.parentElement.style.display = "block";
-  }
-
-  // 🔵 TIME ATTACK
-  if (gameMode === "time") {
-
-    label1.textContent = "⏱ Time:";
-    label2.textContent = "🏆 Best Time:";
-    label3.textContent = "";
-    label4.textContent = "🎖 Grade:";
-
-    currentScoreSpan.textContent = timeSurvived.toFixed(1) + " s";
-    bestScoreSpan.textContent = bestTime.toFixed(1) + " s";
-    totalScoreSpan.textContent = "";
-    gradeSpan.textContent = getTimeGrade(timeSurvived);
-
-    // cacher ligne inutile
-    label3.parentElement.style.display = "none";
-  }
+  currentScoreSpan.textContent = formatNumber(runScore) + " $BURN";
+  bestScoreSpan.textContent = formatNumber(bestScore) + " $BURN";
+  totalScoreSpan.textContent = formatNumber(getTotalDistance()) + " $BURN";
+  gradeSpan.textContent = getGrade(distance);
 
   updateObjectifDisplay();
   scoreBoard.style.display = "block";
 
-  // 🚀 unlock visuel
-  if (newlyUnlockedThisRun.length) {
-    const lastUnlocked = newlyUnlockedThisRun[newlyUnlockedThisRun.length - 1];
+  // 🔥 BURN DASHBOARD
+  afficherBurnDashboard(runScore);
+}
+
+/* -------------------- Burn Dashboard -------------------- */
+function afficherBurnDashboard(sessionBurned) {
+  const TOTAL_SUPPLY = 1_000_000_000;
+
+  const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+  const newTotal = prevTotal + sessionBurned;
+  localStorage.setItem("totalBurnedTokens", newTotal);
+
+  const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+
+  const sessionEl = document.getElementById("burnSessionValue");
+  const burnBarEl = document.getElementById("burnBar");
+  const burnTotalEl = document.getElementById("burnTotalBurned");
+  const burnShareBtn = document.getElementById("burnShareBtn");
+  const burnNowBtn = document.getElementById("burnNowBtn");
+  const burnTxStatus = document.getElementById("burnTxStatus");
+
+  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionBurned) + ' <span class="burnUnit">$BURN</span>';
+  if (burnTotalEl) burnTotalEl.textContent = formatNumber(newTotal);
+
+  if (burnBarEl) {
+    burnBarEl.style.width = "0%";
     setTimeout(() => {
-      showSuccessBanner(`🚀 New rocket unlocked: ${lastUnlocked.label}`);
-    }, 250);
+      burnBarEl.style.width = burnPercent.toFixed(4) + "%";
+    }, 300);
+  }
+
+  // Reset burn now button state
+  if (burnNowBtn) {
+    burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
+    burnNowBtn.disabled = false;
+    burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
+  }
+  if (burnTxStatus) {
+    burnTxStatus.style.display = "none";
+    burnTxStatus.textContent = "";
+  }
+
+  // Notify wallet module of session burn amount
+  if (window.setLastSessionBurn) {
+    window.setLastSessionBurn(sessionBurned);
+  }
+
+  if (burnShareBtn) {
+    burnShareBtn.onclick = () => {
+      const text = `🔥 I just destroyed ${formatNumber(sessionBurned)} $BURN tokens in one run!\n\nEvery meter = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+    };
   }
 }
 
@@ -1766,10 +1168,6 @@ totalScoreSpan.textContent = formatNumber(getTotalDistance()) + " m";
 gameOver = false;
 isDying = false;
 particles = [];
-timeSurvived = 0;
-timeLeft = 60;
-
-   
 
     if (isMobile) {
   player.gravityDown = 1.9;
@@ -1787,18 +1185,15 @@ timeLeft = 60;
     particles = [];
     starsCollectibles = [];
     starScore = 0;
-    bigStarScore = 0;
     magnets = [];
     magnetActive = false;
     frameCount = 0;
     flamePulse = 0;
     gameOver = false;
     distance = 0;
-   timeLeft = 60;
-nextBonusDistance = 250;
+    nextBonusDistance = 250;
     progressBar.style.width = "5%";
     startTime = performance.now();
-    newlyUnlockedThisRun = [];
     lastTime = performance.now();
     player.y = height / 2;
     player.velocityY = 0;
@@ -1815,121 +1210,73 @@ nextBonusDistance = 250;
     objectifsBtn.style.display = "none";
     objectifList.style.display = "none";
     scoreBoard.style.display = "none";
+    const burnDash = document.getElementById("burnDashboard");
+    if (burnDash) burnDash.style.display = "none";
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    if (gameMode === "mission") {
-  progressBar.parentElement.style.display = "none";
-  progressLabel.style.display = "none";
-} else {
-  progressBar.parentElement.style.display = "block";
-  progressLabel.style.display = "block";
-}
+    progressBar.parentElement.style.display = "none";
+    progressLabel.style.display = "none";
     lastSpecialSpawn = 0;
-   
-timeSurvived = 0;
-    
     isDying = false;
 
     nextMagnetDistance = 300;
-nextShieldDistance = 600;
-nextX2Distance = 900;
-nextMeteorBonusDistance = 1200;
-nextLetterDistance = 500;
-
+    nextShieldDistance = 600;
+    nextX2Distance = 900;
+    nextMeteorBonusDistance = 1200;
+    nextLetterDistance = 500;
     nextBonusDistance = 250;
+    hitFlashTimer = 0;
 
-    missionCompleted = false;
-  
-hitFlashTimer = 0;
-    
-    
- // 🛡️ SHIELD RESET
-shields = [];
-shieldActive = false;
-shieldTimer = 0;
+    shields = [];
+    shieldActive = false;
+    shieldTimer = 0;
 
-// 🌟 METEOR → STAR RESET
-meteorToStarBonuses = [];
-meteorToStarActive = false;
-meteorToStarTimer = 0;
+    meteorToStarBonuses = [];
+    meteorToStarActive = false;
+    meteorToStarTimer = 0;
 
     x2s = [];
-    
-  
-  specialDestroyedThisRun = {
-  ISS: false,
-  Starman: false,
-  Soyouz: false,
-  Ovni: false,
-    astro: false
-};
- }
+
+    specialDestroyedThisRun = {
+      ISS: false,
+      Starman: false,
+      Soyouz: false,
+      Ovni: false,
+      astro: false
+    };
+  }
   
   
 
   /* -------------------- Buttons -------------------- */
 tutorialBtn.onclick = () => {
-
   tutorialModal.style.display = "none";
 
-  // 🎵 lancer musique ici (AU BON MOMENT)
-if (music && musicEnabled) {
-  music.currentTime = 0;
-  music.play().catch(() => {});
-}
+  if (music && musicEnabled) {
+    music.currentTime = 0;
+    music.play().catch(() => {});
+  }
 
-  // ✅ marquer comme fait ICI (au bon moment)
   setTutorialDone(gameMode);
-
-  // ✅ afficher le jeu correctement
-  modeSelect.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
 
   wordDisplay.style.display = "block";
   distanceDisplay.style.display = "block";
-
   document.getElementById("topHUD").style.display = "flex";
+  document.getElementById("stats").style.display = "none";
+  progressBar.parentElement.style.display = "flex";
+  progressLabel.style.display = "block";
 
-  if (focusMode || gameMode === "time") {
-    document.getElementById("stats").style.display = "none";
-  } else {
-    document.getElementById("stats").style.display = "block";
-  }
-
-  // 🚀 lancer le jeu
   animationId = requestAnimationFrame(gameLoop);
 };
   
 playButton.onclick = () => {
   playClick();
-
-  // 🔥 au lieu de lancer le jeu → écran choix mode
-  menu.style.display = "none";
-  modeSelect.style.display = "block";
-};
-
-endlessModeBtn.onclick = () => {
-  playClick();
   gameMode = "endless";
   focusMode = true;
-  startGame();
-};
-
-missionModeBtn.onclick = () => {
-  playClick();
-  gameMode = "mission";
-  focusMode = false; // ✅ AJOUT
-  missionTarget = 30;
-  startGame();
-};
-
-timeModeBtn.onclick = () => {
-  playClick();
-  gameMode = "time";
-  focusMode = false; // ✅ AJOUT
-  timeLeft = 60;
+  menu.style.display = "none";
   startGame();
 };
 
@@ -1937,16 +1284,16 @@ timeModeBtn.onclick = () => {
     playClick();
 
     if (music && musicEnabled) {
-  music.currentTime = 0;
-  music.play().catch(() => {});
-}
+      music.currentTime = 0;
+      music.play().catch(() => {});
+    }
 
     resetGame();
 
-// ✅ remettre HUD
-  document.getElementById("topHUD").style.display = "flex";
-    
+    document.getElementById("topHUD").style.display = "flex";
     wordDisplay.style.display = "block";
+    progressBar.parentElement.style.display = "flex";
+    progressLabel.style.display = "block";
     animationId = requestAnimationFrame(gameLoop);
   };
 
@@ -1963,15 +1310,12 @@ timeModeBtn.onclick = () => {
 
   shareBtn.onclick = () => {
     playClick();
-    const text = `J'ai fait ${Math.floor(distance)} m dans AstroLab Rush ! Peux-tu faire mieux ? 🚀🎮`;
+    const burned = Math.floor(distance);
+    const text = `🔥 I just destroyed ${burned.toLocaleString()} $BURN tokens in one run on Astro-Burn!\n\nEvery meter = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
     const url = window.location.href;
 
     if (navigator.share) {
-      navigator.share({
-        title: "AstroLab Rush - Mon score",
-        text,
-        url
-      }).catch(() => {});
+      navigator.share({ title: "Astro-Burn", text, url }).catch(() => {});
     } else {
       window.open(
         `https://twitter.com/intent/tweet?text=${encodeURIComponent(text + " " + url)}`,
@@ -2001,6 +1345,8 @@ timeModeBtn.onclick = () => {
   shareBtn.style.display = "none";
   objectifsBtn.style.display = "none";
   backToMenuBtn.style.display = "none";
+  const burnDashBack = document.getElementById("burnDashboard");
+  if (burnDashBack) burnDashBack.style.display = "none";
 
     document.getElementById("topHUD").style.display = "none"; // ✅ AJOUT ICI
 
@@ -2016,33 +1362,25 @@ timeModeBtn.onclick = () => {
   progressBar.parentElement.style.display = "none";
 progressLabel.style.display = "none";  
 
-  drawMenuRocket();
-
 };
 
  function startGame() {
 
   resetGame();
 
- 
-
   // 🎓 TUTORIAL
   if (!isTutorialDone(gameMode)) {
-  showTutorial(gameMode);
-  
-  return;
-}
+    showTutorial(gameMode);
+    return;
+  }
 
-    if (music && musicEnabled) {
+  if (music && musicEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
 
   // 🚀 LANCEMENT
   animationId = requestAnimationFrame(gameLoop);
-
-  // ✅ 👉 CE BLOC DOIT ÊTRE ICI
-  modeSelect.style.display = "none";
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
@@ -2051,20 +1389,17 @@ progressLabel.style.display = "none";
   distanceDisplay.style.display = "block";
 
   document.getElementById("topHUD").style.display = "flex";
+  document.getElementById("stats").style.display = "none";
 
-  if (focusMode || gameMode === "time") {
-    document.getElementById("stats").style.display = "none";
-  } else {
-    document.getElementById("stats").style.display = "block";
-  }
+  // 🔥 barre de progression
+  progressBar.parentElement.style.display = "flex";
+  progressLabel.style.display = "block";
 }
 
   /* -------------------- Start Screen -------------------- */
   menu.style.display = "block";
   distanceDisplay.style.display = "none";
   updateObjectifDisplay();
-
-  drawMenuRocket();
 
   /* -------------------- Main Loop -------------------- */
 
@@ -2105,17 +1440,6 @@ const GAME_SETTINGS = {
 
   const now = performance.now();
 
-  // time mode
-  if (gameMode === "time" && !gameOver && !isDying) {
-    timeSurvived += dt / 60;
-    timeLeft -= (dt / 60) * 1.5;
-
-if (timeLeft < 20) {
-  timeLeft += (dt / 60) * 0.5;
-}
-    timeLeft = Math.max(0, Math.min(timeLeft, 60));
-  }
-
   // tutorial timer
   if (tutorialActive) {
     tutorialTimer -= 16;
@@ -2135,15 +1459,6 @@ if (hitFlashTimer > 0) {
   ctx.fillRect(0, 0, width, height);
   ctx.restore();
 }
-
-  // red warning in time mode
-  if (gameMode === "time" && timeLeft < 10) {
-    ctx.save();
-    ctx.globalAlpha = 0.15;
-    ctx.fillStyle = "red";
-    ctx.fillRect(0, 0, width, height);
-    ctx.restore();
-  }
 
   // death phase
   if (isDying) {
@@ -2191,7 +1506,7 @@ if (hitFlashTimer > 0) {
   }
 
   // speed settings
-  const settings = GAME_SETTINGS[gameMode][isMobile ? "mobile" : "desktop"];
+  const settings = GAME_SETTINGS["endless"][isMobile ? "mobile" : "desktop"];
   const effectiveDistance = Math.min(distance, settings.maxDist);
   const level = Math.floor(effectiveDistance / settings.step);
   const speedFactor = isMobile ? 0.7 : 0.85;
@@ -2203,7 +1518,6 @@ if (hitFlashTimer > 0) {
   const maxMeteorites = isMobile ? 5 : 14;
   const maxStars = isMobile ? 5 : 14;
   const maxBonuses = isMobile ? 2 : 5;
-  const particleLimit = isMobile ? 1 : 6;
 
   // meteor spawn
   frameCount += dt;
@@ -2223,97 +1537,18 @@ if (hitFlashTimer > 0) {
     lastSpecialSpawn = now;
   }
 
-  // stars / bonuses / letters spawn
+  // stars spawn
   if (!focusMode && !gameOver && starsCollectibles.length < maxStars) {
-    let starRate = 0.02;
-
-    if (gameMode === "mission") {
-      starRate = 0.035;
+    if (Math.random() < 0.02) {
+      createStar(finalSpeed);
     }
+  }
 
-    if (gameMode === "time") {
-      starRate = 0.15;
-    }
-
-    if (gameMode === "time") {
-      if (now - lastStarSpawn > (isMobile ? 1400 : 1200)) {
-        createStar(finalSpeed);
-        lastStarSpawn = now;
-      }
-    } else {
-      if (starsCollectibles.length < maxStars) {
-        if (Math.random() < starRate) {
-          createStar(finalSpeed);
-        }
-      }
-    }
-
-    if (!gameOver && !isDying && !focusMode) {
-      const totalBonuses =
-        magnets.length +
-        shields.length +
-        x2s.length +
-        meteorToStarBonuses.length;
-
-      if (totalBonuses < maxBonuses) {
-        // limite seulement, le vrai spawn bonus reste en dessous
-      }
-    }
-
-    if (gameMode === "mission") {
-      if (distance > nextBonusDistance) {
-        const totalBonuses =
-          magnets.length +
-          shields.length +
-          x2s.length +
-          meteorToStarBonuses.length;
-
-        if (totalBonuses < maxBonuses) {
-          const type = getRandomBonus();
-
-          switch (type) {
-            case "magnet":
-              if (!magnetActive && magnets.length === 0) {
-                createMagnet(finalSpeed);
-              }
-              break;
-
-            case "shield":
-              if (!shieldActive && shields.length === 0 && !meteorToStarActive) {
-                createShield(finalSpeed);
-              }
-              break;
-
-            case "x2":
-              if (x2s.length === 0) {
-                createX2(finalSpeed);
-              }
-              break;
-
-            case "meteor":
-              if (!meteorToStarActive && !shieldActive && meteorToStarBonuses.length === 0) {
-                createMeteorToStarBonus(finalSpeed);
-              }
-              break;
-          }
-        }
-
-        nextBonusDistance = distance + getNextGap(250, 250);
-      }
-    }
-
-    // letters
-    if (
-      !gameOver &&
-      !isDying &&
-      letters.length === 0 &&
-      !focusMode &&
-      gameMode !== "time"
-    ) {
-      if (distance > nextLetterDistance) {
-        createLetter(finalSpeed);
-        nextLetterDistance = distance + getNextGap(400, 900);
-      }
+  // letters
+  if (!gameOver && !isDying && letters.length === 0 && !focusMode) {
+    if (distance > nextLetterDistance) {
+      createLetter(finalSpeed);
+      nextLetterDistance = distance + getNextGap(400, 900);
     }
   }
 
@@ -2350,9 +1585,7 @@ if (hitFlashTimer > 0) {
 
     // shield collision
     else if (shieldActive && distSq < hitRadius * hitRadius) {
-      if (particles.length < particleLimit) {
-        createExplosion(b.x, b.y);
-      }
+      createExplosion(b.x, b.y);
       meteorDestroyed++;
       bubbles.splice(i, 1);
       continue;
@@ -2360,14 +1593,6 @@ if (hitFlashTimer > 0) {
 
     // normal collision
     else if (distSq < hitRadius * hitRadius) {
-      if (gameMode === "time") {
-        timeLeft -= 10;
-        playSound(hitSound);
-        hitFlashTimer = 150;
-        bubbles.splice(i, 1);
-        continue;
-      }
-
       isDying = true;
       createExplosion(player.x, player.y);
       pressing = false;
@@ -2405,22 +1630,12 @@ if (hitFlashTimer > 0) {
       if (src.includes("Ovni")) specialDestroyedThisRun.Ovni = true;
       if (src.includes("astro")) specialDestroyedThisRun.astro = true;
 
-      if (particles.length < particleLimit) {
-        createExplosion(o.x, o.y);
-      }
+      createExplosion(o.x, o.y);
       specialObstacles.splice(i, 1);
       continue;
     }
 
     if (!shieldActive && distSq < normalHitRadius * normalHitRadius) {
-      if (gameMode === "time") {
-        timeLeft -= 20;
-        playSound(hitSound);
-        hitFlashTimer = 150;
-        specialObstacles.splice(i, 1);
-        continue;
-      }
-
       isDying = true;
       createExplosion(player.x, player.y);
       pressing = false;
@@ -2459,21 +1674,8 @@ if (hitFlashTimer > 0) {
     const hitRadius = player.radius + s.size;
 
     if (distSq < hitRadius * hitRadius) {
-      starScore += s.big ? 5 : 1;
-
-      if (gameMode === "time") {
-        if (s.big) {
-          timeLeft += 10;
-          showSuccessBanner("⭐ +10s!");
-        } else {
-          timeLeft += 2.5;
-        }
-
-        timeLeft = Math.min(timeLeft, 60);
-      }
-
+      starScore += 1;
       playSound(starSound);
-
       starsCollectibles.splice(i, 1);
       continue;
     }
@@ -2632,24 +1834,11 @@ if (hitFlashTimer > 0) {
     ctx.restore();
   }
 
-  // time over
-  if (timeLeft <= 0 && !isDying && !gameOver) {
-    timeLeft = 0;
-    isDying = true;
-    createExplosion(player.x, player.y);
-  }
-
+  // time over — kept as safety but won't trigger in endless
   // player physics + HUD counters
   if (!gameOver && !isDying) {
-    if (gameMode === "endless") {
-      document.getElementById("starCount").textContent = starScore;
-      document.getElementById("destroyCount").textContent = meteorDestroyed;
-    }
-
-    if (gameMode === "mission") {
-      document.getElementById("starCount").textContent = starScore;
-      document.getElementById("destroyCount").textContent = meteorDestroyed;
-    }
+    document.getElementById("starCount").textContent = starScore;
+    document.getElementById("destroyCount").textContent = meteorDestroyed;
 
     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
     player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
@@ -2667,16 +1856,8 @@ if (hitFlashTimer > 0) {
     distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
   }
 
-  // display by mode
-  if (gameMode === "time") {
-    const grade = getTimeGrade(timeSurvived);
-    distanceDisplay.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${grade}`;
-  } else if (gameMode === "mission") {
-    distanceDisplay.textContent = `⭐ ${starScore} / ${missionTarget}`;
-  } else {
-    distanceDisplay.textContent =
-      `Distance: ${formatNumber(Math.floor(distance))} m ⭐ ${starScore} 💥 ${meteorDestroyed}`;
-  }
+  // display distance as $BURN
+  distanceDisplay.textContent = `🔥 ${formatNumber(Math.floor(distance))} $BURN`;
 
   // galaxy word
   const displayWord = word.map((letter, index) => {
@@ -2687,15 +1868,14 @@ if (hitFlashTimer > 0) {
 
   const progressText = document.getElementById("progressText");
 
-  // endless progress
-  if (gameMode === "endless") {
+  // progress bar — rank based
+  {
     let currentThreshold = 0;
     let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
 
     for (let i = 0; i < gradeObjectives.length; i++) {
       if (distance >= gradeObjectives[i].threshold) {
         currentThreshold = gradeObjectives[i].threshold;
-
         if (i + 1 < gradeObjectives.length) {
           nextThreshold = gradeObjectives[i + 1].threshold;
         }
@@ -2710,55 +1890,12 @@ if (hitFlashTimer > 0) {
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
 
     const remaining = Math.floor(nextThreshold - distance);
-    progressLabel.textContent = `Next Grade : ${remaining} m`;
-
-    progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
+    progressLabel.textContent = `Next Rank : ${remaining} $BURN`;
+    if (progressText) progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
   }
 
-  // time / mission progress
-  else {
-    const percent = (timeLeft / 60) * 100;
-    progressBar.style.width = percent + "%";
-
-    if (percent > 60) {
-      progressBar.style.background = "#00ccff";
-    } else if (percent > 30) {
-      progressBar.style.background = "#ffd700";
-    } else {
-      progressBar.style.background = "#ff3b3b";
-    }
-
-    if (percent <= 30) {
-      progressBar.style.boxShadow = "0 0 10px red";
-    } else if (percent <= 60) {
-      progressBar.style.boxShadow = "0 0 10px yellow";
-    } else {
-      progressBar.style.boxShadow = "none";
-    }
-
-    const currentTimeGrade = getTimeGrade(timeSurvived);
-
-    let nextTimeThreshold = null;
-    for (let i = 0; i < timeGrades.length; i++) {
-      if (timeSurvived < timeGrades[i].threshold) {
-        nextTimeThreshold = timeGrades[i].threshold;
-        break;
-      }
-    }
-
-    progressLabel.textContent = `⏱️ ${timeSurvived.toFixed(1)}s — ${currentTimeGrade}`;
-
-    if (nextTimeThreshold !== null) {
-      const remaining = nextTimeThreshold - timeSurvived;
-      progressText.textContent = `Next Grade : ${remaining.toFixed(1)}s`;
-    } else {
-      progressText.textContent = `${currentTimeGrade} MAX`;
-    }
-  }
-
-  // visual bonus / milestone
+  // rank milestone flash
   if (
-    gameMode === "endless" &&
     nextGradeIndex < gradeObjectives.length &&
     distance >= gradeObjectives[nextGradeIndex].threshold
   ) {
@@ -2771,24 +1908,6 @@ if (hitFlashTimer > 0) {
 
     showMilestone(grade.label);
     flashScreen(getFlashColor());
-
-    nextGradeIndex++;
-  }
-
-  if (
-    gameMode === "time" &&
-    nextGradeIndex < timeGrades.length &&
-    timeSurvived >= timeGrades[nextGradeIndex].threshold
-  ) {
-    const grade = timeGrades[nextGradeIndex];
-
-    distanceDisplay.classList.add("distancePulse");
-    setTimeout(() => {
-      distanceDisplay.classList.remove("distancePulse");
-    }, 400);
-
-    showMilestone(grade.label);
-    flashScreen("#00ccff");
 
     nextGradeIndex++;
   }
@@ -2951,22 +2070,7 @@ if (hitFlashTimer > 0) {
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.font = "22px Arial";
-
-    let text = "";
-
-    if (gameMode === "endless") {
-      text = "🚀 Hold to fly • Avoid meteorites";
-    }
-
-    if (gameMode === "mission") {
-      text = "⭐ Collect stars • Use bonuses";
-    }
-
-    if (gameMode === "time") {
-      text = "⏱️ Collect stars to gain time!";
-    }
-
-    ctx.fillText(text, width / 2, height / 2);
+    ctx.fillText("🔥 Hold to fly • Avoid meteorites", width / 2, height / 2);
     ctx.restore();
   }
 
@@ -3016,81 +2120,6 @@ if (hitFlashTimer > 0) {
 
     animateMenuStars();
   }
-  function drawMenuRocket(){
-
-  if(!menuRocketCanvas) return;
-
-  const size = menuRocketCanvas.clientWidth;
-
-  menuRocketCanvas.width = size;
-  menuRocketCanvas.height = 160;
-
-  menuRocketCtx.clearRect(0,0,size,160);
-
-  const rocket = rocketDefinitions[rocketScrollIndex];
-  const img = rocketImages[rocket.key];
-
-  const centerX = size/2;
-  const centerY = menuRocketCanvas.height/2;
-
-  const unlocked = unlockedRocketKeys.includes(rocket.key);
-
-  menuRocketCtx.save();
-
-  if(!unlocked){
-    menuRocketCtx.globalAlpha = 0.35;
-    menuRocketCtx.filter = "grayscale(100%)";
-  }
-
-  const rocketSize = isMobile ? 80 : 80;
-
-menuRocketCtx.drawImage(
-  img,
-  centerX - rocketSize / 2,
-  centerY - rocketSize / 2,
-  rocketSize,
-  rocketSize
-);
-
-  menuRocketCtx.restore();
-
-}
-
-
-  
-
-const arrowLeft = document.getElementById("arrowLeft");
-const arrowRight = document.getElementById("arrowRight");
-
-arrowLeft.onclick = () => {
-
-  rocketScrollIndex = Math.max(0, rocketScrollIndex - 1);
-
-  const rocket = rocketDefinitions[rocketScrollIndex];
-
-  if(unlockedRocketKeys.includes(rocket.key)){
-    selectedRocketKey = rocket.key;
-    setSelectedRocketKey(rocket.key);
-    showSuccessBanner(`🚀 ${rocket.label} selected`);
-  }
-
-  drawMenuRocket();
-};
-
-arrowRight.onclick = () => {
-
-  rocketScrollIndex = Math.min(rocketDefinitions.length - 1, rocketScrollIndex + 1);
-
-  const rocket = rocketDefinitions[rocketScrollIndex];
-
-  if(unlockedRocketKeys.includes(rocket.key)){
-    selectedRocketKey = rocket.key;
-    setSelectedRocketKey(rocket.key);
-    showSuccessBanner(`🚀 ${rocket.label} selected`);
-  }
-
-  drawMenuRocket();
-};
 
 settingsBtn.onclick = () => {
 
@@ -3129,35 +2158,127 @@ toggleMusicBtn.onclick = () => {
 };
 
  resetGameBtn.onclick = () => {
-
   playClick();
-
   const confirmReset = confirm("Reset all progress ?");
+  if (!confirmReset) return;
 
-  if(!confirmReset) return;
-
-  // 🔥 RESET COMPLET
-localStorage.removeItem(STORAGE_KEYS.BEST_SCORE);
-localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
-localStorage.removeItem(STORAGE_KEYS.SELECTED_ROCKET);
-localStorage.removeItem(STORAGE_KEYS.UNLOCKED_ROCKETS);
-localStorage.removeItem(STORAGE_KEYS.TOTAL_STARS);
-localStorage.removeItem(STORAGE_KEYS.TOTAL_GALAXY);
-localStorage.removeItem(STORAGE_KEYS.TOTAL_DESTROYED);
-localStorage.removeItem(STORAGE_KEYS.TOTAL_SPECIAL);
-
-// 🔥 MANQUANTS
-localStorage.removeItem("bestTime");
-localStorage.removeItem("totalBigStars");
-localStorage.removeItem("totalMeteorToStar");
-
-// 🔥 TUTORIELS
-localStorage.removeItem("tutorial_endless_done");
-localStorage.removeItem("tutorial_mission_done");
-localStorage.removeItem("tutorial_time_done");
+  localStorage.removeItem(STORAGE_KEYS.BEST_SCORE);
+  localStorage.removeItem(STORAGE_KEYS.TOTAL_DISTANCE);
+  localStorage.removeItem(STORAGE_KEYS.TOTAL_STARS);
+  localStorage.removeItem(STORAGE_KEYS.TOTAL_GALAXY);
+  localStorage.removeItem(STORAGE_KEYS.TOTAL_DESTROYED);
+  localStorage.removeItem("totalBurnedTokens");
+  localStorage.removeItem("tutorial_endless_done");
 
   location.reload();
+};
 
-}; 
-  
+})();
+
+/* ==================== SOLANA WALLET ==================== */
+(() => {
+  let walletPublicKey = null;
+  let lastSessionBurn = 0;
+
+  const connectBtn = document.getElementById("connectWalletBtn");
+  const walletStatus = document.getElementById("walletStatus");
+  const burnNowBtn = document.getElementById("burnNowBtn");
+  const burnTxStatus = document.getElementById("burnTxStatus");
+
+  // Expose session burn to wallet module
+  window.setLastSessionBurn = (amount) => {
+    lastSessionBurn = amount;
+    if (walletPublicKey && burnNowBtn) {
+      burnNowBtn.style.display = "inline-block";
+    }
+  };
+
+  // Connect wallet
+  if (connectBtn) {
+    connectBtn.onclick = async () => {
+      try {
+        const provider = window.solana;
+        if (!provider || !provider.isPhantom) {
+          alert("Phantom wallet not found!\n\nInstall it at phantom.app then switch to Devnet in settings.");
+          return;
+        }
+
+        const resp = await provider.connect();
+        walletPublicKey = resp.publicKey.toString();
+
+        connectBtn.textContent = "✅ " + walletPublicKey.slice(0, 4) + "..." + walletPublicKey.slice(-4);
+        connectBtn.style.background = "#1a9e1a";
+
+        if (walletStatus) {
+          walletStatus.textContent = "Connected on Devnet";
+          walletStatus.style.display = "block";
+        }
+
+      } catch (e) {
+        console.error("Wallet connection failed:", e);
+      }
+    };
+  }
+
+  // Burn on-chain
+  if (burnNowBtn) {
+    burnNowBtn.onclick = async () => {
+      if (!walletPublicKey) {
+        alert("Connect your Phantom wallet first!");
+        return;
+      }
+
+      if (lastSessionBurn <= 0) {
+        alert("No $BURN to send — play a run first!");
+        return;
+      }
+
+      try {
+        burnNowBtn.textContent = "⏳ Sending...";
+        burnNowBtn.disabled = true;
+        if (burnTxStatus) { burnTxStatus.style.display = "none"; }
+
+        const solanaWeb3 = window.solanaWeb3;
+        const connection = new solanaWeb3.Connection(
+          solanaWeb3.clusterApiUrl("devnet"),
+          "confirmed"
+        );
+
+        const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
+
+        // Burn address = system program (address nulle Solana)
+        // On envoie 0 lamports avec un memo du burn amount — simulation propre
+        const transaction = new solanaWeb3.Transaction().add(
+          solanaWeb3.SystemProgram.transfer({
+            fromPubkey,
+            toPubkey: new solanaWeb3.PublicKey("11111111111111111111111111111111"),
+            lamports: lastSessionBurn // 1 lamport par $BURN simulé
+          })
+        );
+
+        const { blockhash } = await connection.getLatestBlockhash();
+        transaction.recentBlockhash = blockhash;
+        transaction.feePayer = fromPubkey;
+
+        const signed = await window.solana.signAndSendTransaction(transaction);
+
+        if (burnTxStatus) {
+          burnTxStatus.style.display = "block";
+          burnTxStatus.innerHTML = `✅ ${lastSessionBurn} $BURN burned!<br><a href="https://explorer.solana.com/tx/${signed.signature}?cluster=devnet" target="_blank" style="color:#00ffcc;">View on Explorer ↗</a>`;
+        }
+
+        burnNowBtn.textContent = "✅ Burned!";
+        burnNowBtn.style.background = "#1a9e1a";
+
+      } catch (e) {
+        console.error("Burn failed:", e);
+        burnNowBtn.textContent = "❌ Failed — retry";
+        burnNowBtn.disabled = false;
+        if (burnTxStatus) {
+          burnTxStatus.style.display = "block";
+          burnTxStatus.textContent = "Error: " + (e.message || "unknown");
+        }
+      }
+    };
+  }
 })();

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>AstroLab Rush</title>
+  <title>Astro-Burn</title>
 
   <!-- 🔗 Lien vers le manifest -->
   <link rel="manifest" href="manifest.json" />
@@ -876,10 +876,170 @@ font-weight:bold;
   z-index: 9999;
 }  
 
-    * {
-  font-family: 'Fredoka', sans-serif;
+    * { font-family: 'Fredoka', sans-serif; }
+
+/* scoreBoard */
+#scoreBoard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fffbe6;
+  padding: 18px 20px;
+  border-radius: 20px;
+  border: 5px solid black;
+  text-align: center;
+  z-index: 17;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
+  display: none;
+  width: 340px;
+  max-width: 90vw;
+  max-height: 88vh;
+  overflow-y: auto;
 }
-  
+
+#scoreBoard h2 { margin: 0 0 10px 0; font-size: 24px; color: #444; }
+#scoreBoard p { margin: 6px 0; font-size: 18px; }
+
+/* burn dashboard */
+#burnDashboard {
+  margin-top: 14px;
+  background: linear-gradient(160deg, #0a0015, #1a0030);
+  border: 2px solid #ff4400;
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 18px rgba(255,80,0,0.4);
+}
+
+#burnSessionBlock {
+  background: rgba(255,80,0,0.12);
+  border: 1px solid #ff4400;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+#burnSessionLabel {
+  font-size: 10px;
+  color: #ff9966;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+#burnSessionValue {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff4400;
+  animation: burnPulse 1.5s ease-in-out infinite;
+}
+
+.burnUnit { font-size: 16px; color: #ff8844; }
+
+@keyframes burnPulse {
+  0%, 100% { text-shadow: 0 0 8px rgba(255,68,0,0.6); }
+  50% { text-shadow: 0 0 20px rgba(255,68,0,1); }
+}
+
+#burnTotalBlock { margin-bottom: 10px; }
+
+#burnTotalLabel {
+  font-size: 10px;
+  color: #aaa;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+#burnBarWrapper {
+  width: 100%;
+  height: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  border: 1px solid #ff4400;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+#burnBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #ff2200, #ff8800);
+  border-radius: 6px;
+  transition: width 1.2s ease;
+  box-shadow: 0 0 6px #ff4400;
+}
+
+#burnTotalValue { font-size: 11px; color: #cc6633; }
+
+#burnCTAText {
+  font-size: 11px;
+  color: #777;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+#burnShareBtn, #burnNowBtn {
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 black;
+  font-family: 'Fredoka', sans-serif;
+  text-transform: uppercase;
+  margin: 4px 2px;
+}
+
+#burnShareBtn { background: linear-gradient(to bottom, #ff5500, #cc2200); color: white; }
+#burnNowBtn { background: linear-gradient(to bottom, #9945FF, #6a1fc2); color: white; display: none; }
+#burnNowBtn:hover, #burnShareBtn:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
+
+#burnTxStatus {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #00ffcc;
+  display: none;
+  word-break: break-all;
+}
+
+/* game over buttons */
+#gameOverButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+#gameOverButtons button {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 3px solid black;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 black;
+  text-transform: uppercase;
+}
+
+#rejouer { background: #ff8800; color: black; }
+#objectifsBtn { background: #fff04f; color: black; }
+#shareScore { background: #00cfcf; color: black; }
+#backToMenu { background: #ffaa00; color: black; }
+#gameOverButtons button:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
+
+/* wallet */
+#connectWalletBtn { transition: opacity 0.2s; }
+#walletStatus { font-size: 13px; color: #9945FF; margin-top: 4px; }
+
   </style>
 </head>
 <body>
@@ -887,22 +1047,14 @@ font-weight:bold;
 
   
   <div id="menu">
-  <h1 id="gameTitle">AstroLab Rush</h1>
+  <h1 id="gameTitle">Astro-Burn 🔥</h1>
 
   <img id="menuImage" src="menu.png" alt="Image menu" />
 
- <div id="rocketSelector">
-
- <div id="arrowLeft">‹</div>
-
-  <canvas id="menuRocket"></canvas>
-
-  <div id="arrowRight">›</div>
-
-</div>
-
   <button id="playButton" class="menuBtn">Play</button>
-<button id="menuObjectivesBtn" class="menuBtn">Objectives</button>
+<button id="menuObjectivesBtn" class="menuBtn">🔥 $BURN Ranks</button>
+<button id="connectWalletBtn" class="menuBtn" style="background:#9945FF; color:white;">👻 Connect Wallet</button>
+<div id="walletStatus" style="color:#9945FF; font-size:14px; margin-top:6px; display:none;"></div>
 <button id="settingsBtn" class="menuBtn">Settings</button>
 
 </div>
@@ -917,19 +1069,6 @@ font-weight:bold;
     <button id="tutorialBtn">PLAY</button>
 
   </div>
-</div>
-
-  <!-- 🔥 MODE SELECT -->
-<div id="modeSelect" style="display:none;">
-  <h2 style="color:white;">Choose Mode</h2>
-
-  <button id="endlessModeBtn" class="menuBtn">ENDLESS</button>
-<button id="missionModeBtn" class="menuBtn">COLLECT</button>
-<button id="timeModeBtn" class="menuBtn">TIME ATTACK</button>
-
-  <p style="color:white; margin-top:10px;">
-    
-  </p>
 </div>
 
   <canvas id="game"></canvas>
@@ -965,46 +1104,58 @@ font-weight:bold;
 
   <!-- 🆕 Tableau de score -->
   <div id="scoreBoard">
- 
-  <h2>ScoreBoard</h2>
 
-  <p><strong id="label1">Current Distance:</strong> <span id="currentScore">0</span></p>
-  <p><strong id="label2">Best Score:</strong> <span id="bestScore">0</span></p>
-  <p><strong id="label3">Total Distance:</strong> <span id="totalScore">0</span></p>
+  <h2>🔥 ASTRO-BURN</h2>
 
-  <p><strong id="label4">Grade:</strong> <span id="grade">—</span></p>
+  <p><strong id="label1">🔥 $BURN this run:</strong> <span id="currentScore">0</span></p>
+  <p><strong id="label2">🏆 Best run:</strong> <span id="bestScore">0</span></p>
+  <p><strong id="label3">💀 Total destroyed:</strong> <span id="totalScore">0</span></p>
+  <p><strong id="label4">🎖 Rank:</strong> <span id="grade">—</span></p>
+
+  <!-- BURN DASHBOARD -->
+  <div id="burnDashboard">
+    <div id="burnSessionBlock">
+      <div id="burnSessionLabel">YOU BURNED THIS RUN</div>
+      <div id="burnSessionValue">0 <span class="burnUnit">$BURN</span></div>
+    </div>
+
+    <div id="burnTotalBlock">
+      <div id="burnTotalLabel">⚡ GLOBAL SUPPLY DESTROYED</div>
+      <div id="burnBarWrapper">
+        <div id="burnBar"></div>
+      </div>
+      <div id="burnTotalValue"><span id="burnTotalBurned">0</span> / 1,000,000,000 $BURN</div>
+    </div>
+
+    <div id="burnCTAText">Every meter = 1 $BURN destroyed forever</div>
+    <button id="burnShareBtn">🔥 Share my Burn on X</button>
+    <button id="burnNowBtn">👻 Burn on-chain (Devnet)</button>
+    <div id="burnTxStatus"></div>
+  </div>
+
+  <!-- BOUTONS GAME OVER -->
+  <div id="gameOverButtons">
+    <button id="rejouer">Replay</button>
+    <button id="objectifsBtn">Ranks</button>
+    <button id="shareScore">Share</button>
+    <button id="backToMenu">Menu</button>
+  </div>
+
 </div>
+  
+  <div id="success-banner"></div>
 
- 
 <div id="objectifList" style="display: none;">
   <div id="objectifPanel">
-    <h2>Objectives</h2>
-    <p id="totalDistanceDisplay">Total distance: 0 m</p>
-
-<p id="currencyDisplay">⭐ 0 &nbsp;&nbsp; ☄️ 0</p>
-    
-    <h3>Grades</h3>
+    <h2>🔥 $BURN Ranks</h2>
+    <p id="totalDistanceDisplay">Total $BURN destroyed: 0</p>
+    <h3>Ranks</h3>
     <ul id="objectifItems"></ul>
-
-    <h3>Rockets</h3>
-    <ul id="rocketItems"></ul>
-
-    <h3>Shop Rockets</h3>
-<ul id="shopRocketItems"></ul>
-
-    <button id="closeObjectifs">Fermer</button>
+    <button id="closeObjectifs">Close</button>
   </div>
 </div>
 
   <div id="gameOverText">GAME OVER</div>
-
-  <button id="rejouer">Replay</button>
-  <button id="objectifsBtn">Objectives</button>
-  <button id="shareScore">Share Score</button>
-
-  <button id="backToMenu">Menu</button>
-  
-  <div id="success-banner"></div>
   
   <audio id="gameMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
@@ -1031,6 +1182,7 @@ font-weight:bold;
 
   
   <script src="game.js"></script>
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
   <script>
     if ("serviceWorker" in navigator) {
