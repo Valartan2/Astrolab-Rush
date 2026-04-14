@@ -1038,16 +1038,12 @@ font-weight:bold;
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
   <script>
+    // Désactiver le Service Worker pour éviter les conflits avec les CDN externes
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").then(
-          function (registration) {
-            console.log("✅ Service Worker enregistré :", registration);
-          },
-          function (err) {
-            console.error("❌ Erreur d'enregistrement du Service Worker :", err);
-          }
-        );
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
       });
     }
   </script>
