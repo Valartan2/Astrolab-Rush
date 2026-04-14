@@ -2242,8 +2242,11 @@ toggleMusicBtn.onclick = () => {
         return;
       }
 
-      if (lastSessionBurn <= 0) {
-        alert("No $BURN to send — play a run first!");
+      // Lire le cumul total depuis localStorage
+      const cumulBurn = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+
+      if (cumulBurn <= 0) {
+        alert("No $BURN to send — play some runs first!");
         return;
       }
 
@@ -2260,25 +2263,28 @@ toggleMusicBtn.onclick = () => {
 
         const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
 
-        // Burn address = system program (address nulle Solana)
-        // On envoie 0 lamports avec un memo du burn amount — simulation propre
         const transaction = new solanaWeb3.Transaction().add(
           solanaWeb3.SystemProgram.transfer({
             fromPubkey,
             toPubkey: new solanaWeb3.PublicKey("1nc1nerator11111111111111111111111111111111"),
-            lamports: lastSessionBurn // 1 lamport par $BURN simulé
+            lamports: Math.max(1, cumulBurn)
           })
         );
 
-        const { blockhash } = await connection.getLatestBlockhash();
+        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
         transaction.recentBlockhash = blockhash;
         transaction.feePayer = fromPubkey;
 
-        const signed = await window.solana.signAndSendTransaction(transaction);
+        const signed = await window.solana.signTransaction(transaction);
+        const signature = await connection.sendRawTransaction(signed.serialize());
+        await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight });
+
+        // Reset cumul à 0 après burn réussi
+        localStorage.setItem("totalBurnedTokens", "0");
 
         if (burnTxStatus) {
           burnTxStatus.style.display = "block";
-          burnTxStatus.innerHTML = `✅ ${lastSessionBurn} $BURN burned!<br><a href="https://explorer.solana.com/tx/${signed.signature}?cluster=devnet" target="_blank" style="color:#00ffcc;">View on Explorer ↗</a>`;
+          burnTxStatus.innerHTML = `✅ ${cumulBurn.toLocaleString()} $BURN burned on-chain!<br><a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:#9945FF;">View on Explorer ↗</a>`;
         }
 
         burnNowBtn.textContent = "✅ Burned!";
