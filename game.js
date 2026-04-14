@@ -2281,6 +2281,7 @@ toggleMusicBtn.onclick = () => {
 
         // Reset cumul à 0 après burn réussi
         localStorage.setItem("totalBurnedTokens", "0");
+        localStorage.setItem("totalDistance", "0");
 
         if (burnTxStatus) {
           burnTxStatus.style.display = "block";
