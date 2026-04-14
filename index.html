@@ -1039,8 +1039,15 @@ font-weight:bold;
 
   <script>
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let r of registrations) r.unregister();
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").then(
+          function (registration) {
+            console.log("✅ Service Worker enregistré :", registration);
+          },
+          function (err) {
+            console.error("❌ Erreur d'enregistrement du Service Worker :", err);
+          }
+        );
       });
     }
   </script>

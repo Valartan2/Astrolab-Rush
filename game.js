@@ -1097,46 +1097,64 @@ function afficherTableauScore(score) {
   scoreBoard.style.display = "block";
 
   // 🔥 BURN DASHBOARD
-  {
-    const TOTAL_SUPPLY = 1_000_000_000;
-    const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
-    const newTotal = prevTotal + runScore;
-    localStorage.setItem("totalBurnedTokens", newTotal);
-    const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+  afficherBurnDashboard(runScore);
 
-    const sessionEl = document.getElementById("burnSessionValue");
-    const burnBarEl = document.getElementById("burnBar");
-    const burnTotalEl = document.getElementById("burnTotalBurned");
-    const burnShareBtn = document.getElementById("burnShareBtn");
-    const burnNowBtn = document.getElementById("burnNowBtn");
-    const burnTxStatus = document.getElementById("burnTxStatus");
+  // scroll to show burn dashboard
+  setTimeout(() => {
+    scoreBoard.scrollTop = 0;
+  }, 50);
+}
 
-    if (sessionEl) sessionEl.innerHTML = runScore.toLocaleString() + ' <span class="burnUnit">$BURN</span>';
-    if (burnTotalEl) burnTotalEl.textContent = newTotal.toLocaleString();
+/* -------------------- Burn Dashboard -------------------- */
+function afficherBurnDashboard(sessionBurned) {
+  const TOTAL_SUPPLY = 1_000_000_000;
 
-    if (burnBarEl) {
-      burnBarEl.style.width = "0%";
-      setTimeout(() => { burnBarEl.style.width = burnPercent.toFixed(4) + "%"; }, 300);
-    }
+  const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+  const newTotal = prevTotal + sessionBurned;
+  localStorage.setItem("totalBurnedTokens", newTotal);
 
-    if (burnNowBtn) {
-      burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
-      burnNowBtn.disabled = false;
-      burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
+  const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+
+  const sessionEl = document.getElementById("burnSessionValue");
+  const burnBarEl = document.getElementById("burnBar");
+  const burnTotalEl = document.getElementById("burnTotalBurned");
+  const burnShareBtn = document.getElementById("burnShareBtn");
+  const burnNowBtn = document.getElementById("burnNowBtn");
+  const burnTxStatus = document.getElementById("burnTxStatus");
+
+  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionBurned) + ' <span class="burnUnit">$BURN</span>';
+  if (burnTotalEl) burnTotalEl.textContent = formatNumber(newTotal);
+
+  if (burnBarEl) {
+    burnBarEl.style.width = "0%";
+    setTimeout(() => { burnBarEl.style.width = burnPercent.toFixed(4) + "%"; }, 300);
+  }
+
+  if (burnNowBtn) {
+    burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
+    burnNowBtn.disabled = false;
+    burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
+    const provider = window.solana;
+    if (provider && provider.isPhantom && provider.isConnected) {
       burnNowBtn.style.display = "inline-block";
     }
-    if (burnTxStatus) { burnTxStatus.style.display = "none"; burnTxStatus.textContent = ""; }
-
-    window._lastSessionBurn = runScore;
-    if (window.setLastSessionBurn) window.setLastSessionBurn(runScore);
-
-    if (burnShareBtn) {
-      burnShareBtn.onclick = () => {
-        const text = `🔥 I just destroyed ${runScore.toLocaleString()} $BURN in one run!\n\nEvery meter = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
-      };
-    }
   }
+  if (burnTxStatus) {
+    burnTxStatus.style.display = "none";
+    burnTxStatus.textContent = "";
+  }
+
+  window._lastSessionBurn = sessionBurned;
+  if (window.setLastSessionBurn) window.setLastSessionBurn(sessionBurned);
+
+  if (burnShareBtn) {
+    burnShareBtn.onclick = () => {
+      const text = `🔥 I just destroyed ${formatNumber(sessionBurned)} $BURN tokens in one run!\n\nEvery meter = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+    };
+  }
+}
+
 
 
 
@@ -2158,8 +2176,6 @@ toggleMusicBtn.onclick = () => {
 
   location.reload();
 };
-
-}
 
 })();
 
