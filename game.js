@@ -528,7 +528,7 @@ let hitFlashTimer = 0;
 let tutorialTimer = 0;
 
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
-  const CONSTANT_SPEED = 14;
+  const CONSTANT_SPEED = 18;
 
   /* -------------------- Stars Background -------------------- */
   const stars = Array.from({ length: isMobile ? 60 : 150 }, () => ({
