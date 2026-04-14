@@ -528,7 +528,7 @@ let hitFlashTimer = 0;
 let tutorialTimer = 0;
 
   const distanceSpeedFactor = isMobile ? 3.8 : 2.5;
-  const CONSTANT_SPEED = 18;
+  const CONSTANT_SPEED = 14;
 
   /* -------------------- Stars Background -------------------- */
   const stars = Array.from({ length: isMobile ? 60 : 150 }, () => ({
@@ -2280,7 +2280,7 @@ toggleMusicBtn.onclick = () => {
         burnNowBtn.disabled = true;
         if (burnTxStatus) { burnTxStatus.style.display = "none"; }
 
-        const WEBHOOK_URL = "https://hook.eu2.make.com/1omb34nsoy756rf6n7pqsk3a1yo73bmg";
+        const WEBHOOK_URL = "https://astrolab-rush-production.up.railway.app/burn";
 
         const response = await fetch(WEBHOOK_URL, {
           method: "POST",
