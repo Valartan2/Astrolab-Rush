@@ -737,44 +737,44 @@ font-weight:bold;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #fffbe6;
-  padding: 10px 14px;
+  padding: 16px 18px;
   border-radius: 20px;
   border: 5px solid black;
   text-align: center;
   z-index: 17;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: bold;
   color: #222;
   display: none;
-  width: 340px;
+  width: 360px;
   max-width: 92vw;
-  max-height: 92vh;
+  max-height: 90vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-#scoreBoard h2 { margin: 0 0 5px 0; font-size: 18px; color: #444; }
-#scoreBoard p { margin: 3px 0; font-size: 13px; }
+#scoreBoard h2 { margin: 0 0 8px 0; font-size: 22px; color: #444; }
+#scoreBoard p { margin: 5px 0; font-size: 16px; }
 
 /* burn dashboard */
 #burnDashboard {
-  margin-top: 8px;
+  margin-top: 14px;
   background: linear-gradient(160deg, #0a0015, #1a0030);
   border: 2px solid #ff4400;
-  border-radius: 10px;
-  padding: 8px 10px;
+  border-radius: 14px;
+  padding: 14px 16px;
   text-align: center;
   color: white;
-  box-shadow: 0 0 12px rgba(255,80,0,0.4);
+  box-shadow: 0 0 18px rgba(255,80,0,0.4);
 }
 
 #burnSessionBlock {
   background: rgba(255,80,0,0.12);
   border: 1px solid #ff4400;
-  border-radius: 8px;
-  padding: 4px 8px;
-  margin-bottom: 6px;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
 }
 
 #burnSessionLabel {
@@ -786,7 +786,7 @@ font-weight:bold;
 }
 
 #burnSessionValue {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
   color: #ff4400;
   animation: burnPulse 1.5s ease-in-out infinite;
@@ -866,20 +866,20 @@ font-weight:bold;
 #gameOverButtons {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 8px;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 14px;
 }
 
 #gameOverButtons button {
   font-family: 'Fredoka', sans-serif;
   font-weight: bold;
-  font-size: 13px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 2px solid black;
+  font-size: 15px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 3px solid black;
   cursor: pointer;
-  box-shadow: 2px 2px 0 black;
+  box-shadow: 3px 3px 0 black;
   text-transform: uppercase;
 }
 
@@ -992,6 +992,8 @@ font-weight:bold;
     <button id="objectifsBtn">Ranks</button>
     <button id="shareScore">Share</button>
     <button id="backToMenu">Menu</button>
+    <button id="burnNowBtn" style="background:linear-gradient(to bottom,#9945FF,#6a1fc2);color:white;width:100%;margin-top:6px;">👻 Burn on-chain (Devnet)</button>
+    <div id="burnTxStatus" style="font-size:11px;color:#00ffcc;display:none;width:100%;"></div>
   </div>
 
 </div>
