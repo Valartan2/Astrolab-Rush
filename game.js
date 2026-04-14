@@ -1184,7 +1184,7 @@ particles = [];
   player.gravityUp = -2.2;
   player.maxSpeed = 13;
 }
-    // Init nextGradeIndex — sera recalculé au 1er frame
+    // nextGradeIndex sera initialisé au 1er frame
     nextGradeIndex = -1;
     player.radius = 30;
     bubbles = [];
@@ -1875,35 +1875,17 @@ if (hitFlashTimer > 0) {
 
   const progressText = document.getElementById("progressText");
 
-  // progress bar — basé sur le cumul total
+  // barre de progression — basée sur distance du run (repart de 0)
   {
-    const cumul = getTotalDistance() + Math.floor(distance);
-    let currentThreshold = 0;
-    let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
-
-    for (let i = 0; i < gradeObjectives.length; i++) {
-      if (cumul >= gradeObjectives[i].threshold) {
-        currentThreshold = gradeObjectives[i].threshold;
-        if (i + 1 < gradeObjectives.length) {
-          nextThreshold = gradeObjectives[i + 1].threshold;
-        }
-      }
-    }
-
-    const progress = (cumul - currentThreshold) / (nextThreshold - currentThreshold);
-    const percent = Math.max(0, Math.min(progress, 1)) * 100;
-
+    const maxDisplay = gradeObjectives[gradeObjectives.length - 1].threshold;
+    const percent = Math.min((distance / maxDisplay) * 100, 100);
     progressBar.style.width = percent + "%";
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
-
-    const remaining = Math.floor(nextThreshold - cumul);
-    progressLabel.textContent = `Next Rank : ${remaining} $BURN`;
-    if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
+    if (progressText) progressText.textContent = formatNumber(Math.floor(distance)) + " $BURN";
   }
 
-  // rank milestone flash — basé sur le cumul total
-  // Init au 1er frame pour éviter les faux triggers
+  // milestone — basé sur cumul total
   if (nextGradeIndex === -1) {
     const initTotal = getTotalDistance();
     nextGradeIndex = 0;
@@ -1914,23 +1896,20 @@ if (hitFlashTimer > 0) {
     }
   }
 
-  const cumulTotal = getTotalDistance() + Math.floor(distance);
   if (
-    distance > 10 &&
-    nextGradeIndex < gradeObjectives.length &&
-    cumulTotal >= gradeObjectives[nextGradeIndex].threshold
+    !gameOver &&
+    !isDying &&
+    nextGradeIndex < gradeObjectives.length
   ) {
-    const grade = gradeObjectives[nextGradeIndex];
-
-    distanceDisplay.classList.add("distancePulse");
-    setTimeout(() => {
-      distanceDisplay.classList.remove("distancePulse");
-    }, 400);
-
-    showMilestone(grade.label);
-    flashScreen(getFlashColor());
-
-    nextGradeIndex++;
+    const cumulTotal = getTotalDistance() + Math.floor(distance);
+    if (cumulTotal >= gradeObjectives[nextGradeIndex].threshold) {
+      const grade = gradeObjectives[nextGradeIndex];
+      distanceDisplay.classList.add("distancePulse");
+      setTimeout(() => distanceDisplay.classList.remove("distancePulse"), 400);
+      showMilestone(grade.label);
+      flashScreen(getFlashColor());
+      nextGradeIndex++;
+    }
   }
 
   // particles
