@@ -1137,7 +1137,7 @@ function afficherBurnDashboard(sessionBurned) {
     burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
     burnNowBtn.disabled = false;
     burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
-    burnNowBtn.style.display = "block";
+    burnNowBtn.setAttribute("style", "display:block!important;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(to bottom,#9945FF,#6a1fc2);color:white;border:3px solid black;border-radius:12px;padding:12px 28px;font-size:17px;font-weight:bold;font-family:Fredoka,sans-serif;text-transform:uppercase;box-shadow:3px 3px 0 black;cursor:pointer;white-space:nowrap;");
   }
   if (burnTxStatus) {
     burnTxStatus.style.display = "none";
@@ -1218,6 +1218,8 @@ particles = [];
     scoreBoard.style.display = "none";
     const burnDash = document.getElementById("burnDashboard");
     if (burnDash) burnDash.style.display = "none";
+    const burnNowReset = document.getElementById("burnNowBtn");
+    if (burnNowReset) burnNowReset.setAttribute("style", "display:none!important;");
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "none";
