@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 // Config
-const SPREADSHEET_ID = "1lirt-a1JVk5ZgMyw5Nu4BZYWGezjbt1SkQlk7rapyEc";
+const SPREADSHEET_ID = "1iirt-a1JVk5ZgMyw5Nu4BZYWGezjbt1SkQlk7rapyEc";
 const MAX_SCORE = 5000;
 const MIN_SCORE = 1;
 const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24h
