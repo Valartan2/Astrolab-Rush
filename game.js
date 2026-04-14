@@ -2249,6 +2249,32 @@ toggleMusicBtn.onclick = () => {
         return;
       }
 
+      if (cumulBurn < 5000) {
+        alert(`Accumulate at least 5,000 $BURN before burning!\nCurrent: ${cumulBurn.toLocaleString()} / 5,000`);
+        return;
+      }
+
+      // Protection anti-hack : plafond à 5000 par soumission
+      const MAX_BURN = 5000;
+      const safeBurn = Math.min(cumulBurn, MAX_BURN);
+
+      // Vérification wallet format basique
+      if (!walletPublicKey || walletPublicKey.length < 32 || walletPublicKey.length > 44) {
+        alert("Invalid wallet — reconnect Phantom.");
+        return;
+      }
+
+      // Cooldown 24h par wallet
+      const lastBurnKey = "lastBurn_" + walletPublicKey;
+      const lastBurnTime = parseInt(localStorage.getItem(lastBurnKey) || "0");
+      const now = Date.now();
+      const cooldown = 24 * 60 * 60 * 1000;
+      if (now - lastBurnTime < cooldown) {
+        const hoursLeft = Math.ceil((cooldown - (now - lastBurnTime)) / 3600000);
+        alert(`You already burned today!\nCome back in ${hoursLeft}h.`);
+        return;
+      }
+
       try {
         burnNowBtn.textContent = "⏳ Sending...";
         burnNowBtn.disabled = true;
@@ -2262,7 +2288,7 @@ toggleMusicBtn.onclick = () => {
           body: JSON.stringify({
             date: new Date().toISOString(),
             wallet: walletPublicKey,
-            score: cumulBurn
+            score: safeBurn
           })
         });
 
@@ -2271,10 +2297,11 @@ toggleMusicBtn.onclick = () => {
         // Reset cumul à 0 après envoi réussi
         localStorage.setItem("totalBurnedTokens", "0");
         localStorage.setItem("totalDistance", "0");
+        localStorage.setItem("lastBurn_" + walletPublicKey, Date.now().toString());
 
         if (burnTxStatus) {
           burnTxStatus.style.display = "block";
-          burnTxStatus.innerHTML = `✅ ${cumulBurn.toLocaleString()} $BURN submitted for burn!`;
+          burnTxStatus.innerHTML = `✅ ${safeBurn.toLocaleString()} $BURN submitted for burn!`;
         }
 
         burnNowBtn.textContent = "✅ Submitted!";
