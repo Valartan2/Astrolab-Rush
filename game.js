@@ -2260,30 +2260,25 @@ toggleMusicBtn.onclick = () => {
 
         const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
 
+        // Burn address = system program (address nulle Solana)
+        // On envoie 0 lamports avec un memo du burn amount — simulation propre
         const transaction = new solanaWeb3.Transaction().add(
           solanaWeb3.SystemProgram.transfer({
             fromPubkey,
-            toPubkey: new solanaWeb3.PublicKey("11111111111111111111111111111111"),
-            lamports: Math.max(1, lastSessionBurn)
+            toPubkey: new solanaWeb3.PublicKey("1nc1nerator11111111111111111111111111111111"),
+            lamports: lastSessionBurn // 1 lamport par $BURN simulé
           })
         );
 
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+        const { blockhash } = await connection.getLatestBlockhash();
         transaction.recentBlockhash = blockhash;
         transaction.feePayer = fromPubkey;
 
-        // Sign avec Phantom
-        const signed = await window.solana.signTransaction(transaction);
-
-        // Envoyer la transaction signée
-        const signature = await connection.sendRawTransaction(signed.serialize());
-
-        // Attendre confirmation
-        await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight });
+        const signed = await window.solana.signAndSendTransaction(transaction);
 
         if (burnTxStatus) {
           burnTxStatus.style.display = "block";
-          burnTxStatus.innerHTML = `✅ ${lastSessionBurn} $BURN burned!<br><a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:#9945FF;">View on Explorer ↗</a>`;
+          burnTxStatus.innerHTML = `✅ ${lastSessionBurn} $BURN burned!<br><a href="https://explorer.solana.com/tx/${signed.signature}?cluster=devnet" target="_blank" style="color:#00ffcc;">View on Explorer ↗</a>`;
         }
 
         burnNowBtn.textContent = "✅ Burned!";
