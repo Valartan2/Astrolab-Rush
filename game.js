@@ -1098,6 +1098,11 @@ function afficherTableauScore(score) {
 
   // 🔥 BURN DASHBOARD
   afficherBurnDashboard(runScore);
+
+  // scroll to show burn dashboard
+  setTimeout(() => {
+    scoreBoard.scrollTop = 0;
+  }, 50);
 }
 
 /* -------------------- Burn Dashboard -------------------- */
