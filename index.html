@@ -737,25 +737,60 @@ font-weight:bold;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #fffbe6;
-  padding: 16px 18px;
+  padding: 20px 24px;
   border-radius: 20px;
   border: 5px solid black;
   text-align: center;
   z-index: 17;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #222;
   display: none;
-  width: 360px;
-  max-width: 92vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  width: 340px;
+  max-width: 90vw;
 }
 
-#scoreBoard h2 { margin: 0 0 8px 0; font-size: 22px; color: #444; }
-#scoreBoard p { margin: 5px 0; font-size: 16px; }
+#scoreBoard h2 { margin: 0 0 10px 0; font-size: 22px; color: #333; }
+#scoreBoard p { margin: 5px 0; font-size: 15px; text-align: left; }
+
+#gameOverButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#gameOverButtons button {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 3px solid black;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 black;
+  text-transform: uppercase;
+}
+
+#burnNowBtn {
+  grid-column: 1 / -1;
+  background: linear-gradient(to bottom, #9945FF, #6a1fc2);
+  color: white;
+}
+#rejouer { background: #ff8800; color: black; }
+#objectifsBtn { background: #fff04f; color: black; }
+#shareScore { background: #00cfcf; color: black; }
+#backToMenu { background: #ffaa00; color: black; }
+#gameOverButtons button:hover { transform: translateY(-2px); }
+
+#burnTxStatus {
+  font-size: 12px;
+  color: #9945FF;
+  margin-top: 8px;
+  display: none;
+  word-break: break-all;
+}
 
 /* burn dashboard */
 #burnDashboard {
@@ -864,11 +899,11 @@ font-weight:bold;
 
 /* game over buttons */
 #gameOverButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  justify-content: center;
   margin-top: 14px;
-  width: 100%;
 }
 
 #gameOverButtons button {
@@ -960,39 +995,20 @@ font-weight:bold;
 
   <h2>🔥 ASTRO-BURN</h2>
 
-  <p><strong id="label1">🔥 $BURN this run:</strong> <span id="currentScore">0</span></p>
-  <p><strong id="label2">🏆 Best run:</strong> <span id="bestScore">0</span></p>
-  <p><strong id="label3">💀 Total destroyed:</strong> <span id="totalScore">0</span></p>
-  <p><strong id="label4">🎖 Rank:</strong> <span id="grade">—</span></p>
+  <p>🚀 <strong>Astro ce run :</strong> <span id="currentScore">0</span></p>
+  <p>🏆 <strong>Best run :</strong> <span id="bestScore">0</span></p>
+  <p>💀 <strong>Total cumulé :</strong> <span id="totalScore">0</span></p>
+  <p>📊 <strong>Supply brûlée :</strong> <span id="burnPercent">0.000000%</span></p>
+  <p>🎖 <strong>Rang :</strong> <span id="grade">—</span></p>
 
-  <!-- BURN DASHBOARD -->
-  <div id="burnDashboard">
-    <div id="burnSessionBlock">
-      <div id="burnSessionLabel">YOU BURNED THIS RUN</div>
-      <div id="burnSessionValue">0 <span class="burnUnit">$BURN</span></div>
-    </div>
-
-    <div id="burnTotalBlock">
-      <div id="burnTotalLabel">⚡ GLOBAL SUPPLY DESTROYED</div>
-      <div id="burnBarWrapper">
-        <div id="burnBar"></div>
-      </div>
-      <div id="burnTotalValue"><span id="burnTotalBurned">0</span> / 1,000,000,000 $BURN</div>
-    </div>
-
-    <div id="burnCTAText">Every meter = 1 $BURN destroyed forever</div>
-    <button id="burnShareBtn">🔥 Share my Burn on X</button>
-    <button id="burnNowBtn">👻 Burn on-chain (Devnet)</button>
-    <div id="burnTxStatus"></div>
-  </div>
-
-  <!-- BOUTONS GAME OVER -->
   <div id="gameOverButtons">
+    <button id="burnNowBtn">👻 Burn on-chain</button>
     <button id="rejouer">Replay</button>
     <button id="objectifsBtn">Ranks</button>
     <button id="shareScore">Share</button>
     <button id="backToMenu">Menu</button>
   </div>
+  <div id="burnTxStatus"></div>
 
 </div>
   
