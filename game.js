@@ -1184,8 +1184,7 @@ particles = [];
   player.gravityUp = -2.2;
   player.maxSpeed = 13;
 }
-    // nextGradeIndex sera initialisé au 1er frame
-    nextGradeIndex = -1;
+    nextGradeIndex = 1;
     player.radius = 30;
     bubbles = [];
     specialObstacles = [];
@@ -1222,7 +1221,7 @@ particles = [];
     distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
     progressBar.parentElement.style.display = "none";
-    progressLabel.style.display = "none";
+    
     lastSpecialSpawn = 0;
     isDying = false;
 
@@ -1274,7 +1273,7 @@ tutorialBtn.onclick = () => {
   document.getElementById("topHUD").style.display = "flex";
   document.getElementById("stats").style.display = "none";
   progressBar.parentElement.style.display = "flex";
-  progressLabel.style.display = "block";
+  
 
   animationId = requestAnimationFrame(gameLoop);
 };
@@ -1300,7 +1299,7 @@ playButton.onclick = () => {
     document.getElementById("topHUD").style.display = "flex";
     wordDisplay.style.display = "block";
     progressBar.parentElement.style.display = "flex";
-    progressLabel.style.display = "block";
+    
     animationId = requestAnimationFrame(gameLoop);
   };
 
@@ -1367,7 +1366,7 @@ playButton.onclick = () => {
   wordDisplay.style.display = "none";  
   distanceDisplay.style.display = "none";
   progressBar.parentElement.style.display = "none";
-progressLabel.style.display = "none";  
+  
 
 };
 
@@ -1400,7 +1399,7 @@ progressLabel.style.display = "none";
 
   // 🔥 barre de progression
   progressBar.parentElement.style.display = "flex";
-  progressLabel.style.display = "block";
+  
 }
 
   /* -------------------- Start Screen -------------------- */
@@ -1875,14 +1874,13 @@ if (hitFlashTimer > 0) {
 
   const progressText = document.getElementById("progressText");
 
-  // barre de progression — cumul total vers prochain palier
+  // progress bar — rank based
   {
-    const cumul = getTotalDistance() + Math.floor(distance);
     let currentThreshold = 0;
     let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
 
     for (let i = 0; i < gradeObjectives.length; i++) {
-      if (cumul >= gradeObjectives[i].threshold) {
+      if (distance >= gradeObjectives[i].threshold) {
         currentThreshold = gradeObjectives[i].threshold;
         if (i + 1 < gradeObjectives.length) {
           nextThreshold = gradeObjectives[i + 1].threshold;
@@ -1890,40 +1888,34 @@ if (hitFlashTimer > 0) {
       }
     }
 
-    const progress = (cumul - currentThreshold) / (nextThreshold - currentThreshold);
+    const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
     const percent = Math.max(0, Math.min(progress, 1)) * 100;
 
     progressBar.style.width = percent + "%";
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
-    if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
+
+    const remaining = Math.floor(nextThreshold - distance);
+    
+    if (progressText) progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
   }
 
-  // milestone — basé sur cumul total
-  if (nextGradeIndex === -1) {
-    const initTotal = getTotalDistance();
-    nextGradeIndex = 0;
-    for (let i = 0; i < gradeObjectives.length; i++) {
-      if (initTotal >= gradeObjectives[i].threshold) {
-        nextGradeIndex = i + 1;
-      }
-    }
-  }
-
+  // rank milestone flash
   if (
-    !gameOver &&
-    !isDying &&
-    nextGradeIndex < gradeObjectives.length
+    nextGradeIndex < gradeObjectives.length &&
+    distance >= gradeObjectives[nextGradeIndex].threshold
   ) {
-    const cumulTotal = getTotalDistance() + Math.floor(distance);
-    if (cumulTotal >= gradeObjectives[nextGradeIndex].threshold) {
-      const grade = gradeObjectives[nextGradeIndex];
-      distanceDisplay.classList.add("distancePulse");
-      setTimeout(() => distanceDisplay.classList.remove("distancePulse"), 400);
-      showMilestone(grade.label);
-      flashScreen(getFlashColor());
-      nextGradeIndex++;
-    }
+    const grade = gradeObjectives[nextGradeIndex];
+
+    distanceDisplay.classList.add("distancePulse");
+    setTimeout(() => {
+      distanceDisplay.classList.remove("distancePulse");
+    }, 400);
+
+    showMilestone(grade.label);
+    flashScreen(getFlashColor());
+
+    nextGradeIndex++;
   }
 
   // particles
