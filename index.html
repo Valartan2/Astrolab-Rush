@@ -864,11 +864,11 @@ font-weight:bold;
 
 /* game over buttons */
 #gameOverButtons {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
-  justify-content: center;
   margin-top: 14px;
+  width: 100%;
 }
 
 #gameOverButtons button {
@@ -887,7 +887,6 @@ font-weight:bold;
 #objectifsBtn { background: #fff04f; color: black; }
 #shareScore { background: #00cfcf; color: black; }
 #backToMenu { background: #ffaa00; color: black; }
-#burnNowBtn { background: linear-gradient(to bottom,#9945FF,#6a1fc2) !important; color: white !important; width: 100%; margin-top: 4px; display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; min-height: 36px !important; }
 #gameOverButtons button:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
 
 /* wallet */
