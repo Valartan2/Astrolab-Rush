@@ -563,17 +563,19 @@ font-weight:bold;
 #topHUD {
   position: absolute;
   top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 600px;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   z-index: 20;
+  pointer-events: none;
 }
 
 #distance {
+  position: absolute;
+  left: 10px;
   background: #b6fcb6;
   color: #003300;
   font-size: 16px;
@@ -583,11 +585,12 @@ font-weight:bold;
   border: 3px solid black;
   box-shadow: 3px 3px 0 black;
   white-space: nowrap;
-  flex-shrink: 0;
+  pointer-events: auto;
 }
 
 #progressWrapper {
-  flex: 1;
+  width: 300px;
+  max-width: 40vw;
   height: 24px;
   background: rgba(255,255,255,0.2);
   border: 3px solid black;
@@ -619,7 +622,6 @@ font-weight:bold;
   font-weight: bold;
   text-shadow: 1px 1px 0 black;
   white-space: nowrap;
-  flex-shrink: 0;
 }   
 
     .smallStar {
