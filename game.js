@@ -1057,51 +1057,104 @@ function drawX2(b) {
 
   /* -------------------- Scoreboard -------------------- */
 function afficherTableauScore(score) {
-  const TOTAL_SUPPLY = 1_000_000_000;
-  const runScore = Math.floor(score);
 
-  // Save scores
+  const runScore = Math.floor(score);
   let bestScore = getBestScore();
+
   bestScore = Math.max(runScore, bestScore);
   setBestScore(bestScore);
 
-  const newTotal = getTotalDistance() + runScore;
+  let newTotal = getTotalDistance();
+  newTotal += runScore;
   setTotalDistance(newTotal);
-  setTotalStars(getTotalStars() + starScore);
-  setTotalGalaxy(getTotalGalaxy() + galaxyCompletedThisRun);
-  setTotalDestroyed(getTotalDestroyed() + meteorDestroyed);
 
-  // Update localStorage burn total
-  const prevBurned = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
-  const newBurned = prevBurned + runScore;
-  localStorage.setItem("totalBurnedTokens", newBurned);
-  const burnPct = (newBurned / TOTAL_SUPPLY * 100).toFixed(6);
+  const totalStars = getTotalStars() + starScore;
+  setTotalStars(totalStars);
 
-  // Update DOM
+  const totalGalaxy = getTotalGalaxy() + galaxyCompletedThisRun;
+  setTotalGalaxy(totalGalaxy);
+
+  const totalDestroyed = getTotalDestroyed() + meteorDestroyed;
+  setTotalDestroyed(totalDestroyed);
+
+  // 🎯 LABELS — $BURN branding
+  const label1 = document.getElementById("label1");
+  const label2 = document.getElementById("label2");
+  const label3 = document.getElementById("label3");
+  const label4 = document.getElementById("label4");
+
+  if (label1) label1.textContent = "🔥 $BURN this run:";
+  if (label2) label2.textContent = "🏆 Best run:";
+  if (label3) label3.textContent = "💀 Total $BURN destroyed:";
+  if (label4) label4.textContent = "🎖 Rank:";
+
   currentScoreSpan.textContent = formatNumber(runScore) + " $BURN";
   bestScoreSpan.textContent = formatNumber(bestScore) + " $BURN";
-  totalScoreSpan.textContent = formatNumber(newTotal) + " $BURN";
-  gradeSpan.textContent = getGrade(runScore);
-
-  const burnPercentEl = document.getElementById("burnPercent");
-  if (burnPercentEl) burnPercentEl.textContent = burnPct + "%";
-
-  // burnNowBtn
-  const burnNowBtn = document.getElementById("burnNowBtn");
-  if (burnNowBtn) {
-    burnNowBtn.textContent = "👻 Burn on-chain";
-    burnNowBtn.disabled = false;
-    burnNowBtn.style.display = "";
-  }
-
-  const burnTxStatus = document.getElementById("burnTxStatus");
-  if (burnTxStatus) { burnTxStatus.style.display = "none"; burnTxStatus.textContent = ""; }
-
-  window._lastSessionBurn = runScore;
-  if (window.setLastSessionBurn) window.setLastSessionBurn(runScore);
+  totalScoreSpan.textContent = formatNumber(getTotalDistance()) + " $BURN";
+  gradeSpan.textContent = getGrade(distance);
 
   updateObjectifDisplay();
   scoreBoard.style.display = "block";
+
+  // 🔥 BURN DASHBOARD
+  afficherBurnDashboard(runScore);
+
+  // scroll to show burn dashboard
+  setTimeout(() => {
+    scoreBoard.scrollTop = 0;
+  }, 50);
+}
+
+/* -------------------- Burn Dashboard -------------------- */
+function afficherBurnDashboard(sessionBurned) {
+  const TOTAL_SUPPLY = 1_000_000_000;
+
+  const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+  const newTotal = prevTotal + sessionBurned;
+  localStorage.setItem("totalBurnedTokens", newTotal);
+
+  const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+
+  const sessionEl = document.getElementById("burnSessionValue");
+  const burnBarEl = document.getElementById("burnBar");
+  const burnTotalEl = document.getElementById("burnTotalBurned");
+  const burnShareBtn = document.getElementById("burnShareBtn");
+  const burnNowBtn = document.getElementById("burnNowBtn");
+  const burnTxStatus = document.getElementById("burnTxStatus");
+
+  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionBurned) + ' <span class="burnUnit">$BURN</span>';
+  if (burnTotalEl) burnTotalEl.textContent = formatNumber(newTotal);
+
+  if (burnBarEl) {
+    burnBarEl.style.width = "0%";
+    setTimeout(() => {
+      burnBarEl.style.width = burnPercent.toFixed(4) + "%";
+    }, 300);
+  }
+
+  // Reset burn now button state
+  if (burnNowBtn) {
+    burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
+    burnNowBtn.disabled = false;
+    burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
+    burnNowBtn.style.display = "block";
+  }
+  if (burnTxStatus) {
+    burnTxStatus.style.display = "none";
+    burnTxStatus.textContent = "";
+  }
+
+  // Notify wallet module of session burn amount
+  if (window.setLastSessionBurn) {
+    window.setLastSessionBurn(sessionBurned);
+  }
+
+  if (burnShareBtn) {
+    burnShareBtn.onclick = () => {
+      const text = `🔥 I just destroyed ${formatNumber(sessionBurned)} $BURN tokens in one run!\n\nEvery meter = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+    };
+  }
 }
 
 
@@ -1131,7 +1184,14 @@ particles = [];
   player.gravityUp = -2.2;
   player.maxSpeed = 13;
 }
+    // Init nextGradeIndex based on existing cumul total
+    const existingTotal = getTotalDistance();
     nextGradeIndex = 1;
+    for (let i = 0; i < gradeObjectives.length; i++) {
+      if (existingTotal >= gradeObjectives[i].threshold) {
+        nextGradeIndex = i + 1;
+      }
+    }
     player.radius = 30;
     bubbles = [];
     specialObstacles = [];
@@ -1847,10 +1907,11 @@ if (hitFlashTimer > 0) {
     if (progressText) progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
   }
 
-  // rank milestone flash
+  // rank milestone flash — basé sur le cumul total
+  const cumulTotal = getTotalDistance() + Math.floor(distance);
   if (
     nextGradeIndex < gradeObjectives.length &&
-    distance >= gradeObjectives[nextGradeIndex].threshold
+    cumulTotal >= gradeObjectives[nextGradeIndex].threshold
   ) {
     const grade = gradeObjectives[nextGradeIndex];
 
