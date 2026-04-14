@@ -1881,13 +1881,14 @@ if (hitFlashTimer > 0) {
 
   const progressText = document.getElementById("progressText");
 
-  // progress bar — rank based
+  // progress bar — basé sur le cumul total
   {
+    const cumul = getTotalDistance() + Math.floor(distance);
     let currentThreshold = 0;
     let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
 
     for (let i = 0; i < gradeObjectives.length; i++) {
-      if (distance >= gradeObjectives[i].threshold) {
+      if (cumul >= gradeObjectives[i].threshold) {
         currentThreshold = gradeObjectives[i].threshold;
         if (i + 1 < gradeObjectives.length) {
           nextThreshold = gradeObjectives[i + 1].threshold;
@@ -1895,16 +1896,16 @@ if (hitFlashTimer > 0) {
       }
     }
 
-    const progress = (distance - currentThreshold) / (nextThreshold - currentThreshold);
+    const progress = (cumul - currentThreshold) / (nextThreshold - currentThreshold);
     const percent = Math.max(0, Math.min(progress, 1)) * 100;
 
     progressBar.style.width = percent + "%";
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
 
-    const remaining = Math.floor(nextThreshold - distance);
+    const remaining = Math.floor(nextThreshold - cumul);
     progressLabel.textContent = `Next Rank : ${remaining} $BURN`;
-    if (progressText) progressText.textContent = Math.floor(distance) + " / " + nextThreshold;
+    if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
   }
 
   // rank milestone flash — basé sur le cumul total
