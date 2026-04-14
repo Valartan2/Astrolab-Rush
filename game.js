@@ -2242,7 +2242,6 @@ toggleMusicBtn.onclick = () => {
         return;
       }
 
-      // Lire le cumul total depuis localStorage
       const cumulBurn = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
 
       if (cumulBurn <= 0) {
@@ -2255,40 +2254,30 @@ toggleMusicBtn.onclick = () => {
         burnNowBtn.disabled = true;
         if (burnTxStatus) { burnTxStatus.style.display = "none"; }
 
-        const solanaWeb3 = window.solanaWeb3;
-        const connection = new solanaWeb3.Connection(
-          solanaWeb3.clusterApiUrl("devnet"),
-          "confirmed"
-        );
+        const WEBHOOK_URL = "https://hook.eu2.make.com/1omb34nsoy756rf6n7pqsk3a1yo73bmg";
 
-        const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
-
-        const transaction = new solanaWeb3.Transaction().add(
-          solanaWeb3.SystemProgram.transfer({
-            fromPubkey,
-            toPubkey: new solanaWeb3.PublicKey("1nc1nerator11111111111111111111111111111111"),
-            lamports: Math.max(1, cumulBurn)
+        const response = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: new Date().toISOString(),
+            wallet: walletPublicKey,
+            score: cumulBurn
           })
-        );
+        });
 
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-        transaction.recentBlockhash = blockhash;
-        transaction.feePayer = fromPubkey;
+        if (!response.ok) throw new Error("Webhook failed");
 
-        const signed = await window.solana.signTransaction(transaction);
-        const signature = await connection.sendRawTransaction(signed.serialize());
-        await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight });
-
-        // Reset cumul à 0 après burn réussi
+        // Reset cumul à 0 après envoi réussi
         localStorage.setItem("totalBurnedTokens", "0");
         localStorage.setItem("totalDistance", "0");
 
         if (burnTxStatus) {
           burnTxStatus.style.display = "block";
-          burnTxStatus.innerHTML = `✅ ${cumulBurn.toLocaleString()} $BURN burned on-chain!<br><a href="https://explorer.solana.com/tx/${signature}?cluster=devnet" target="_blank" style="color:#9945FF;">View on Explorer ↗</a>`;
+          burnTxStatus.innerHTML = `✅ ${cumulBurn.toLocaleString()} $BURN submitted for burn!`;
         }
 
-        burnNowBtn.textContent = "✅ Burned!";
+        burnNowBtn.textContent = "✅ Submitted!";
         burnNowBtn.style.background = "#1a9e1a";
 
       } catch (e) {
