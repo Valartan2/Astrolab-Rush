@@ -1184,14 +1184,8 @@ particles = [];
   player.gravityUp = -2.2;
   player.maxSpeed = 13;
 }
-    // Init nextGradeIndex based on existing cumul total
-    const existingTotal = getTotalDistance();
-    nextGradeIndex = 1;
-    for (let i = 0; i < gradeObjectives.length; i++) {
-      if (existingTotal >= gradeObjectives[i].threshold) {
-        nextGradeIndex = i + 1;
-      }
-    }
+    // Init nextGradeIndex — sera recalculé au 1er frame
+    nextGradeIndex = -1;
     player.radius = 30;
     bubbles = [];
     specialObstacles = [];
@@ -1909,8 +1903,20 @@ if (hitFlashTimer > 0) {
   }
 
   // rank milestone flash — basé sur le cumul total
+  // Init au 1er frame pour éviter les faux triggers
+  if (nextGradeIndex === -1) {
+    const initTotal = getTotalDistance();
+    nextGradeIndex = 0;
+    for (let i = 0; i < gradeObjectives.length; i++) {
+      if (initTotal >= gradeObjectives[i].threshold) {
+        nextGradeIndex = i + 1;
+      }
+    }
+  }
+
   const cumulTotal = getTotalDistance() + Math.floor(distance);
   if (
+    distance > 10 &&
     nextGradeIndex < gradeObjectives.length &&
     cumulTotal >= gradeObjectives[nextGradeIndex].threshold
   ) {
