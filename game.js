@@ -1875,14 +1875,28 @@ if (hitFlashTimer > 0) {
 
   const progressText = document.getElementById("progressText");
 
-  // barre de progression — basée sur distance du run (repart de 0)
+  // barre de progression — cumul total vers prochain palier
   {
-    const maxDisplay = gradeObjectives[gradeObjectives.length - 1].threshold;
-    const percent = Math.min((distance / maxDisplay) * 100, 100);
+    const cumul = getTotalDistance() + Math.floor(distance);
+    let currentThreshold = 0;
+    let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
+
+    for (let i = 0; i < gradeObjectives.length; i++) {
+      if (cumul >= gradeObjectives[i].threshold) {
+        currentThreshold = gradeObjectives[i].threshold;
+        if (i + 1 < gradeObjectives.length) {
+          nextThreshold = gradeObjectives[i + 1].threshold;
+        }
+      }
+    }
+
+    const progress = (cumul - currentThreshold) / (nextThreshold - currentThreshold);
+    const percent = Math.max(0, Math.min(progress, 1)) * 100;
+
     progressBar.style.width = percent + "%";
     progressBar.style.background = getFlashColor();
     progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
-    if (progressText) progressText.textContent = formatNumber(Math.floor(distance)) + " $BURN";
+    if (progressText) progressText.textContent = formatNumber(cumul) + " / " + formatNumber(nextThreshold);
   }
 
   // milestone — basé sur cumul total
