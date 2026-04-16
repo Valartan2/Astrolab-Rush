@@ -1654,7 +1654,6 @@ tutorialBtn.onclick = () => {
 playButton.onclick = () => {
   playClick();
   gameMode = "mission";
-  missionTarget = 30;
   startGame();
 };
 
@@ -1667,6 +1666,16 @@ playButton.onclick = () => {
     }
 
     resetGame();
+
+    // Recalcule nextGradeIndex depuis le nouveau total
+    const currentTotal = getTotalStars();
+    nextGradeIndex = 0;
+    for (let i = 0; i < gradeObjectives.length; i++) {
+      if (currentTotal >= gradeObjectives[i].threshold) {
+        nextGradeIndex = i + 1;
+      }
+    }
+
     menu.style.display = "none";
     document.getElementById("topHUD").style.display = "flex";
     animationId = requestAnimationFrame(gameLoop);
@@ -1744,6 +1753,15 @@ playButton.onclick = () => {
 
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
+
+  // Init nextGradeIndex depuis le total actuel
+  const currentTotal = getTotalStars();
+  nextGradeIndex = 0;
+  for (let i = 0; i < gradeObjectives.length; i++) {
+    if (currentTotal >= gradeObjectives[i].threshold) {
+      nextGradeIndex = i + 1;
+    }
+  }
 
   if (!isTutorialDone(gameMode)) {
     showTutorial(gameMode);
@@ -2232,18 +2250,45 @@ if (hitFlashTimer > 0) {
     distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
   }
 
-  // display étoiles
-  distanceDisplay.textContent = `⭐ ${starScore} / ${missionTarget}`;
+  // display étoiles du run en cours
+  distanceDisplay.textContent = `⭐ ${starScore}`;
 
-  // barre de progression étoiles
+  // barre de progression cumulative vers prochain grade
   {
-    const percent = Math.min((starScore / missionTarget) * 100, 100);
+    const cumul = getTotalStars() + starScore;
+    let currentThreshold = 0;
+    let nextThreshold = gradeObjectives[gradeObjectives.length - 1].threshold;
+
+    for (let i = 0; i < gradeObjectives.length; i++) {
+      if (cumul >= gradeObjectives[i].threshold) {
+        currentThreshold = gradeObjectives[i].threshold;
+        if (i + 1 < gradeObjectives.length) {
+          nextThreshold = gradeObjectives[i + 1].threshold;
+        } else {
+          nextThreshold = currentThreshold; // max grade
+        }
+      }
+    }
+
+    const percent = nextThreshold > currentThreshold
+      ? Math.min(((cumul - currentThreshold) / (nextThreshold - currentThreshold)) * 100, 100)
+      : 100;
+
     if (progressBar) {
       progressBar.style.width = percent + "%";
       progressBar.style.background = "linear-gradient(to right, #00ffcc, #00ccff)";
     }
     const progressText = document.getElementById("progressText");
-    if (progressText) progressText.textContent = `${starScore} / ${missionTarget} ⭐`;
+    if (progressText) progressText.textContent = `${cumul} / ${nextThreshold} ⭐`;
+
+    // milestone check — grade franchi pendant ce run
+    if (!gameOver && !isDying && nextGradeIndex < gradeObjectives.length) {
+      if (cumul >= gradeObjectives[nextGradeIndex].threshold) {
+        showMilestone(`🏆 ${gradeObjectives[nextGradeIndex].label}`);
+        flashScreen("#00ccff");
+        nextGradeIndex++;
+      }
+    }
   }
 
   // particles
