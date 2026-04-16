@@ -3,23 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <title>Astro-Burn</title>
-
-  <!-- 🔗 Lien vers le manifest -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#001122" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="apple-touch-icon" href="/icon-180.png">
-
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ✅ Styles iOS : suppression pastille et sélection */
     html, body {
       margin: 0; padding: 0; overflow: hidden;
       background: linear-gradient(to top, #001122, #002233);
       font-family: 'Fredoka', sans-serif;
-
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
@@ -29,6 +23,7 @@
     * {
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
+      font-family: 'Fredoka', sans-serif;
     }
 
     canvas {
@@ -37,22 +32,16 @@
       outline: none;
       touch-action: none;
     }
-    
+
     #gameTitle {
       font-size: 48px;
       color: white;
       text-shadow: 2px 2px 4px black;
       margin-bottom: 20px;
-      font-family:  'Fredoka', sans-serif;
       user-select: none;
     }
 
-    #playButton:hover {
-      background: #ff8800;
-      transform: translateY(-2px);
-      box-shadow: 6px 6px 0 black;
-    }
-
+    /* -------------------- MENU -------------------- */
     #menu {
       position: absolute;
       top: 50%;
@@ -64,79 +53,141 @@
 
     #menuImage {
       display: block;
-      margin: 0 auto 50px auto;
+      margin: 0 auto 20px auto;
       max-width: 200px;
       width: 50vw;
       height: auto;
-      max-height: 150px;
+      max-height: 120px;
       object-fit: contain;
     }
 
-    #menuRocket{
-width:220px;
-height:160px;
-margin:20px auto;
-display:block;
-background:transparent;
-}
+    #menuRocket {
+      width: 220px;
+      height: 160px;
+      margin: 10px auto;
+      display: block;
+      background: transparent;
+    }
 
- #rocketSelector{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-margin:10px auto 25px auto;
-}
+    #rocketSelector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 10px auto 15px auto;
+    }
 
-#arrowLeft,
-#arrowRight{
-font-size:46px;
-color:white;
+    #arrowLeft, #arrowRight {
+      font-size: 46px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.2s;
+    }
 
-cursor:pointer;
-user-select:none;
+    #arrowLeft:hover, #arrowRight:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
 
-opacity:0.6;
-transition:opacity 0.2s, transform 0.2s;
-}
+    .menuBtn {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      font-size: 22px;
+      padding: 12px 30px;
+      background: #ffaa00;
+      color: black;
+      border: 4px solid black;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 black;
+      display: block;
+      margin: 12px auto;
+      width: 220px;
+      text-transform: uppercase;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-#arrowLeft:hover,
-#arrowRight:hover{
-opacity:1;
-transform:scale(1.2);
-}  
+    .menuBtn:hover {
+      background: #ff8800;
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 black;
+    }
 
- #menuObjectivesBtn{
-font-family:'Fredoka', sans-serif;
-font-weight:bold;
-font-size:22px;
-padding:12px 30px;
-margin-top:12px;
+    .menuBtn:active {
+      transform: translateY(2px);
+      box-shadow: 2px 2px 0 black;
+    }
 
-background:#ffaa00;
-color:black;
+    /* wallet button spécial */
+    #connectWalletBtn {
+      background: #9945FF;
+      color: white;
+    }
+    #connectWalletBtn:hover {
+      background: #7733cc;
+    }
 
-border:4px solid black;
-border-radius:15px;
+    #walletStatus {
+      color: #9945FF;
+      font-size: 14px;
+      margin-top: 4px;
+      display: none;
+    }
 
-cursor:pointer;
+    /* -------------------- HUD -------------------- */
+    #topHUD {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      z-index: 20;
+    }
 
-box-shadow:4px 4px 0 black;
+    #stats {
+      font-size: 14px;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 2px solid black;
+    }
 
-display:block;
-margin:15px auto;   
-width:200px;
+    #progressWrapper {
+      flex: 1;
+      height: 22px;
+      background: rgba(255,255,255,0.2);
+      border: 3px solid black;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
 
-text-transform:uppercase;
-}
+    #progressBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #00ffcc, #00ccff);
+      transition: width 0.15s linear;
+    }
 
+    #progressText {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      left: 0;
+      font-size: 12px;
+      color: white;
+      font-weight: bold;
+    }
 
-#menuObjectivesBtn:hover{
-background:#ff8800;
-transform:translateY(-2px);
-box-shadow:6px 6px 0 black;
-}
-    
     #distance {
       position: absolute;
       top: 10px;
@@ -153,20 +204,35 @@ box-shadow:6px 6px 0 black;
       display: none;
     }
 
-    #levelFlash{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:cyan;
-opacity:0;
-pointer-events:none;
-z-index:998;
-transition:opacity 0.15s;
-}
+    #wordDisplay {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      color: white;
+      font-weight: bold;
+      background: rgba(0,0,0,0.6);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 2px solid white;
+      z-index: 10;
+      display: none;
+    }
 
+    #progressLabel {
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 black;
+      z-index: 10;
+      display: none;
+    }
 
+    /* -------------------- GAME OVER -------------------- */
     #gameOverText {
       position: absolute;
       top: 15%;
@@ -174,7 +240,7 @@ transition:opacity 0.15s;
       transform: translateX(-50%);
       font-size: 48px;
       color: #ff3b3b;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
       display: none;
       z-index: 16;
       animation: pulse 2s infinite;
@@ -186,160 +252,256 @@ transition:opacity 0.15s;
     }
 
     @keyframes scorePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
 
-.distancePulse {
-  animation: scorePulse 0.4s ease;
-}
+    .distancePulse { animation: scorePulse 0.4s ease; }
 
-    /* 🆕 Tableau de score */
+    /* -------------------- SCOREBOARD -------------------- */
+    #scoreBoard {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fffbe6;
+      padding: 20px 24px;
+      border-radius: 20px;
+      border: 5px solid black;
+      text-align: center;
+      z-index: 17;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      font-size: 16px;
+      font-weight: bold;
+      color: #222;
+      display: none;
+      width: 340px;
+      max-width: 90vw;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
 
+    #scoreBoard h2 { margin: 0 0 10px 0; font-size: 22px; color: #333; }
+    #scoreBoard p { margin: 5px 0; font-size: 15px; text-align: left; }
+
+    #gameOverButtons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    #gameOverButtons button {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 3px solid black;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 black;
+      text-transform: uppercase;
+    }
+
+    #gameOverButtons button:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
+
+    #rejouer { background: #ff8800; color: black; }
+    #objectifsBtn { background: #fff04f; color: black; }
+    #shareScore { background: #00cfcf; color: black; }
+    #backToMenu { background: #ffaa00; color: black; }
+
+    /* -------------------- BURN DASHBOARD -------------------- */
+    #burnDashboard {
+      margin-top: 14px;
+      background: linear-gradient(160deg, #0a0015, #1a0030);
+      border: 2px solid #ff4400;
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 18px rgba(255,80,0,0.4);
+    }
+
+    #burnSessionBlock {
+      background: rgba(255,80,0,0.12);
+      border: 1px solid #ff4400;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    #burnSessionLabel {
+      font-size: 10px;
+      color: #ff9966;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    #burnSessionValue {
+      font-size: 28px;
+      font-weight: bold;
+      color: #ff4400;
+      animation: burnPulse 1.5s ease-in-out infinite;
+    }
+
+    .burnUnit { font-size: 16px; color: #ff8844; }
+
+    @keyframes burnPulse {
+      0%, 100% { text-shadow: 0 0 8px rgba(255,68,0,0.6); }
+      50% { text-shadow: 0 0 20px rgba(255,68,0,1); }
+    }
+
+    #burnTotalBlock { margin-bottom: 10px; }
+
+    #burnTotalLabel {
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    #burnBarWrapper {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      border: 1px solid #ff4400;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    #burnBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #ff2200, #ff8800);
+      border-radius: 6px;
+      transition: width 1.2s ease;
+      box-shadow: 0 0 6px #ff4400;
+    }
+
+    #burnTotalValue { font-size: 11px; color: #cc6633; }
+
+    #burnCTAText {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    #burnShareBtn, #burnNowBtn {
+      border: 2px solid black;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 black;
+      font-family: 'Fredoka', sans-serif;
+      text-transform: uppercase;
+      margin: 4px 2px;
+    }
+
+    #burnShareBtn { background: linear-gradient(to bottom, #ff5500, #cc2200); color: white; }
+    #burnNowBtn { background: linear-gradient(to bottom, #9945FF, #6a1fc2); color: white; display: none; }
+    #burnNowBtn:hover, #burnShareBtn:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
+
+    #burnTxStatus {
+      font-size: 12px;
+      margin-top: 6px;
+      color: #00ffcc;
+      display: none;
+      word-break: break-all;
+    }
+
+    /* -------------------- OBJECTIFS -------------------- */
     #objectifList {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-#objectifPanel {
+    #objectifPanel {
+      background: linear-gradient(180deg,#fffbe6,#f3edd6);
+      padding: 25px;
+      border-radius: 25px;
+      border: 4px solid black;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      width: 480px;
+      max-width: 95vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      font-size: 18px;
+    }
 
-background: linear-gradient(180deg,#fffbe6,#f3edd6);
+    #objectifPanel ul { list-style: none; padding: 0; }
+    #objectifPanel li { font-size: 18px; padding: 6px 0; }
+    #objectifPanel h2 { text-align: center; margin-bottom: 10px; }
+    #objectifPanel h3 { margin: 16px 0 8px; font-size: 20px; }
 
-padding: 25px;
+    #closeObjectifs {
+      margin: 20px auto 0 auto;
+      display: block;
+      font-size: 20px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 3px solid black;
+      background: #ffaa00;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 black;
+    }
 
-border-radius: 25px;
+    #totalDistanceDisplay { margin: 10px 0 14px; font-size: 18px; color: #333; }
 
-border: 4px solid black;
+    .rocket-item {
+      font-size: 17px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 3px solid black;
+      background: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      padding-left: 22px;
+    }
 
-box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    .rocket-unlocked { background: linear-gradient(90deg,#c8ffd8,#a9f0c0); }
+    .rocket-locked { background: #e5e5e5; color: #777; opacity: 0.7; }
+    .rocket-selected { outline: 3px solid #00cfcf; background: #cfffff; }
+    .rocket-icon { width: 40px; height: 40px; margin-right: 10px; }
 
-width: 480px;
-max-width: 95vw;
+    .buy-btn {
+      margin-left: 12px;
+      background: linear-gradient(to bottom, #ffd84d, #ffb300);
+      border: 3px solid #333;
+      border-radius: 12px;
+      padding: 6px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #996600;
+      font-size: 14px;
+    }
 
-max-height: 80vh;
-overflow-y: auto;
+    .buy-btn:hover { transform: scale(1.05); }
+    .buy-btn:active { transform: scale(0.92); box-shadow: 0 2px 0 #996600; }
 
-font-size: 18px;
-
-}
-
-#objectifPanel ul {
-  list-style: none;
-  padding: 0;
-}
-
-#objectifPanel li {
-  font-size: 18px;
-  padding: 6px 0;
-}
-
-#objectifPanel h2 {
-  text-align: center;
-  margin-bottom: 10px;
-}    
-
-#objectifPanel h3 {
-  margin: 16px 0 8px;
-  font-size: 20px;
-}
-
-#objectifPanel {
-  padding: 25px;
-}    
-
-#closeObjectifs{
-margin:20px auto 0 auto; /* 🔥 centre */
-display:block;
-
-font-size:20px;
-padding:10px 20px;
-border-radius:12px;
-border:3px solid black;
-background:#ffaa00;
-font-weight:bold;
-cursor:pointer;
-box-shadow:3px 3px 0 black;
-}
-
-#totalDistanceDisplay {
-  margin: 10px 0 14px;
-  font-size: 18px;
-  color: #333;
-}
-
-.rocket-item{
-font-size:17px;
-
-padding:12px 18px; 
-
-border-radius:12px;
-
-margin-bottom:12px;
-
-border:3px solid black;
-
-background:white;
-
-font-weight:bold;
-
-display: flex;           /* 🔥 IMPORTANT */
-  align-items: center;  
-}
-
-.rocket-item {
-  padding-left: 22px; /* 🔥 FORCE espace à gauche */
-}    
-
-
-
-.rocket-unlocked{
-
-background:linear-gradient(90deg,#c8ffd8,#a9f0c0);
-
-}
-
-.rocket-locked{
-
-background:#e5e5e5;
-color:#777;
-
-opacity:0.7;
-
-}
-
-.rocket-selected {
-  outline: 3px solid #00cfcf;
-  background: #cfffff;
-}    
-
-.objectif-achieved::before {
-  content: "✅ ";
-  color: green;
-}
-
-
-#objectifsBtn:hover {
-  background: #fdd835;
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 6px 6px 0 black;
-}
-
-
+    /* -------------------- MISC -------------------- */
     #success-banner {
       position: fixed;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.85);
+      background-color: rgba(0,0,0,0.85);
       color: #00ffcc;
       padding: 12px 24px;
       border-radius: 16px;
@@ -347,715 +509,414 @@ opacity:0.7;
       font-weight: bold;
       display: none;
       z-index: 999;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+      box-shadow: 0 0 12px rgba(0,255,204,0.5);
       text-align: center;
     }
 
-
     #menuStars {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       z-index: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       background: #001122;
     }
 
-    #milestoneMessage{
-position:fixed;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:42px;
-color:white;
-font-weight:bold;
-text-shadow:0 0 10px cyan;
-opacity:0;
-transition:opacity 0.4s;
-will-change: opacity;
-pointer-events:none;
-z-index:999;
-
-white-space:nowrap;
-text-align:center;
-max-width:95vw;
-}
-
-    @media (max-width: 768px) {
-      #playButton, #rejouer, #shareScore {
-        font-size: 20px;
-        padding: 10px 25px;
-        width: auto;
-      } 
-      #milestoneMessage{
-        font-size:22px;
-      }
+    #milestoneMessage {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 42px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 0 0 10px cyan;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap;
+      text-align: center;
+      max-width: 95vw;
     }
-    
 
-      
-      #gameOverText {
-        font-size: 32px;
-      }      
+    #levelFlash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: cyan;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 998;
+      transition: opacity 0.15s;
     }
-#settingsBtn{
-font-family:'Fredoka', sans-serif;
-font-weight:bold;
-font-size:22px;
-padding:12px 30px;
-margin-top:12px;
 
-background:#ffaa00;
-color:black;
+    #settingsBtn {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      font-size: 22px;
+      padding: 12px 30px;
+      margin-top: 12px;
+      background: #ffaa00;
+      color: black;
+      border: 4px solid black;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 black;
+      display: block;
+      margin: 15px auto;
+      width: 220px;
+      text-transform: uppercase;
+    }
 
-border:4px solid black;
-border-radius:15px;
+    #settingsPanel {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
 
-cursor:pointer;
+    #settingsBox {
+      background: linear-gradient(180deg,#fffbe6,#f3edd6);
+      padding: 25px;
+      border-radius: 25px;
+      border: 4px solid black;
+      text-align: center;
+      width: 320px;
+    }
 
-box-shadow:4px 4px 0 black;
-
-display:block;
-margin:15px auto;
-width:200px;
-
-text-transform:uppercase;
-}
-
-#settingsPanel{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:1000;
-}
-
-#settingsBox{
-background:linear-gradient(180deg,#fffbe6,#f3edd6);
-padding:25px;
-border-radius:25px;
-border:4px solid black;
-text-align:center;
-width:320px;
-}
-
-#settingsBox button{
-display:block;
-margin:12px auto;
-font-size:20px;
-padding:10px 20px;
-border-radius:12px;
-border:3px solid black;
-background:#ffaa00;
-cursor:pointer;
-font-weight:bold;
-}
-
-.menuBtn {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: bold;
-  font-size: 22px;
-  padding: 12px 30px;
-
-  background: #ffaa00;
-  color: black;
-
-  border: 4px solid black;
-  border-radius: 15px;
-
-  cursor: pointer;
-
-  box-shadow: 4px 4px 0 black;
-
-  display: block;
-  margin: 15px auto;
-  width: 200px;
-
-  text-transform: uppercase;
-
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.menuBtn:hover {
-  background: #ff8800;
-  transform: translateY(-2px);
-  box-shadow: 6px 6px 0 black;
-}
-
-.menuBtn:active {
-  transform: translateY(2px);
-  box-shadow: 2px 2px 0 black;
-}   
-
-#progressLabel {
-  position: absolute;
-  top: 50px;
-  right: 20px;
-  font-size: 16px;
-  color: white;
-  font-weight: bold;
-  text-shadow: 2px 2px 0 black;
-  z-index: 10;
-  display: none;
-}
-
-/* 🔥 LE PLUS IMPORTANT */
-#progressContainer {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 220px;
-  height: 24px;
-
-  background: rgba(255,255,255,0.2);
-  border: 4px solid black;
-  border-radius: 14px;
-
-  overflow: hidden;
-  box-shadow: 4px 4px 0 black;
-
-  z-index: 10;
-  display: none;
-}
-
-#progressBarOld {
-  height: 100%;
-  width: 0%;
-
-   background: linear-gradient(to right, #00ffcc, #00ccff);
-  border-radius: 10px;
-
-  transition: width 0.15s linear;
-}
-
-#wordDisplay {
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  font-size: 22px;
-  color: white;
-  font-weight: bold;
-
-  background: rgba(0,0,0,0.6);
-  padding: 6px 14px;
-  border-radius: 12px;
-  border: 2px solid white;
-
-  z-index: 10;
-  display: none;
-}
-
-#playButton {
-  width: 220px;
-  height: 60px;
-}
-
-
-
-#topHUD {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 20;
-  pointer-events: none;
-}
-
-#distance {
-  position: absolute;
-  left: 10px;
-  background: #b6fcb6;
-  color: #003300;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 6px 12px;
-  border-radius: 12px;
-  border: 3px solid black;
-  box-shadow: 3px 3px 0 black;
-  white-space: nowrap;
-  pointer-events: auto;
-}
-
-#progressWrapper {
-  width: 300px;
-  max-width: 40vw;
-  height: 24px;
-  background: rgba(255,255,255,0.2);
-  border: 3px solid black;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(to right, #00ffcc, #00ccff);
-}
-
-#progressText {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 0; left: 0;
-  font-size: 11px;
-  color: white;
-  font-weight: bold;
-  line-height: 24px;
-}
-
-#progressLabel {
-  color: white;
-  font-size: 13px;
-  font-weight: bold;
-  text-shadow: 1px 1px 0 black;
-  white-space: nowrap;
-}   
-
-    .smallStar {
-  font-size: 16px;
-}
-
-.bigStar {
-  font-size: 24px; /* ou 26 si tu veux plus impact */
-}
-
-    #modeSelect {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 20;
-}
-
-
- .buy-btn {
-  margin-left: 12px;
-  background: linear-gradient(to bottom, #ffd84d, #ffb300);
-  border: 3px solid #333;
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #996600;
-  font-size: 14px;
-}
-
-.buy-btn:hover {
-  transform: scale(1.05);
-}
-
-.buy-btn:active {
-  transform: scale(0.92);
-  box-shadow: 0 2px 0 #996600;
-}
-
-    .rocket-icon {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
+    #settingsBox button {
+      display: block;
+      margin: 12px auto;
+      font-size: 20px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 3px solid black;
+      background: #ffaa00;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
     .tutorial-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 20, 0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,20,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
 
-.tutorial-box {
-  background: linear-gradient(145deg, #001122, #002244);
-  border: 2px solid #00ccff;
-  border-radius: 20px;
-  padding: 30px;
-  text-align: center;
-  color: white;
-  width: 300px;
-  box-shadow: 0 0 20px #00ccff;
-}
+    .tutorial-box {
+      background: linear-gradient(145deg, #001122, #002244);
+      border: 2px solid #00ccff;
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      color: white;
+      width: 300px;
+      box-shadow: 0 0 20px #00ccff;
+    }
 
-.tutorial-box h2 {
-  margin-bottom: 15px;
-}
+    .tutorial-box h2 { margin-bottom: 15px; }
+    .tutorial-box p { font-size: 16px; margin-bottom: 20px; }
+    .tutorial-box button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #00ccff;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.tutorial-box p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
+    #rotateMessage {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      color: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      text-align: center;
+      z-index: 9999;
+    }
 
-.tutorial-box button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #00ccff;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .smallStar { font-size: 16px; }
+    .bigStar { font-size: 24px; }
 
+    #menuObjectivesBtn {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: bold;
+      font-size: 22px;
+      padding: 12px 30px;
+      background: #ffaa00;
+      color: black;
+      border: 4px solid black;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 black;
+      display: block;
+      margin: 15px auto;
+      width: 220px;
+      text-transform: uppercase;
+    }
 
-#rotateMessage {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
-  color: white;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  text-align: center;
-  z-index: 9999;
-}  
+    #menuObjectivesBtn:hover {
+      background: #ff8800;
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 black;
+    }
 
-    * { font-family: 'Fredoka', sans-serif; }
-
-/* scoreBoard */
-#scoreBoard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fffbe6;
-  padding: 20px 24px;
-  border-radius: 20px;
-  border: 5px solid black;
-  text-align: center;
-  z-index: 17;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  font-size: 16px;
-  font-weight: bold;
-  color: #222;
-  display: none;
-  width: 340px;
-  max-width: 90vw;
-}
-
-#scoreBoard h2 { margin: 0 0 10px 0; font-size: 22px; color: #333; }
-#scoreBoard p { margin: 5px 0; font-size: 15px; text-align: left; }
-
-#gameOverButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-#gameOverButtons button {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: bold;
-  font-size: 15px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 3px solid black;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 black;
-  text-transform: uppercase;
-}
-
-#burnNowBtn {
-  grid-column: 1 / -1;
-  background: linear-gradient(to bottom, #9945FF, #6a1fc2);
-  color: white;
-}
-#rejouer { background: #ff8800; color: black; }
-#objectifsBtn { background: #fff04f; color: black; }
-#shareScore { background: #00cfcf; color: black; }
-#backToMenu { background: #ffaa00; color: black; }
-#gameOverButtons button:hover { transform: translateY(-2px); }
-
-#burnTxStatus {
-  font-size: 12px;
-  color: #9945FF;
-  margin-top: 8px;
-  display: none;
-  word-break: break-all;
-}
-
-/* burn dashboard */
-#burnDashboard {
-  margin-top: 14px;
-  background: linear-gradient(160deg, #0a0015, #1a0030);
-  border: 2px solid #ff4400;
-  border-radius: 14px;
-  padding: 14px 16px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 0 18px rgba(255,80,0,0.4);
-}
-
-#burnSessionBlock {
-  background: rgba(255,80,0,0.12);
-  border: 1px solid #ff4400;
-  border-radius: 10px;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-}
-
-#burnSessionLabel {
-  font-size: 10px;
-  color: #ff9966;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-#burnSessionValue {
-  font-size: 28px;
-  font-weight: bold;
-  color: #ff4400;
-  animation: burnPulse 1.5s ease-in-out infinite;
-}
-
-.burnUnit { font-size: 16px; color: #ff8844; }
-
-@keyframes burnPulse {
-  0%, 100% { text-shadow: 0 0 8px rgba(255,68,0,0.6); }
-  50% { text-shadow: 0 0 20px rgba(255,68,0,1); }
-}
-
-#burnTotalBlock { margin-bottom: 10px; }
-
-#burnTotalLabel {
-  font-size: 10px;
-  color: #aaa;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-
-#burnBarWrapper {
-  width: 100%;
-  height: 12px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  border: 1px solid #ff4400;
-  overflow: hidden;
-  margin-bottom: 4px;
-}
-
-#burnBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(to right, #ff2200, #ff8800);
-  border-radius: 6px;
-  transition: width 1.2s ease;
-  box-shadow: 0 0 6px #ff4400;
-}
-
-#burnTotalValue { font-size: 11px; color: #cc6633; }
-
-#burnCTAText {
-  font-size: 11px;
-  color: #777;
-  margin-bottom: 8px;
-  font-style: italic;
-}
-
-#burnShareBtn, #burnNowBtn {
-  border: 2px solid black;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 black;
-  font-family: 'Fredoka', sans-serif;
-  text-transform: uppercase;
-  margin: 4px 2px;
-}
-
-#burnShareBtn { background: linear-gradient(to bottom, #ff5500, #cc2200); color: white; }
-#burnNowBtn { background: linear-gradient(to bottom, #9945FF, #6a1fc2); color: white; display: none; }
-#burnNowBtn:hover, #burnShareBtn:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
-
-#burnTxStatus {
-  font-size: 12px;
-  margin-top: 6px;
-  color: #00ffcc;
-  display: none;
-  word-break: break-all;
-}
-
-/* game over buttons */
-#gameOverButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 14px;
-}
-
-#gameOverButtons button {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: bold;
-  font-size: 15px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: 3px solid black;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 black;
-  text-transform: uppercase;
-}
-
-#rejouer { background: #ff8800; color: black; }
-#objectifsBtn { background: #fff04f; color: black; }
-#shareScore { background: #00cfcf; color: black; }
-#backToMenu { background: #ffaa00; color: black; }
-#gameOverButtons button:hover { transform: translateY(-2px); box-shadow: 5px 5px 0 black; }
-
-/* wallet */
-#connectWalletBtn { transition: opacity 0.2s; }
-#walletStatus { font-size: 13px; color: #9945FF; margin-top: 4px; }
-
+    @media (max-width: 768px) {
+      #milestoneMessage { font-size: 22px; }
+      #gameOverText { font-size: 32px; }
+    }
   </style>
 </head>
 <body>
   <canvas id="menuStars"></canvas>
 
-  
+  <!-- -------------------- MENU -------------------- -->
   <div id="menu">
-  <h1 id="gameTitle">Astro-Burn 🔥</h1>
+    <h1 id="gameTitle">Astro-Burn 🔥</h1>
 
-  <img id="menuImage" src="menu.png" alt="Image menu" />
+    <img id="menuImage" src="menu.png" alt="Image menu" />
 
-  <button id="playButton" class="menuBtn">Play</button>
-<button id="menuObjectivesBtn" class="menuBtn">🔥 $BURN Ranks</button>
-<button id="connectWalletBtn" class="menuBtn" style="background:#9945FF; color:white;">👻 Connect Wallet</button>
-<div id="walletStatus" style="color:#9945FF; font-size:14px; margin-top:6px; display:none;"></div>
-<button id="settingsBtn" class="menuBtn">Settings</button>
+    <div id="rocketSelector">
+      <div id="arrowLeft">‹</div>
+      <canvas id="menuRocket"></canvas>
+      <div id="arrowRight">›</div>
+    </div>
 
-</div>
-
-  <div id="tutorialModal" class="tutorial-modal">
-  <div class="tutorial-box">
-
-    <h2 id="tutorialTitle">🚀 How to play</h2>
-
-    <p id="tutorialText">...</p>
-
-    <button id="tutorialBtn">PLAY</button>
-
+    <button id="playButton" class="menuBtn">Play</button>
+    <button id="menuObjectivesBtn" class="menuBtn">🔥 $BURN Ranks</button>
+    <button id="connectWalletBtn" class="menuBtn">👻 Connect Wallet</button>
+    <div id="walletStatus"></div>
+    <button id="settingsBtn" class="menuBtn">Settings</button>
   </div>
-</div>
+
+  <!-- -------------------- TUTORIAL -------------------- -->
+  <div id="tutorialModal" class="tutorial-modal">
+    <div class="tutorial-box">
+      <h2 id="tutorialTitle">🚀 How to play</h2>
+      <p id="tutorialText">...</p>
+      <button id="tutorialBtn">PLAY</button>
+    </div>
+  </div>
 
   <canvas id="game"></canvas>
 
   <div id="rotateMessage">
-  📱 Please rotate your device
-</div>
-
-
-<div id="topHUD" style="display:none;">
-  <div id="distance">🔥 0 $BURN</div>
-  <div id="progressWrapper">
-    <div id="progressBar"></div>
-    <div id="progressText">0 / 500</div>
+    📱 Please rotate your device
   </div>
-  <div id="progressLabel"></div>
-</div>
 
-<div id="wordDisplay" style="display:none;"></div>
-  
+  <!-- -------------------- TOP HUD -------------------- -->
+  <div id="topHUD" style="display:none;">
+    <div id="stats">
+      <span class="smallStar">⭐</span> <span id="starCount">0</span>
+      💥 <span id="destroyCount">0</span>
+    </div>
+    <div id="progressWrapper">
+      <div id="progressBar"></div>
+      <div id="progressText">0 / 30</div>
+    </div>
+    <div id="distance">⭐ 0</div>
+    <div id="wordDisplay">G _ _ _ _ _</div>
+  </div>
 
-  <!-- 🆕 Tableau de score -->
+  <div id="progressLabel" style="display:none;">Next Grade</div>
+
+  <!-- -------------------- SCOREBOARD -------------------- -->
   <div id="scoreBoard">
+    <h2>🔥 ASTRO-BURN</h2>
+    <p><strong id="label1">⭐ Stars:</strong> <span id="currentScore">0</span></p>
+    <p><strong id="label2">☄️ Meteors:</strong> <span id="bestScore">0</span></p>
+    <p><strong id="label3">⭐ Total Stars:</strong> <span id="totalScore">0</span></p>
+    <p><strong id="label4">☄️ Total Meteors:</strong> <span id="grade">0</span></p>
 
-  <h2>🔥 ASTRO-BURN</h2>
+    <!-- Burn Dashboard -->
+    <div id="burnDashboard">
+      <div id="burnSessionBlock">
+        <div id="burnSessionLabel">🔥 $BURN this run</div>
+        <div id="burnSessionValue">0 <span class="burnUnit">$BURN</span></div>
+      </div>
+      <div id="burnTotalBlock">
+        <div id="burnTotalLabel">Total $BURN accumulated</div>
+        <div id="burnBarWrapper">
+          <div id="burnBar"></div>
+        </div>
+        <div id="burnTotalValue">0 / 1,000,000,000</div>
+      </div>
+      <div id="burnCTAText">Every star = 1 $BURN destroyed forever</div>
+      <button id="burnShareBtn">🔥 Share my burn</button>
+      <button id="burnNowBtn">👻 Burn on-chain (Devnet)</button>
+      <div id="burnTxStatus"></div>
+    </div>
 
-  <p>🚀 <strong>Astro ce run :</strong> <span id="currentScore">0</span></p>
-  <p>🏆 <strong>Best run :</strong> <span id="bestScore">0</span></p>
-  <p>💀 <strong>Total cumulé :</strong> <span id="totalScore">0</span></p>
-  <p>📊 <strong>Supply brûlée :</strong> <span id="burnPercent">0.000000%</span></p>
-  <p>🎖 <strong>Rang :</strong> <span id="grade">—</span></p>
-
-  <div id="gameOverButtons">
-    <button id="burnNowBtn">👻 Burn on-chain</button>
-    <button id="rejouer">Replay</button>
-    <button id="objectifsBtn">Ranks</button>
-    <button id="shareScore">Share</button>
-    <button id="backToMenu">Menu</button>
+    <div id="gameOverButtons">
+      <button id="rejouer">Replay</button>
+      <button id="objectifsBtn">Ranks</button>
+      <button id="shareScore">Share</button>
+      <button id="backToMenu">Menu</button>
+    </div>
   </div>
-  <div id="burnTxStatus"></div>
 
-</div>
-  
-  <div id="success-banner"></div>
-
-<div id="objectifList" style="display: none;">
-  <div id="objectifPanel">
-    <h2>🔥 $BURN Ranks</h2>
-    <p id="totalDistanceDisplay">Total $BURN destroyed: 0</p>
-    <h3>Ranks</h3>
-    <ul id="objectifItems"></ul>
-    <button id="closeObjectifs">Close</button>
+  <!-- -------------------- OBJECTIFS -------------------- -->
+  <div id="objectifList" style="display:none;">
+    <div id="objectifPanel">
+      <h2>🔥 $BURN Ranks</h2>
+      <p id="totalDistanceDisplay">Total $BURN destroyed: 0</p>
+      <p id="currencyDisplay">⭐ 0 &nbsp;&nbsp; ☄️ 0</p>
+      <h3>Grades</h3>
+      <ul id="objectifItems"></ul>
+      <h3>Rockets</h3>
+      <ul id="rocketItems"></ul>
+      <h3>Shop</h3>
+      <ul id="shopRocketItems"></ul>
+      <button id="closeObjectifs">Close</button>
+    </div>
   </div>
-</div>
 
   <div id="gameOverText">GAME OVER</div>
-  
+  <div id="success-banner"></div>
+
   <audio id="gameMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-<div id="milestoneMessage"></div> 
-<div id="levelFlash"></div>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
 
-<div id="settingsPanel" style="display:none;">
-  <div id="settingsBox">
+  <div id="milestoneMessage"></div>
+  <div id="levelFlash"></div>
 
-    <h2>Settings</h2>
-
-    <button id="toggleMusic">Music: ON</button>
-
-    <button id="resetGameBtn">Reset Game</button>
-
-    <button id="closeSettings">Close</button>
-
+  <!-- -------------------- SETTINGS -------------------- -->
+  <div id="settingsPanel" style="display:none;">
+    <div id="settingsBox">
+      <h2>Settings</h2>
+      <button id="toggleMusic">Music: ON</button>
+      <button id="resetGameBtn">Reset Game</button>
+      <button id="closeSettings">Close</button>
+    </div>
   </div>
-</div>
 
-
-
-
-  
   <script src="game.js"></script>
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
+  <!-- Wallet Phantom -->
+  <script>
+  (() => {
+    let walletPublicKey = null;
+
+    const connectBtn = document.getElementById("connectWalletBtn");
+    const walletStatus = document.getElementById("walletStatus");
+    const burnNowBtn = document.getElementById("burnNowBtn");
+    const burnTxStatus = document.getElementById("burnTxStatus");
+
+    window.setLastSessionBurn = (amount) => {
+      if (walletPublicKey && burnNowBtn) {
+        burnNowBtn.style.display = "inline-block";
+      }
+    };
+
+    if (connectBtn) {
+      connectBtn.onclick = async () => {
+        try {
+          const provider = window.solana;
+          if (!provider || !provider.isPhantom) {
+            alert("Phantom wallet not found!\n\nInstall it at phantom.app then switch to Devnet in settings.");
+            return;
+          }
+          const resp = await provider.connect();
+          walletPublicKey = resp.publicKey.toString();
+          connectBtn.textContent = "✅ " + walletPublicKey.slice(0,4) + "..." + walletPublicKey.slice(-4);
+          connectBtn.style.background = "#1a9e1a";
+          if (walletStatus) {
+            walletStatus.textContent = "Connected on Devnet";
+            walletStatus.style.display = "block";
+          }
+        } catch(e) {
+          console.error("Wallet connection failed:", e);
+        }
+      };
+    }
+
+    if (burnNowBtn) {
+      burnNowBtn.onclick = async () => {
+        if (!walletPublicKey) {
+          alert("Connect your Phantom wallet first!");
+          return;
+        }
+        const cumulBurn = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+        if (cumulBurn <= 0) {
+          alert("No $BURN to send — play some runs first!");
+          return;
+        }
+        if (cumulBurn < 5000) {
+          alert(`Accumulate at least 5,000 $BURN before burning!\nCurrent: ${cumulBurn.toLocaleString()} / 5,000`);
+          return;
+        }
+        const MAX_BURN = 5000;
+        const safeBurn = Math.min(cumulBurn, MAX_BURN);
+        if (!walletPublicKey || walletPublicKey.length < 32 || walletPublicKey.length > 44) {
+          alert("Invalid wallet — reconnect Phantom.");
+          return;
+        }
+        const lastBurnKey = "lastBurn_" + walletPublicKey;
+        const lastBurnTime = parseInt(localStorage.getItem(lastBurnKey) || "0");
+        const now = Date.now();
+        const cooldown = 24 * 60 * 60 * 1000;
+        if (now - lastBurnTime < cooldown) {
+          const hoursLeft = Math.ceil((cooldown - (now - lastBurnTime)) / 3600000);
+          alert(`You already burned today!\nCome back in ${hoursLeft}h.`);
+          return;
+        }
+        try {
+          burnNowBtn.textContent = "⏳ Sending...";
+          burnNowBtn.disabled = true;
+          if (burnTxStatus) burnTxStatus.style.display = "none";
+          const WEBHOOK_URL = "https://astrolab-rush-production.up.railway.app/burn";
+          const response = await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ date: new Date().toISOString(), wallet: walletPublicKey, score: safeBurn })
+          });
+          if (!response.ok) throw new Error("Webhook failed");
+          localStorage.setItem("totalBurnedTokens", "0");
+          localStorage.setItem("lastBurn_" + walletPublicKey, Date.now().toString());
+          if (burnTxStatus) {
+            burnTxStatus.style.display = "block";
+            burnTxStatus.innerHTML = `✅ ${safeBurn.toLocaleString()} $BURN submitted for burn!`;
+          }
+          burnNowBtn.textContent = "✅ Submitted!";
+          burnNowBtn.style.background = "#1a9e1a";
+        } catch(e) {
+          console.error("Burn failed:", e);
+          burnNowBtn.textContent = "❌ Failed — retry";
+          burnNowBtn.disabled = false;
+          if (burnTxStatus) {
+            burnTxStatus.style.display = "block";
+            burnTxStatus.textContent = "Error: " + (e.message || "unknown");
+          }
+        }
+      };
+    }
+  })();
+  </script>
+
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
+      window.addEventListener("load", function() {
         navigator.serviceWorker.register("sw.js").then(
-          function (registration) {
-            console.log("✅ Service Worker enregistré :", registration);
-          },
-          function (err) {
-            console.error("❌ Erreur d'enregistrement du Service Worker :", err);
-          }
+          function(registration) { console.log("✅ Service Worker enregistré :", registration); },
+          function(err) { console.error("❌ Erreur SW :", err); }
         );
       });
     }
   </script>
- 
 </body>
 </html>
