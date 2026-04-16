@@ -139,36 +139,60 @@
     /* -------------------- HUD -------------------- */
     #topHUD {
       position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0;
+      left: 0;
+      width: 100%;
       display: flex;
       align-items: center;
-      gap: 12px;
       z-index: 20;
       pointer-events: none;
+      padding: 10px;
+      box-sizing: border-box;
+      gap: 10px;
     }
 
     #distance {
       color: #003300;
-      font-size: 22px;
+      font-size: 20px;
       background: #b6fcb6;
-      padding: 8px 18px;
+      padding: 7px 16px;
       border-radius: 15px;
       border: 3px solid black;
       box-shadow: 3px 3px 0 black;
       font-weight: bold;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    #stats {
-      font-size: 18px;
-      color: white;
-      background: rgba(0,0,0,0.6);
-      padding: 8px 14px;
+    #progressWrapper {
+      flex: 1;
+      height: 22px;
+      background: rgba(255,255,255,0.2);
+      border: 3px solid black;
       border-radius: 12px;
-      border: 2px solid black;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 2px 2px 0 black;
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #00ffcc, #00ccff);
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+
+    #progressText {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0; left: 0;
+      font-size: 12px;
+      color: white;
       font-weight: bold;
+      line-height: 22px;
+      text-shadow: 1px 1px 0 black;
     }
 
     /* -------------------- GAME OVER -------------------- */
@@ -659,17 +683,15 @@
   <!-- -------------------- TOP HUD -------------------- -->
   <div id="topHUD" style="display:none;">
     <div id="distance">⭐ 0 / 30</div>
-    <div id="stats">
-      💥 <span id="destroyCount">0</span>
+    <div id="progressWrapper">
+      <div id="progressBar"></div>
+      <div id="progressText">0 / 30</div>
     </div>
   </div>
 
-  <div id="progressWrapper" style="display:none;">
-    <div id="progressBar"></div>
-    <div id="progressText">0 / 30</div>
-  </div>
   <div id="progressLabel" style="display:none;"></div>
   <div id="wordDisplay" style="display:none;"></div>
+  <div id="stats" style="display:none;"><span id="destroyCount">0</span></div>
 
   <!-- -------------------- SCOREBOARD -------------------- -->
   <div id="scoreBoard">

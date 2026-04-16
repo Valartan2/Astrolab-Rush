@@ -1588,8 +1588,7 @@ particles = [];
     objectifList.style.display = "none";
     scoreBoard.style.display = "none";
     backToMenuBtn.style.display = "none";
-    progressBar.parentElement.style.display = "none";
-    progressLabel.style.display = "none";
+    if (progressBar) progressBar.style.width = "0%";
     lastSpecialSpawn = 0;
     lastTime = 0;
    
@@ -1843,6 +1842,11 @@ if (hitFlashTimer > 0) {
       gameOverText.style.display = "block";
 
       afficherTableauScore(distance);
+
+      rejouerBtn.style.display = "block";
+      shareBtn.style.display = "block";
+      objectifsBtn.style.display = "block";
+      backToMenuBtn.style.display = "block";
     }
 
     animationId = requestAnimationFrame(gameLoop);
@@ -2230,6 +2234,17 @@ if (hitFlashTimer > 0) {
 
   // display étoiles
   distanceDisplay.textContent = `⭐ ${starScore} / ${missionTarget}`;
+
+  // barre de progression étoiles
+  {
+    const percent = Math.min((starScore / missionTarget) * 100, 100);
+    if (progressBar) {
+      progressBar.style.width = percent + "%";
+      progressBar.style.background = "linear-gradient(to right, #00ffcc, #00ccff)";
+    }
+    const progressText = document.getElementById("progressText");
+    if (progressText) progressText.textContent = `${starScore} / ${missionTarget} ⭐`;
+  }
 
   // particles
   for (let i = particles.length - 1; i >= 0; i--) {
