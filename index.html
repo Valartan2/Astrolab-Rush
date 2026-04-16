@@ -138,98 +138,37 @@
 
     /* -------------------- HUD -------------------- */
     #topHUD {
-      position: absolute;
+      position: fixed;
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      width: 100%;
-      max-width: 600px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 0 10px;
+      gap: 12px;
       z-index: 20;
-    }
-
-    #stats {
-      font-size: 14px;
-      color: white;
-      background: rgba(0,0,0,0.5);
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 2px solid black;
-    }
-
-    #progressWrapper {
-      flex: 1;
-      height: 22px;
-      background: rgba(255,255,255,0.2);
-      border: 3px solid black;
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #progressBar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #00ffcc, #00ccff);
-      transition: width 0.15s linear;
-    }
-
-    #progressText {
-      position: absolute;
-      width: 100%;
-      text-align: center;
-      top: 0;
-      left: 0;
-      font-size: 12px;
-      color: white;
-      font-weight: bold;
+      pointer-events: none;
     }
 
     #distance {
-      position: absolute;
-      top: 10px;
-      left: 20px;
       color: #003300;
-      font-size: 24px;
+      font-size: 22px;
       background: #b6fcb6;
-      padding: 10px 20px;
+      padding: 8px 18px;
       border-radius: 15px;
       border: 3px solid black;
       box-shadow: 3px 3px 0 black;
-      z-index: 10;
       font-weight: bold;
-      display: none;
+      white-space: nowrap;
     }
 
-    #wordDisplay {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 22px;
+    #stats {
+      font-size: 18px;
       color: white;
-      font-weight: bold;
       background: rgba(0,0,0,0.6);
-      padding: 6px 14px;
+      padding: 8px 14px;
       border-radius: 12px;
-      border: 2px solid white;
-      z-index: 10;
-      display: none;
-    }
-
-    #progressLabel {
-      position: absolute;
-      top: 50px;
-      right: 20px;
-      font-size: 16px;
-      color: white;
+      border: 2px solid black;
       font-weight: bold;
-      text-shadow: 2px 2px 0 black;
-      z-index: 10;
-      display: none;
     }
 
     /* -------------------- GAME OVER -------------------- */
@@ -719,19 +658,18 @@
 
   <!-- -------------------- TOP HUD -------------------- -->
   <div id="topHUD" style="display:none;">
+    <div id="distance">⭐ 0 / 30</div>
     <div id="stats">
-      <span class="smallStar">⭐</span> <span id="starCount">0</span>
       💥 <span id="destroyCount">0</span>
     </div>
-    <div id="progressWrapper">
-      <div id="progressBar"></div>
-      <div id="progressText">0 / 30</div>
-    </div>
-    <div id="distance">⭐ 0</div>
-    <div id="wordDisplay">G _ _ _ _ _</div>
   </div>
 
-  <div id="progressLabel" style="display:none;">Next Grade</div>
+  <div id="progressWrapper" style="display:none;">
+    <div id="progressBar"></div>
+    <div id="progressText">0 / 30</div>
+  </div>
+  <div id="progressLabel" style="display:none;"></div>
+  <div id="wordDisplay" style="display:none;"></div>
 
   <!-- -------------------- SCOREBOARD -------------------- -->
   <div id="scoreBoard">

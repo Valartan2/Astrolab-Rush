@@ -1460,6 +1460,9 @@ function afficherTableauScore(score) {
   totalScoreSpan.textContent = getTotalStars();
   gradeSpan.textContent = getTotalDestroyed();
 
+  // 🔥 BURN DASHBOARD
+  afficherBurnDashboard(starScore);
+
   updateObjectifDisplay();
   scoreBoard.style.display = "block";
 
@@ -1468,6 +1471,56 @@ function afficherTableauScore(score) {
     setTimeout(() => {
       showSuccessBanner(`🚀 New rocket unlocked: ${lastUnlocked.label}`);
     }, 250);
+  }
+}
+
+/* -------------------- Burn Dashboard -------------------- */
+function afficherBurnDashboard(sessionBurned) {
+  const TOTAL_SUPPLY = 1_000_000_000;
+
+  const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
+  const newTotal = prevTotal + sessionBurned;
+  localStorage.setItem("totalBurnedTokens", newTotal);
+
+  const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+
+  const sessionEl = document.getElementById("burnSessionValue");
+  const burnBarEl = document.getElementById("burnBar");
+  const burnTotalEl = document.getElementById("burnTotalValue");
+  const burnShareBtn = document.getElementById("burnShareBtn");
+  const burnNowBtn = document.getElementById("burnNowBtn");
+  const burnTxStatus = document.getElementById("burnTxStatus");
+
+  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionBurned) + ' <span class="burnUnit">$BURN</span>';
+  if (burnTotalEl) burnTotalEl.textContent = formatNumber(newTotal) + " / 1,000,000,000";
+
+  if (burnBarEl) {
+    burnBarEl.style.width = "0%";
+    setTimeout(() => {
+      burnBarEl.style.width = burnPercent.toFixed(4) + "%";
+    }, 300);
+  }
+
+  if (burnNowBtn) {
+    burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
+    burnNowBtn.disabled = false;
+    burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
+    burnNowBtn.style.display = "block";
+  }
+  if (burnTxStatus) {
+    burnTxStatus.style.display = "none";
+    burnTxStatus.textContent = "";
+  }
+
+  if (window.setLastSessionBurn) {
+    window.setLastSessionBurn(sessionBurned);
+  }
+
+  if (burnShareBtn) {
+    burnShareBtn.onclick = () => {
+      const text = `🔥 I just collected ${formatNumber(sessionBurned)} $BURN stars in one run!\n\nEvery star = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+    };
   }
 }
 
@@ -1515,7 +1568,7 @@ particles = [];
     gameOver = false;
     distance = 0;
     nextBonusDistance = 250;
-    progressBar.style.width = "5%";
+    if (progressBar) progressBar.style.width = "0%";
     startTime = performance.now();
     newlyUnlockedThisRun = [];
     lastTime = performance.now();
@@ -1534,11 +1587,11 @@ particles = [];
     objectifsBtn.style.display = "none";
     objectifList.style.display = "none";
     scoreBoard.style.display = "none";
-    distanceDisplay.style.display = "block";
     backToMenuBtn.style.display = "none";
-    progressBar.parentElement.style.display = "block";
-    progressLabel.style.display = "block";
+    progressBar.parentElement.style.display = "none";
+    progressLabel.style.display = "none";
     lastSpecialSpawn = 0;
+    lastTime = 0;
    
     isDying = false;
 
@@ -1583,6 +1636,10 @@ meteorToStarTimer = 0;
 tutorialBtn.onclick = () => {
   tutorialModal.style.display = "none";
 
+  menu.style.display = "none";
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "none";
+
   if (music && musicEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
@@ -1590,14 +1647,7 @@ tutorialBtn.onclick = () => {
 
   setTutorialDone(gameMode);
 
-  const menuCanvas = document.getElementById("menuStars");
-  if (menuCanvas) menuCanvas.style.display = "none";
-
-  wordDisplay.style.display = "block";
-  distanceDisplay.style.display = "block";
-
   document.getElementById("topHUD").style.display = "flex";
-  document.getElementById("stats").style.display = "block";
 
   animationId = requestAnimationFrame(gameLoop);
 };
@@ -1613,16 +1663,13 @@ playButton.onclick = () => {
     playClick();
 
     if (music && musicEnabled) {
-  music.currentTime = 0;
-  music.play().catch(() => {});
-}
+      music.currentTime = 0;
+      music.play().catch(() => {});
+    }
 
     resetGame();
-
-// ✅ remettre HUD
-  document.getElementById("topHUD").style.display = "flex";
-    
-    wordDisplay.style.display = "block";
+    menu.style.display = "none";
+    document.getElementById("topHUD").style.display = "flex";
     animationId = requestAnimationFrame(gameLoop);
   };
 
@@ -1678,19 +1725,12 @@ playButton.onclick = () => {
   objectifsBtn.style.display = "none";
   backToMenuBtn.style.display = "none";
 
-    document.getElementById("topHUD").style.display = "none"; // ✅ AJOUT ICI
+    document.getElementById("topHUD").style.display = "none";
 
   // remettre menu
   menu.style.display = "block";
-
-  // remettre background menu
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "block";
-
-  wordDisplay.style.display = "none";  
-  distanceDisplay.style.display = "none";
-  progressBar.parentElement.style.display = "none";
-progressLabel.style.display = "none";  
 
   drawMenuRocket();
 
@@ -1699,6 +1739,12 @@ progressLabel.style.display = "none";
  function startGame() {
 
   resetGame();
+
+  // 🔥 CACHER LE MENU
+  menu.style.display = "none";
+
+  const menuCanvas = document.getElementById("menuStars");
+  if (menuCanvas) menuCanvas.style.display = "none";
 
   if (!isTutorialDone(gameMode)) {
     showTutorial(gameMode);
@@ -1710,16 +1756,9 @@ progressLabel.style.display = "none";
     music.play().catch(() => {});
   }
 
-  animationId = requestAnimationFrame(gameLoop);
-
-  const menuCanvas = document.getElementById("menuStars");
-  if (menuCanvas) menuCanvas.style.display = "none";
-
-  wordDisplay.style.display = "block";
-  distanceDisplay.style.display = "block";
-
   document.getElementById("topHUD").style.display = "flex";
-  document.getElementById("stats").style.display = "block";
+
+  animationId = requestAnimationFrame(gameLoop);
 }
 
   /* -------------------- Start Screen -------------------- */
@@ -1753,7 +1792,8 @@ const GAME_SETTINGS = {
   const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
   ctx.scale(dpr * GAME_ZOOM, dpr * GAME_ZOOM);
 
-  // delta time
+  // delta time — fix first frame spike
+  if (lastTime === 0) lastTime = timestamp;
   let dt = (timestamp - lastTime) / 16.67;
   dt = Math.min(dt, isMobile ? 1.2 : 1.5);
   lastTime = timestamp;
@@ -1796,20 +1836,13 @@ if (hitFlashTimer > 0) {
       isDying = false;
       gameOver = true;
 
-      wordDisplay.style.display = "none";
       document.getElementById("topHUD").style.display = "none";
 
       if (music) music.pause();
 
       gameOverText.style.display = "block";
-      distanceDisplay.style.display = "none";
 
       afficherTableauScore(distance);
-
-      rejouerBtn.style.display = "block";
-      shareBtn.style.display = "block";
-      objectifsBtn.style.display = "block";
-      backToMenuBtn.style.display = "block";
     }
 
     animationId = requestAnimationFrame(gameLoop);
@@ -2193,26 +2226,8 @@ if (hitFlashTimer > 0) {
     distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
   }
 
-  // display
+  // display étoiles
   distanceDisplay.textContent = `⭐ ${starScore} / ${missionTarget}`;
-
-  // galaxy word
-  const displayWord = word.map((letter, index) => {
-    return index < currentLetterIndex ? letter : "_";
-  }).join(" ");
-
-  wordDisplay.textContent = displayWord;
-
-  const progressText = document.getElementById("progressText");
-
-  // mission progress — étoiles
-  {
-    const percent = Math.min((starScore / missionTarget) * 100, 100);
-    progressBar.style.width = percent + "%";
-    progressBar.style.background = "#00ccff";
-    progressBar.style.boxShadow = percent > 80 ? "0 0 8px white" : "none";
-    if (progressText) progressText.textContent = `${starScore} / ${missionTarget} ⭐`;
-  }
 
   // particles
   for (let i = particles.length - 1; i >= 0; i--) {
