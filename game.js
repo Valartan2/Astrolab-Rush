@@ -2207,8 +2207,10 @@ if (hitFlashTimer > 0) {
 
   // player physics + HUD counters
   if (!gameOver && !isDying) {
-    document.getElementById("starCount").textContent = starScore;
-    document.getElementById("destroyCount").textContent = meteorDestroyed;
+    const starCountEl = document.getElementById("starCount");
+    const destroyCountEl = document.getElementById("destroyCount");
+    if (starCountEl) starCountEl.textContent = starScore;
+    if (destroyCountEl) destroyCountEl.textContent = meteorDestroyed;
 
     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
     player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
