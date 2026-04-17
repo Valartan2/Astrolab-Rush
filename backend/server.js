@@ -8,8 +8,8 @@ app.use(express.json());
 
 // Config
 const SPREADSHEET_ID = "1iirt-a1JVk5ZgMyw5Nu4BZYWGezjbt1SkQlk7rapyEc";
-const MAX_SCORE = 5000;
-const MIN_SCORE = 1;
+const MAX_ETOILES = 50000;
+const MIN_ETOILES = 1;
 const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24h
 const ALLOWED_ORIGIN = "https://valartan2.github.io";
 
@@ -43,55 +43,55 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rate limiting par IP — max 10 requêtes par heure
+// Rate limiting par IP — max 20 requêtes par heure
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 10,
+  max: 20,
   message: { error: "Too many requests from this IP" }
 });
-app.use("/burn", limiter);
+app.use("/contribute", limiter);
 
 // Route principale
-app.post("/burn", async (req, res) => {
-  const { wallet, score } = req.body;
+app.post("/contribute", async (req, res) => {
+  const { wallet, etoiles } = req.body;
 
   // Validation wallet
   if (!wallet || !isValidSolanaAddress(wallet)) {
     return res.status(400).json({ error: "Invalid wallet address" });
   }
 
-  // Validation score
-  const parsedScore = parseInt(score);
-  if (!parsedScore || parsedScore < MIN_SCORE || parsedScore > MAX_SCORE) {
-    return res.status(400).json({ error: `Score must be between ${MIN_SCORE} and ${MAX_SCORE}` });
+  // Validation etoiles
+  const parsedEtoiles = parseInt(etoiles);
+  if (!parsedEtoiles || parsedEtoiles < MIN_ETOILES || parsedEtoiles > MAX_ETOILES) {
+    return res.status(400).json({ error: `Etoiles must be between ${MIN_ETOILES} and ${MAX_ETOILES}` });
   }
 
   // Cooldown 24h par wallet via Redis
   const redisKey = `cooldown:${wallet}`;
-  const lastBurn = await redisClient.get(redisKey);
-  if (lastBurn) {
-    const waitMs = COOLDOWN_MS - (Date.now() - parseInt(lastBurn));
+  const lastContrib = await redisClient.get(redisKey);
+  if (lastContrib) {
+    const waitMs = COOLDOWN_MS - (Date.now() - parseInt(lastContrib));
     const waitHours = Math.ceil(waitMs / 3600000);
     return res.status(429).json({ error: `Wait ${waitHours}h before submitting again` });
   }
 
   try {
     const sheets = await getSheets();
-    const serverDate = new Date().toISOString(); // date côté serveur, pas client
+    const serverDate = new Date().toISOString();
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
       range: "Feuille 1!A:C",
       valueInputOption: "RAW",
       requestBody: {
-        values: [[serverDate, wallet, parsedScore]],
+        values: [[serverDate, wallet, parsedEtoiles]],
       },
     });
 
     // Stocker le cooldown dans Redis (expire après 24h)
     await redisClient.set(redisKey, Date.now().toString(), { EX: 86400 });
 
-    return res.json({ success: true, burned: parsedScore });
+    return res.json({ success: true, etoiles: parsedEtoiles });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: "Server error" });
