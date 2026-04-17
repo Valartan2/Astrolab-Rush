@@ -704,19 +704,19 @@
     <!-- Burn Dashboard -->
     <div id="burnDashboard">
       <div id="burnSessionBlock">
-        <div id="burnSessionLabel">🔥 $BURN this run</div>
-        <div id="burnSessionValue">0 <span class="burnUnit">$BURN</span></div>
+        <div id="burnSessionLabel">⭐ Stars this run</div>
+        <div id="burnSessionValue">0 <span class="burnUnit">⭐</span></div>
       </div>
       <div id="burnTotalBlock">
-        <div id="burnTotalLabel">Total $BURN accumulated</div>
+        <div id="burnTotalLabel">My total stars</div>
         <div id="burnBarWrapper">
           <div id="burnBar"></div>
         </div>
-        <div id="burnTotalValue">0 / 1,000,000,000</div>
+        <div id="burnTotalValue">Mes étoiles : 0</div>
       </div>
-      <div id="burnCTAText">Every star = 1 $BURN destroyed forever</div>
-      <button id="burnShareBtn">🔥 Share my burn</button>
-      <button id="burnNowBtn">👻 Burn on-chain (Devnet)</button>
+      <div id="burnCTAText">Every star fuels the next BURN DAY 🔥</div>
+      <button id="burnShareBtn">🔥 Share my stars</button>
+      <button id="burnNowBtn">🌟 Contribute my stars</button>
       <div id="burnTxStatus"></div>
     </div>
 
@@ -788,7 +788,7 @@
         try {
           const provider = window.solana;
           if (!provider || !provider.isPhantom) {
-            alert("Phantom wallet not found!\n\nInstall it at phantom.app then switch to Devnet in settings.");
+            alert("Phantom wallet not found!\n\nInstall it at phantom.app.");
             return;
           }
           const resp = await provider.connect();
@@ -796,7 +796,7 @@
           connectBtn.textContent = "✅ " + walletPublicKey.slice(0,4) + "..." + walletPublicKey.slice(-4);
           connectBtn.style.background = "#1a9e1a";
           if (walletStatus) {
-            walletStatus.textContent = "Connected on Devnet";
+            walletStatus.textContent = "Wallet connected";
             walletStatus.style.display = "block";
           }
         } catch(e) {
@@ -811,51 +811,51 @@
           alert("Connect your Phantom wallet first!");
           return;
         }
-        const cumulBurn = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
-        if (cumulBurn <= 0) {
-          alert("No $BURN to send — play some runs first!");
+
+        const cumulEtoiles = parseInt(localStorage.getItem("totalEtoiles") || "0");
+        if (cumulEtoiles <= 0) {
+          alert("No stars to contribute — play some runs first!");
           return;
         }
-        if (cumulBurn < 5000) {
-          alert(`Accumulate at least 5,000 $BURN before burning!\nCurrent: ${cumulBurn.toLocaleString()} / 5,000`);
-          return;
-        }
-        const MAX_BURN = 5000;
-        const safeBurn = Math.min(cumulBurn, MAX_BURN);
-        if (!walletPublicKey || walletPublicKey.length < 32 || walletPublicKey.length > 44) {
-          alert("Invalid wallet — reconnect Phantom.");
-          return;
-        }
-        const lastBurnKey = "lastBurn_" + walletPublicKey;
-        const lastBurnTime = parseInt(localStorage.getItem(lastBurnKey) || "0");
+
+        const lastContribKey = "lastContrib_" + walletPublicKey;
+        const lastContribTime = parseInt(localStorage.getItem(lastContribKey) || "0");
         const now = Date.now();
         const cooldown = 24 * 60 * 60 * 1000;
-        if (now - lastBurnTime < cooldown) {
-          const hoursLeft = Math.ceil((cooldown - (now - lastBurnTime)) / 3600000);
-          alert(`You already burned today!\nCome back in ${hoursLeft}h.`);
+        if (now - lastContribTime < cooldown) {
+          const hoursLeft = Math.ceil((cooldown - (now - lastContribTime)) / 3600000);
+          alert(`You already contributed today!\nCome back in ${hoursLeft}h.`);
           return;
         }
+
+        const safeEtoiles = Math.min(cumulEtoiles, 50000);
+
         try {
           burnNowBtn.textContent = "⏳ Sending...";
           burnNowBtn.disabled = true;
           if (burnTxStatus) burnTxStatus.style.display = "none";
-          const WEBHOOK_URL = "https://astrolab-rush-production.up.railway.app/burn";
+
+          const WEBHOOK_URL = "https://astrolab-rush-production.up.railway.app/contribute";
           const response = await fetch(WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ date: new Date().toISOString(), wallet: walletPublicKey, score: safeBurn })
+            body: JSON.stringify({ date: new Date().toISOString(), wallet: walletPublicKey, etoiles: safeEtoiles })
           });
-          if (!response.ok) throw new Error("Webhook failed");
-          localStorage.setItem("totalBurnedTokens", "0");
-          localStorage.setItem("lastBurn_" + walletPublicKey, Date.now().toString());
+
+          if (!response.ok) throw new Error("Server error");
+
+          localStorage.setItem("totalEtoiles", "0");
+          localStorage.setItem(lastContribKey, Date.now().toString());
+
           if (burnTxStatus) {
             burnTxStatus.style.display = "block";
-            burnTxStatus.innerHTML = `✅ ${safeBurn.toLocaleString()} $BURN submitted for burn!`;
+            burnTxStatus.innerHTML = `✅ ${safeEtoiles.toLocaleString()} ⭐ contributed to the burn pool!`;
           }
-          burnNowBtn.textContent = "✅ Submitted!";
+          burnNowBtn.textContent = "✅ Contributed!";
           burnNowBtn.style.background = "#1a9e1a";
+
         } catch(e) {
-          console.error("Burn failed:", e);
+          console.error("Contribute failed:", e);
           burnNowBtn.textContent = "❌ Failed — retry";
           burnNowBtn.disabled = false;
           if (burnTxStatus) {

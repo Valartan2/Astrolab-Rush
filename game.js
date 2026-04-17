@@ -1475,34 +1475,27 @@ function afficherTableauScore(score) {
 }
 
 /* -------------------- Burn Dashboard -------------------- */
-function afficherBurnDashboard(sessionBurned) {
-  const TOTAL_SUPPLY = 1_000_000_000;
-
-  const prevTotal = parseInt(localStorage.getItem("totalBurnedTokens") || "0");
-  const newTotal = prevTotal + sessionBurned;
-  localStorage.setItem("totalBurnedTokens", newTotal);
-
-  const burnPercent = Math.min((newTotal / TOTAL_SUPPLY) * 100, 100);
+function afficherBurnDashboard(sessionEtoiles) {
 
   const sessionEl = document.getElementById("burnSessionValue");
-  const burnBarEl = document.getElementById("burnBar");
-  const burnTotalEl = document.getElementById("burnTotalValue");
   const burnShareBtn = document.getElementById("burnShareBtn");
   const burnNowBtn = document.getElementById("burnNowBtn");
   const burnTxStatus = document.getElementById("burnTxStatus");
 
-  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionBurned) + ' <span class="burnUnit">$BURN</span>';
-  if (burnTotalEl) burnTotalEl.textContent = formatNumber(newTotal) + " / 1,000,000,000";
+  // Affiche les étoiles de ce run
+  if (sessionEl) sessionEl.innerHTML = formatNumber(sessionEtoiles) + ' <span class="burnUnit">⭐</span>';
 
-  if (burnBarEl) {
-    burnBarEl.style.width = "0%";
-    setTimeout(() => {
-      burnBarEl.style.width = burnPercent.toFixed(4) + "%";
-    }, 300);
-  }
+  // Cumul local pour info joueur
+  const prevTotal = parseInt(localStorage.getItem("totalEtoiles") || "0");
+  const newTotal = prevTotal + sessionEtoiles;
+  localStorage.setItem("totalEtoiles", newTotal);
 
+  const burnTotalEl = document.getElementById("burnTotalValue");
+  if (burnTotalEl) burnTotalEl.textContent = "Mes étoiles : " + formatNumber(newTotal);
+
+  // Bouton contribuer
   if (burnNowBtn) {
-    burnNowBtn.textContent = "👻 Burn on-chain (Devnet)";
+    burnNowBtn.textContent = "🌟 Contribute my stars";
     burnNowBtn.disabled = false;
     burnNowBtn.style.background = "linear-gradient(to bottom, #9945FF, #6a1fc2)";
     burnNowBtn.style.display = "block";
@@ -1513,12 +1506,13 @@ function afficherBurnDashboard(sessionBurned) {
   }
 
   if (window.setLastSessionBurn) {
-    window.setLastSessionBurn(sessionBurned);
+    window.setLastSessionBurn(sessionEtoiles);
   }
 
+  // Bouton partage Twitter
   if (burnShareBtn) {
     burnShareBtn.onclick = () => {
-      const text = `🔥 I just collected ${formatNumber(sessionBurned)} $BURN stars in one run!\n\nEvery star = 1 token burned forever 🚀\n\n#AstroBurn #Solana #BURN`;
+      const text = `⭐ I just collected ${formatNumber(sessionEtoiles)} stars in Astro-Burn!\n\nEvery star fuels the next BURN DAY 🔥\n\nPlay free 👇\n#AstroBurn #Solana #PlayToBurn`;
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
     };
   }
