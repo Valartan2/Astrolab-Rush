@@ -195,7 +195,21 @@
       text-shadow: 1px 1px 0 black;
     }
 
-    /* -------------------- GAME OVER -------------------- */
+    #runStarsDisplay {
+      position: fixed;
+      top: 42px;
+      right: 10px;
+      font-size: 13px;
+      color: white;
+      font-weight: bold;
+      background: rgba(0,0,0,0.55);
+      padding: 4px 10px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.3);
+      z-index: 20;
+      pointer-events: none;
+      display: none;
+    }
     #gameOverText {
       position: absolute;
       top: 15%;
@@ -682,12 +696,14 @@
 
   <!-- -------------------- TOP HUD -------------------- -->
   <div id="topHUD" style="display:none;">
-    <div id="distance">⭐ 0 / 30</div>
+    <div id="distance">⭐ 0</div>
     <div id="progressWrapper">
       <div id="progressBar"></div>
-      <div id="progressText">0 / 30</div>
+      <div id="progressText">0 / 500</div>
     </div>
   </div>
+
+  <div id="runStarsDisplay">⭐ 0 this run</div>
 
   <div id="progressLabel" style="display:none;"></div>
   <div id="wordDisplay" style="display:none;"></div>
@@ -697,9 +713,9 @@
   <div id="scoreBoard">
     <h2>🔥 ASTRO-BURN</h2>
     <p><strong id="label1">⭐ Stars:</strong> <span id="currentScore">0</span></p>
-    <p style="display:none;"><strong id="label2">☄️ Meteors:</strong> <span id="bestScore">0</span></p>
+    <p><strong id="label2">☄️ Meteors:</strong> <span id="bestScore">0</span></p>
     <p><strong id="label3">⭐ Total Stars:</strong> <span id="totalScore">0</span></p>
-    <p style="display:none;"><strong id="label4">☄️ Total Meteors:</strong> <span id="grade">0</span></p>
+    <p><strong id="label4">☄️ Total Meteors:</strong> <span id="grade">0</span></p>
 
     <!-- Burn Dashboard -->
     <div id="burnDashboard">

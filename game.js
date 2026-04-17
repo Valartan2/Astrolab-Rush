@@ -1640,6 +1640,7 @@ tutorialBtn.onclick = () => {
   setTutorialDone(gameMode);
 
   document.getElementById("topHUD").style.display = "flex";
+  const _rsd = document.getElementById("runStarsDisplay"); if (_rsd) { _rsd.style.display = "block"; _rsd.textContent = "⭐ 0 this run"; }
 
   animationId = requestAnimationFrame(gameLoop);
 };
@@ -1671,6 +1672,7 @@ playButton.onclick = () => {
 
     menu.style.display = "none";
     document.getElementById("topHUD").style.display = "flex";
+  const _rsd = document.getElementById("runStarsDisplay"); if (_rsd) { _rsd.style.display = "block"; _rsd.textContent = "⭐ 0 this run"; }
     animationId = requestAnimationFrame(gameLoop);
   };
 
@@ -1727,6 +1729,7 @@ playButton.onclick = () => {
   backToMenuBtn.style.display = "none";
 
     document.getElementById("topHUD").style.display = "none";
+    const _rsdH = document.getElementById("runStarsDisplay"); if (_rsdH) _rsdH.style.display = "none";
 
   // remettre menu
   menu.style.display = "block";
@@ -1767,6 +1770,7 @@ playButton.onclick = () => {
   }
 
   document.getElementById("topHUD").style.display = "flex";
+  const _rsd = document.getElementById("runStarsDisplay"); if (_rsd) { _rsd.style.display = "block"; _rsd.textContent = "⭐ 0 this run"; }
 
   animationId = requestAnimationFrame(gameLoop);
 }
@@ -1847,6 +1851,7 @@ if (hitFlashTimer > 0) {
       gameOver = true;
 
       document.getElementById("topHUD").style.display = "none";
+    const _rsdH = document.getElementById("runStarsDisplay"); if (_rsdH) _rsdH.style.display = "none";
 
       if (music) music.pause();
 
@@ -2243,8 +2248,15 @@ if (hitFlashTimer > 0) {
     distance += (baseSpeed / 60) * distanceSpeedFactor * dt;
   }
 
+  // display cumul total en haut à gauche
+  {
+    const cumul = getTotalStars() + starScore;
+    distanceDisplay.textContent = `⭐ ${cumul.toLocaleString()}`;
+  }
+
   // display étoiles du run en cours
-  distanceDisplay.textContent = `⭐ ${starScore}`;
+  const runStarsEl = document.getElementById("runStarsDisplay");
+  if (runStarsEl) runStarsEl.textContent = `⭐ ${starScore} this run`;
 
   // barre de progression cumulative vers prochain grade
   {
