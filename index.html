@@ -818,16 +818,6 @@
           return;
         }
 
-        const lastContribKey = "lastContrib_" + walletPublicKey;
-        const lastContribTime = parseInt(localStorage.getItem(lastContribKey) || "0");
-        const now = Date.now();
-        const cooldown = 24 * 60 * 60 * 1000;
-        if (now - lastContribTime < cooldown) {
-          const hoursLeft = Math.ceil((cooldown - (now - lastContribTime)) / 3600000);
-          alert(`You already contributed today!\nCome back in ${hoursLeft}h.`);
-          return;
-        }
-
         const safeEtoiles = Math.min(cumulEtoiles, 50000);
 
         try {
@@ -845,7 +835,6 @@
           if (!response.ok) throw new Error("Server error");
 
           localStorage.setItem("totalEtoiles", "0");
-          localStorage.setItem(lastContribKey, Date.now().toString());
 
           if (burnTxStatus) {
             burnTxStatus.style.display = "block";
