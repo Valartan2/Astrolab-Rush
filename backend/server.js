@@ -66,14 +66,14 @@ app.post("/contribute", async (req, res) => {
     return res.status(400).json({ error: `Etoiles must be between ${MIN_ETOILES} and ${MAX_ETOILES}` });
   }
 
-  // Cooldown 24h par wallet via Redis
-  const redisKey = `cooldown:${wallet}`;
-  const lastContrib = await redisClient.get(redisKey);
-  if (lastContrib) {
-    const waitMs = COOLDOWN_MS - (Date.now() - parseInt(lastContrib));
-    const waitHours = Math.ceil(waitMs / 3600000);
-    return res.status(429).json({ error: `Wait ${waitHours}h before submitting again` });
-  }
+  // Cooldown 24h par wallet via Redis — désactivé temporairement pour test
+  // const redisKey = `cooldown:${wallet}`;
+  // const lastContrib = await redisClient.get(redisKey);
+  // if (lastContrib) {
+  //   const waitMs = COOLDOWN_MS - (Date.now() - parseInt(lastContrib));
+  //   const waitHours = Math.ceil(waitMs / 3600000);
+  //   return res.status(429).json({ error: `Wait ${waitHours}h before submitting again` });
+  // }
 
   try {
     const sheets = await getSheets();
@@ -88,8 +88,8 @@ app.post("/contribute", async (req, res) => {
       },
     });
 
-    // Stocker le cooldown dans Redis (expire après 24h)
-    await redisClient.set(redisKey, Date.now().toString(), { EX: 86400 });
+    // Stocker le cooldown dans Redis — désactivé pour test
+    // await redisClient.set(redisKey, Date.now().toString(), { EX: 86400 });
 
     return res.json({ success: true, etoiles: parsedEtoiles });
   } catch (e) {
