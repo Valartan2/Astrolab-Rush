@@ -176,6 +176,7 @@ const progressLabel = document.getElementById("progressLabel");
   
   const clickSound = new Audio("click-151673.mp3");
   function playClick() {
+    if (!soundEnabled) return;
     clickSound.currentTime = 0;
     clickSound.play().catch(() => {});
   }
@@ -195,15 +196,13 @@ hitSound.volume = 0.4;
 let lastStarSoundTime = 0;
 
 function playSound(sound) {
+  if (!soundEnabled) return;
   try {
     const now = performance.now();
-
-    // limite seulement le spam du son étoile
     if (sound === starSound) {
-      if (now - lastStarSoundTime < 80) return; // ajuste 60 / 80 / 100
+      if (now - lastStarSoundTime < 80) return;
       lastStarSoundTime = now;
     }
-
     sound.currentTime = 0;
     sound.play().catch(() => {});
   } catch (e) {}
@@ -744,7 +743,7 @@ let tutorialTimer = 0;
 
     const sound = levelUpSound.cloneNode();
     sound.volume = 0.6;
-    sound.play().catch(() => {});
+    if (soundEnabled) sound.play().catch(() => {});
 
     setTimeout(() => {
       milestoneMessage.style.opacity = 0;
@@ -810,7 +809,7 @@ if (specialEl) {
 
 const distanceEl = document.getElementById("totalDistanceDisplay");
 if (distanceEl) {
-  distanceEl.textContent = `⭐ Total stars: ${formatNumber(totalStars)}`;
+  distanceEl.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
 }
 
     objectifItems.innerHTML = "";
@@ -819,7 +818,7 @@ gradeObjectives.forEach(obj => {
 
   const li = document.createElement("li");
 
-  const unlocked = totalStars >= obj.threshold;
+  const unlocked = bestScore >= obj.threshold;
 
   li.className = "rocket-item";
 
@@ -829,7 +828,7 @@ gradeObjectives.forEach(obj => {
     li.classList.add("rocket-locked");
   }
 
-  const status = unlocked ? " — unlocked ✅" : ` — locked (${formatNumber(obj.threshold)} ⭐)`;
+  const status = unlocked ? " — unlocked" : ` — locked (${formatNumber(obj.threshold)} m)`;
 
   li.textContent = `${obj.label}${status}`;
 
@@ -859,7 +858,7 @@ rocketDefinitions.forEach(rocket => {
   switch(rocket.unlock.type){
 
     case "distance":
-      progressText = `${formatNumber(totalStars)} / ${formatNumber(rocket.unlock.value)} ⭐`;
+      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
       break;
 
     case "stars":
@@ -947,7 +946,7 @@ if (shopList) {
     switch(rocket.unlock.type){
 
       case "distance":
-        unlocked = totalStars >= rocket.unlock.value;
+        unlocked = totalDistance >= rocket.unlock.value;
         break;
 
       case "stars":
@@ -1633,7 +1632,7 @@ tutorialBtn.onclick = () => {
   const menuCanvas = document.getElementById("menuStars");
   if (menuCanvas) menuCanvas.style.display = "none";
 
-  if (music && musicEnabled) {
+  if (music && soundEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
@@ -1654,7 +1653,7 @@ playButton.onclick = () => {
   rejouerBtn.onclick = () => {
     playClick();
 
-    if (music && musicEnabled) {
+    if (music && soundEnabled) {
       music.currentTime = 0;
       music.play().catch(() => {});
     }
@@ -1762,7 +1761,7 @@ playButton.onclick = () => {
     return;
   }
 
-  if (music && musicEnabled) {
+  if (music && soundEnabled) {
     music.currentTime = 0;
     music.play().catch(() => {});
   }
@@ -2579,26 +2578,25 @@ closeSettings.onclick = () => {
 
 };
 
-let musicEnabled = localStorage.getItem("music") !== "off";
+let soundEnabled = localStorage.getItem("music") !== "off";
 
-toggleMusicBtn.textContent = musicEnabled ? "Music: ON" : "Music: OFF";
+toggleMusicBtn.textContent = soundEnabled ? "Sound: ON" : "Sound: OFF";
 
 toggleMusicBtn.onclick = () => {
 
-  playClick();
+  soundEnabled = !soundEnabled;
 
-  musicEnabled = !musicEnabled;
+  localStorage.setItem("music", soundEnabled ? "on" : "off");
 
-  localStorage.setItem("music", musicEnabled ? "on" : "off");
-
-  if (musicEnabled) {
-    toggleMusicBtn.textContent = "Music: ON";
+  if (soundEnabled) {
+    toggleMusicBtn.textContent = "Sound: ON";
     if (music) music.play().catch(()=>{});
   } else {
-    toggleMusicBtn.textContent = "Music: OFF";
+    toggleMusicBtn.textContent = "Sound: OFF";
     if (music) music.pause();
   }
 
+  playClick();
 };
 
  resetGameBtn.onclick = () => {
