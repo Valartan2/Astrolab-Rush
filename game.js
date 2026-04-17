@@ -789,7 +789,7 @@ const totalSpecial = getTotalSpecial();
 
     const currencyDisplay = document.getElementById("currencyDisplay");
 if (currencyDisplay) {
-  currencyDisplay.innerHTML = `⭐ ${getTotalStars()} &nbsp;&nbsp; ☄️ ${getTotalDestroyed()}`;
+  currencyDisplay.innerHTML = `⭐ ${getTotalStars()}`;
 }
 
 const starsEl = document.getElementById("totalStarsDisplay");
