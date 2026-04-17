@@ -809,7 +809,7 @@ if (specialEl) {
 
 const distanceEl = document.getElementById("totalDistanceDisplay");
 if (distanceEl) {
-  distanceEl.textContent = `Total distance: ${formatNumber(totalDistance)} m`;
+  distanceEl.textContent = `⭐ Total stars: ${formatNumber(totalStars)}`;
 }
 
     objectifItems.innerHTML = "";
@@ -818,7 +818,7 @@ gradeObjectives.forEach(obj => {
 
   const li = document.createElement("li");
 
-  const unlocked = bestScore >= obj.threshold;
+  const unlocked = totalStars >= obj.threshold;
 
   li.className = "rocket-item";
 
@@ -828,7 +828,7 @@ gradeObjectives.forEach(obj => {
     li.classList.add("rocket-locked");
   }
 
-  const status = unlocked ? " — unlocked" : ` — locked (${formatNumber(obj.threshold)} m)`;
+  const status = unlocked ? " — unlocked ✅" : ` — locked (${formatNumber(obj.threshold)} ⭐)`;
 
   li.textContent = `${obj.label}${status}`;
 
@@ -858,7 +858,7 @@ rocketDefinitions.forEach(rocket => {
   switch(rocket.unlock.type){
 
     case "distance":
-      progressText = `${formatNumber(totalDistance)} / ${formatNumber(rocket.unlock.value)} m`;
+      progressText = `${formatNumber(totalStars)} / ${formatNumber(rocket.unlock.value)} ⭐`;
       break;
 
     case "stars":
@@ -946,7 +946,7 @@ if (shopList) {
     switch(rocket.unlock.type){
 
       case "distance":
-        unlocked = totalDistance >= rocket.unlock.value;
+        unlocked = totalStars >= rocket.unlock.value;
         break;
 
       case "stars":
