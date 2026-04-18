@@ -544,7 +544,7 @@ height = (canvas.height / dpr) / GAME_ZOOM;
     velocityY: 0,
     gravityUp: -0.8,
     gravityDown: 0.9,
-    maxSpeed: 6
+    maxSpeed: 5
   };
 
   resize();
