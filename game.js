@@ -1490,7 +1490,7 @@ function afficherBurnDashboard(sessionEtoiles) {
   localStorage.setItem("totalEtoiles", newTotal);
 
   const burnTotalEl = document.getElementById("burnTotalValue");
-  if (burnTotalEl) burnTotalEl.textContent = "Mes étoiles : " + formatNumber(newTotal);
+  if (burnTotalEl) burnTotalEl.textContent = "My Stars : " + formatNumber(newTotal);
 
   // Bouton contribuer
   if (burnNowBtn) {
