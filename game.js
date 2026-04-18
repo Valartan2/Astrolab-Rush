@@ -86,7 +86,7 @@ const shopRockets = [
     name: "Neon Rocket",
     file: "rocket10.png",
     priceStars: 100,
-    priceMeteors: 0,
+   
     owned: false
   },
   {
@@ -94,7 +94,7 @@ const shopRockets = [
     name: "Retro Rocket",
      file: "rocket8.png",
     priceStars: 500,
-    priceMeteors: 50,
+   
     owned: false
   },
   {
@@ -102,7 +102,7 @@ const shopRockets = [
     name: "Burger Rocket",
      file: "rocket16.png",
     priceStars: 1000,
-    priceMeteors: 0,
+  
     owned: false
   },
   {
@@ -110,7 +110,7 @@ const shopRockets = [
     name: "Teddy Rocket",
      file: "rocket21.png",
     priceStars: 0,
-    priceMeteors: 350,
+ 
     owned: false
   },
   {
@@ -118,7 +118,7 @@ const shopRockets = [
     name: "Watermelon Rocket",
      file: "rocket24.png",
     priceStars: 1500,
-    priceMeteors: 500,
+   
     owned: false
   },
   {
@@ -126,7 +126,7 @@ const shopRockets = [
     name: "Retro Rocket",
      file: "rocket26.png",
     priceStars: 250,
-    priceMeteors: 30,
+
     owned: false
   },
   {
@@ -134,7 +134,7 @@ const shopRockets = [
     name: "Eiffel Tower Rocket",
      file: "rocket27.png",
     priceStars: 5000,
-    priceMeteors: 1000,
+
     owned: false
   }
 ];
@@ -276,7 +276,7 @@ objectifList.style.display="flex";
 
 { key:"steel", label:"Steel Rocket", file:"rocket4.png", unlock:{type:"distance", value:10000} },
 
-{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"galaxy", value:1} },
+{ key:"red", label:"Red Rocket", file:"rocket5.png", unlock:{type:"distance", value:1000} },
 
 { key:"aqua", label:"Aqua Rocket", file:"rocket6.png", unlock:{type:"distance", value:50000} },
 
@@ -284,7 +284,7 @@ objectifList.style.display="flex";
 
 { key:"retro", label:"Retro Rocket", file:"rocket8.png", unlock:{type:"shop", value:10} },
 
-{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"run", value:2500} },
+{ key:"tech", label:"Tech Rocket", file:"rocket9.png", unlock:{type:"distance", value:2500} },
 
 { key:"neon", label:"Neon Rocket", file:"rocket10.png", unlock:{type:"shop", value:500} },
 
