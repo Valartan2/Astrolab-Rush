@@ -1809,7 +1809,7 @@ const GAME_SETTINGS = {
   // delta time — fix first frame spike
   if (lastTime === 0) lastTime = timestamp;
   let dt = (timestamp - lastTime) / 16.67;
-  dt = Math.min(dt, isMobile ? 1.2 : 1.5);
+  dt = Math.min(dt, 1.0);
   lastTime = timestamp;
 
   const now = performance.now();
@@ -2235,7 +2235,7 @@ if (hitFlashTimer > 0) {
     player.velocityY += (pressing ? player.gravityDown : player.gravityUp) * dt;
     player.velocityY = Math.max(-player.maxSpeed, Math.min(player.velocityY, player.maxSpeed));
     player.y += player.velocityY * dt;
-    player.velocityY *= Math.pow(0.87, dt);
+    player.velocityY *= 0.92;
 
     if (player.y < player.radius) {
       player.y = player.radius;
