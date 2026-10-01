@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- plein écran quand la page est ajoutée à l'écran d'accueil de l'iPhone -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trou">
+<title>Trou – prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --floor:#2a2140; --ink:#f6f0ff; --gold:#ffcc33; --gold-dark:#c98a12;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --floor:#2a2140; } }
+  :root[data-theme="dark"]{ --floor:#2a2140; }
+  html{ height:100%; scroll-padding-top:env(safe-area-inset-top,0px); }
+  body{ height:100%; margin:0; background:var(--floor); overflow:hidden;
+        font-family:"Press Start 2P", "Courier New", monospace; color:var(--ink);
+        -webkit-user-select:none; user-select:none; }
+  canvas{ position:fixed; inset:0; width:100%; height:100%; touch-action:none; display:block; }
+  #wallet{ position:fixed; top:calc(14px + env(safe-area-inset-top,0px)); left:50%; transform:translateX(-50%);
+           display:flex; align-items:center; gap:10px; background:#00000055; border:3px solid var(--gold-dark);
+           padding:10px 16px; font-size:16px; pointer-events:none; }
+  #wallet i{ width:16px; height:16px; background:var(--gold); border:3px solid var(--gold-dark); border-radius:50%; display:inline-block; }
+  #hint{ position:fixed; left:0; right:0; bottom:calc(110px + env(safe-area-inset-bottom,0px)); text-align:center;
+         font-size:11px; line-height:1.8; opacity:.85; pointer-events:none; transition:opacity .6s; padding:0 20px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="wallet"><i></i><span id="count">0</span></div>
+<div id="hint">Glisse le doigt pour diriger la pelle<br>et pousse les billes dans le trou</div>
+<script>
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const countEl = document.getElementById('count'), hint = document.getElementById('hint');
+let W, H, dpr, t = 0, moved = false;
+
+// ---------- monde : 3 zones côte à côte, seule celle du centre est ouverte au départ ----------
+let WW, WH; const WORLD_X = 3, WORLD_Y = 1.5;
+const zones = { left: false, right: false }; // zones débloquées
+const ZONE_TYPES = { // billes propres à chaque zone : valeur et couleur
+  center: { v: 1, c: '#ffcc33', d: '#c98a12', h: '#fff3b0' },
+  left:   { v: 2, c: '#5ab8ff', d: '#2a6fb0', h: '#d6efff' },
+  right:  { v: 5, c: '#c77dff', d: '#7b3fb3', h: '#f0dcff' }
+};
+function bounds(){ return { x0: zones.left ? 0 : W, x1: zones.right ? WW : 2 * W }; }
+function zoneAt(x){ return x < W ? 'left' : x >= 2 * W ? 'right' : 'center'; }
+
+const cam = { x: 0, y: 0 };
+// contrôle façon hole.io : on glisse le doigt n'importe où, la pelle avance dans cette direction
+const joy = { on: false, ox: 0, oy: 0, x: 0, y: 0, mouse: false };
+const JOY_RADIUS = 55;
+const shovel = { x: 0, y: 0, angle: 0, vx: 0, vy: 0 };
+const anchor = { x: 0, y: 0 }; let aimAngle = 0;
+let coins = [], sinking = [], floaters = [], sparks = [], flyers = [], robots = [];
+let dropClock = 0, bank = 0, swallowed = 0, purchases = 0;
+const K = 0.6;
+const R = 10 * K, THICK = 5 * K, MAX_COINS = 260;
+const hole = { x: 0, y: 0, r: 0, pulse: 0, step: 0 };
+const HOLE_START = 13, HOLE_MAX = 80;
+const holeTarget = () => Math.min(HOLE_MAX, HOLE_START + 3 * Math.sqrt(swallowed));
+
+// ---------- améliorations : on les paie en y poussant des billes (le prix est en valeur de billes) ----------
+const UPGRADES = [
+  { id: 'rain',   name: 'PLUIE',   color: '#9ad0ff', costs: [5, 12, 25, 45, 80] },
+  { id: 'shovel', name: 'PELLE',   color: '#7ee0ff', costs: [8, 18, 35, 60, 100] },
+  { id: 'robot',  name: 'ROBOT',   color: '#3fbf7f', costs: [20, 50, 100] },
+  { id: 'value',  name: 'VALEUR',  color: '#ffcc33', costs: [15, 35, 70, 120] },
+  { id: 'speed',  name: 'VITESSE', color: '#ff9f5a', costs: [8, 20, 40, 70] },
+  { id: 'magnet', name: 'AIMANT',  color: '#d68bff', costs: [15, 35, 70] }
+];
+const GATES = [
+  { id: 'gate-left',  name: 'ZONE', color: '#5ab8ff', costs: [100], side: 'left' },
+  { id: 'gate-right', name: 'ZONE', color: '#c77dff', costs: [500], side: 'right' }
+];
+const pads = [...UPGRADES, ...GATES].map(u => ({ ...u, level: 0, paid: 0, stand: 0, flash: 0, frac: 0, x: 0, y: 0, s: 0 }));
+const pad = id => pads.find(p => p.id === id);
+const lvl = id => pad(id).level;
+const maxed = p => p.level >= p.costs.length;
+const VALUES = [1, 2, 3, 5, 8];
+const moveSpeed = () => 260 * (1 + 0.15 * lvl('speed'));
+const dropEvery = () => 0.55 * Math.pow(0.75, lvl('rain'));
+const maxFloor = () => 45 + 22 * lvl('rain');
+const magnetRange = () => [0, 50, 90, 140][lvl('magnet')];
+let shovelScale = 1, shovelTarget = 1;
+
+// pelle en forme de « { » (creux vers l'avant, axe +x)
+function quad(a, c, b, n = 8){ const o = []; for (let i = 1; i <= n; i++){ const u = i / n;
+  o.push([(1-u)*(1-u)*a[0] + 2*(1-u)*u*c[0] + u*u*b[0], (1-u)*(1-u)*a[1] + 2*(1-u)*u*c[1] + u*u*b[1]]); } return o; }
+const SHAPE = [[40, -45], ...quad([40,-45],[6,-45],[6,-21]), [6, -9], ...quad([6,-9],[6,0],[-12,0],4),
+  ...quad([-12,0],[6,0],[6,9],4), [6, 21], ...quad([6,21],[6,45],[40,45])].map(([x, y]) => [x * K, y * K]);
+
+function safeTop(){ return parseFloat(getComputedStyle(document.documentElement).paddingTop) || 0; }
+function safeBottom(){ return parseFloat(getComputedStyle(document.documentElement).paddingBottom) || 0; }
+function layout(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  WW = Math.round(W * WORLD_X); WH = Math.round(H * WORLD_Y);
+  hole.x = WW / 2; hole.y = WH / 2; if (!hole.r || hole.r > HOLE_MAX) hole.r = HOLE_START;
+  // améliorations : 3 carrés au-dessus du trou, 3 en dessous ; portes collées aux murs de la zone centrale
+  const s = Math.min(60, W * 0.17), dx = Math.min(105, W * 0.28), dy = HOLE_MAX + 95;
+  UPGRADES.forEach((u, i) => {
+    const p = pad(u.id), col = i % 3, row = i < 3 ? -1 : 1;
+    p.s = s; p.x = hole.x + (col - 1) * dx - s / 2; p.y = hole.y + row * dy - s / 2;
+  });
+  const gl = pad('gate-left'), gr = pad('gate-right');
+  gl.s = gr.s = s; gl.x = W + 10; gr.x = 2 * W - 10 - s; gl.y = gr.y = hole.y - s / 2;
+}
+
+function spawnCoin(x, y, z = 0){
+  if (coins.length >= MAX_COINS) return;
+  const type = zoneAt(x);
+  coins.push({ x, y, vx: 0, vy: 0, z, vz: 0, type });
+}
+function nearSomething(x, y, pd){
+  if (Math.hypot(x - hole.x, y - hole.y) < HOLE_MAX + pd) return true;
+  return pads.some(p => !(p.side && zones[p.side]) && x > p.x - pd && x < p.x + p.s + pd && y > p.y - pd && y < p.y + p.s + pd);
+}
+function dropCoin(){ // une bille tombe du ciel quelque part dans les zones ouvertes
+  const b = bounds();
+  for (let k = 0; k < 20; k++){
+    const x = b.x0 + 30 + Math.random() * (b.x1 - b.x0 - 60), y = 60 + Math.random() * (WH - 120);
+    if (!nearSomething(x, y, 30)){ spawnCoin(x, y, Math.min(y, 420) + 20); return; }
+  }
+}
+
+function init(){
+  layout();
+  shovel.x = anchor.x = hole.x; shovel.y = anchor.y = hole.y + 60;
+  cam.x = shovel.x - W / 2; cam.y = shovel.y - H / 2;
+  for (let n = 0; n < 35; n++) dropCoin();
+  coins.forEach(c => { c.z = 0; });
+}
+
+// ---------- contrôles ----------
+const keys = {};
+function firstMove(){ if (!moved){ moved = true; hint.style.opacity = 0; } }
+cv.addEventListener('pointerdown', e => {
+  joy.mouse = e.pointerType === 'mouse';
+  if (!joy.mouse){ joy.ox = joy.x = e.clientX; joy.oy = joy.y = e.clientY; }
+  joy.on = true; firstMove();
+});
+cv.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse'){ joy.mouse = true; joy.on = true; joy.x = e.clientX; joy.y = e.clientY; firstMove(); }
+  else if (joy.on){ joy.x = e.clientX; joy.y = e.clientY; }
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach(n => cv.addEventListener(n, () => { joy.on = false; }));
+addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; firstMove(); });
+addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+addEventListener('resize', layout);
+function wantedVelocity(){
+  const S = moveSpeed();
+  let dx = 0, dy = 0;
+  if (keys['arrowleft'] || keys['q'] || keys['a']) dx -= 1;
+  if (keys['arrowright'] || keys['d']) dx += 1;
+  if (keys['arrowup'] || keys['z'] || keys['w']) dy -= 1;
+  if (keys['arrowdown'] || keys['s']) dy += 1;
+  if (dx || dy){ const d = Math.hypot(dx, dy); return [dx / d * S, dy / d * S]; }
+  if (!joy.on) return [0, 0];
+  if (joy.mouse){
+    const vx = joy.x - (shovel.x - cam.x), vy = joy.y - (shovel.y - cam.y), d = Math.hypot(vx, vy);
+    if (d < 8) return [0, 0];
+    const sp = Math.min(S, d * 4); return [vx / d * sp, vy / d * sp];
+  }
+  const vx = joy.x - joy.ox, vy = joy.y - joy.oy, d = Math.hypot(vx, vy);
+  if (d < 6) return [0, 0];
+  if (d > JOY_RADIUS){ joy.ox = joy.x - vx / d * JOY_RADIUS; joy.oy = joy.y - vy / d * JOY_RADIUS; }
+  const sp = S * Math.min(1, d / JOY_RADIUS); return [vx / d * sp, vy / d * sp];
+}
+
+// ---------- physique de la pelle ----------
+function worldShape(){
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle), k = shovelScale;
+  return SHAPE.map(([x, y]) => [shovel.x + (x * c - y * sn) * k, shovel.y + (x * sn + y * c) * k]);
+}
+function pushOut(pts){
+  const reach = 90 * shovelScale;
+  for (const cn of coins){
+    if (cn.z > 0 || Math.abs(cn.x - shovel.x) > reach || Math.abs(cn.y - shovel.y) > reach) continue;
+    for (let i = 0; i < pts.length - 1; i++){
+      const [ax, ay] = pts[i], [bx, by] = pts[i + 1];
+      const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy || 1;
+      let u = ((cn.x - ax) * dx + (cn.y - ay) * dy) / L; u = Math.max(0, Math.min(1, u));
+      const px = ax + dx * u, py = ay + dy * u;
+      let nx = cn.x - px, ny = cn.y - py, d = Math.hypot(nx, ny);
+      const min = R + THICK;
+      if (d < min){
+        if (d < 0.001){ nx = -dy; ny = dx; d = Math.hypot(nx, ny); }
+        cn.x = px + nx / d * min; cn.y = py + ny / d * min;
+      }
+    }
+  }
+}
+// les billes déjà dans le creux de la pelle n'en ressortent que par l'avant
+let CUP_X0, CUP_X1, CUP_Y;
+function markInside(){
+  const k = shovelScale; CUP_X0 = 6 * K * k + R + THICK; CUP_X1 = 40 * K * k; CUP_Y = 45 * K * k - R - THICK;
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle);
+  for (const b of coins){
+    const dx = b.x - shovel.x, dy = b.y - shovel.y, lx = dx * c + dy * sn, ly = -dx * sn + dy * c;
+    b.inCup = b.z <= 0 && lx > 0 && lx < CUP_X1 && Math.abs(ly) < 45 * K * k;
+  }
+}
+function keepInside(){
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle);
+  for (const b of coins){
+    if (!b.inCup) continue;
+    const dx = b.x - shovel.x, dy = b.y - shovel.y;
+    let lx = dx * c + dy * sn, ly = -dx * sn + dy * c;
+    if (lx > CUP_X1){ b.inCup = false; continue; } // sortie par l'avant : autorisée
+    lx = Math.max(CUP_X0, lx); ly = Math.max(-CUP_Y, Math.min(CUP_Y, ly));
+    b.x = shovel.x + lx * c - ly * sn; b.y = shovel.y + lx * sn + ly * c;
+  }
+}
+function coinCollisions(passes = 2){
+  for (let k = 0; k < passes; k++)
+    for (let i = 0; i < coins.length; i++) for (let j = i + 1; j < coins.length; j++){
+      const a = coins[i], b = coins[j]; if (a.z > 0 || b.z > 0) continue;
+      const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+      if (d2 < 4 * R * R && d2 > 0.0001){
+        const d = Math.sqrt(d2), o = (2 * R - d) / 2, nx = dx / d, ny = dy / d;
+        a.x -= nx * o; a.y -= ny * o; b.x += nx * o; b.y += ny * o;
+      }
+    }
+}
+function angleTo(a, b){ let d = b - a; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; return d; }
+function burst(x, y, color, n = 10){
+  for (let i = 0; i < n; i++){ const a = Math.random() * 7, v = 60 + Math.random() * 120;
+    sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.4 + Math.random() * 0.3, color }); }
+}
+
+
+// ---------- gains ----------
+function coinValue(c){ return ZONE_TYPES[c.type].v * VALUES[lvl('value')]; }
+function swallow(x, y, type){ sinking.push({ x, y, k: 1, type }); }
+function cashIn(s){
+  const v = ZONE_TYPES[s.type].v * VALUES[lvl('value')];
+  bank += v; swallowed++; hole.pulse = 1;
+  floaters.push({ x: hole.x + (Math.random() - 0.5) * 16, y: hole.y - hole.r, txt: '+' + v, life: 0.7, color: ZONE_TYPES[s.type].c });
+  const step = Math.floor(holeTarget() / 6);
+  if (step > hole.step){ hole.step = step; if (swallowed > 1){ burst(hole.x, hole.y, '#ffcc33', 26);
+    floaters.push({ x: hole.x, y: hole.y - hole.r - 24, txt: 'LE TROU GRANDIT !', life: 1.4, color: '#ffcc33' }); } }
+}
+
+// ---------- achats ----------
+function buy(p){
+  p.paid -= p.costs[p.level]; p.level++; purchases++; if (maxed(p)) p.paid = 0;
+  const cx = p.x + p.s / 2, cy = p.y + p.s / 2;
+  burst(cx, cy, p.color, 30);
+  let msg = p.name + ' +1 !';
+  if (p.id === 'shovel'){ shovelTarget = 1 + 0.25 * p.level; burst(shovel.x, shovel.y, p.color, 20); }
+  if (p.id === 'robot'){ robots.push({ x: hole.x, y: hole.y + hole.r + 10, angle: 0, load: [], target: null, bob: Math.random() * 6 }); msg = 'NOUVEAU ROBOT !'; }
+  if (p.side){
+    zones[p.side] = true; msg = 'NOUVELLE ZONE !';
+    const x0 = p.side === 'left' ? 0 : 2 * W;
+    for (let n = 0; n < 30; n++) spawnCoin(x0 + 30 + Math.random() * (W - 60), 60 + Math.random() * (WH - 120), 200 + Math.random() * 200);
+  }
+  floaters.push({ x: cx, y: p.y - 14, txt: msg, life: 1.6, color: p.color });
+}
+function updatePads(dt){
+  for (const p of pads) p.flash = Math.max(0, p.flash - dt);
+  // régions : elles s'ouvrent quand ta fortune atteint leur seuil (la fortune n'est pas dépensée)
+  for (const p of pads){
+    if (!p.side || zones[p.side]) continue;
+    const cost = p.costs[0];
+    p.paid = Math.min(bank, cost);
+    if (bank >= cost) buy(p);
+  }
+}
+
+// ---------- robots : ramassent les billes proches et les rapportent au trou ----------
+const ROBOT_CAP = 5, ROBOT_SPEED = 115;
+function updateRobots(dt){
+  const b = bounds();
+  for (const r of robots){
+    r.bob += dt * 8;
+    let tx, ty;
+    if (r.load.length >= ROBOT_CAP || (r.load.length && !coins.length)){
+      tx = hole.x; ty = hole.y;
+      if (Math.hypot(r.x - hole.x, r.y - hole.y) < hole.r + 4){
+        r.load.forEach((type, i) => swallow(r.x + (i - 2) * 3, r.y, type)); r.load = [];
+      }
+    } else {
+      if (!r.target || !coins.includes(r.target) || r.target.z > 0){
+        if (r.target) r.target.claim = null;
+        let best = null, bd = 1e9;
+        for (const c of coins){
+          if (c.z > 0 || c.claim || c.inCup) continue;
+          const d = Math.hypot(c.x - r.x, c.y - r.y); if (d < bd){ bd = d; best = c; }
+        }
+        r.target = best; if (best) best.claim = r;
+      }
+      if (!r.target){ tx = hole.x + Math.cos(t + r.bob) * 60; ty = hole.y + 120; }
+      else { tx = r.target.x; ty = r.target.y; }
+    }
+    const dx = tx - r.x, dy = ty - r.y, d = Math.hypot(dx, dy);
+    if (d > 1){ const sp = Math.min(ROBOT_SPEED, d * 6); r.x += dx / d * sp * dt; r.y += dy / d * sp * dt; r.angle = Math.atan2(dy, dx); }
+    r.x = Math.max(b.x0 + 10, Math.min(b.x1 - 10, r.x));
+    // ramasse les billes au contact
+    if (r.load.length < ROBOT_CAP) for (let i = coins.length - 1; i >= 0; i--){
+      const c = coins[i];
+      if (c.z <= 0 && !c.inCup && Math.hypot(c.x - r.x, c.y - r.y) < 13){
+        coins.splice(i, 1); r.load.push(c.type); if (r.target === c) r.target = null;
+        if (r.load.length >= ROBOT_CAP) break;
+      }
+    }
+  }
+}
+
+function update(dt){
+  t += dt;
+  const b = bounds();
+  const [wvx, wvy] = wantedVelocity(), acc = Math.min(1, dt * 12);
+  shovel.vx += (wvx - shovel.vx) * acc; shovel.vy += (wvy - shovel.vy) * acc;
+  const nx = Math.max(b.x0 + 20, Math.min(b.x1 - 20, shovel.x + shovel.vx * dt));
+  const ny = Math.max(20, Math.min(WH - 20, shovel.y + shovel.vy * dt));
+  const mvx = nx - shovel.x, mvy = ny - shovel.y, dist = Math.hypot(mvx, mvy);
+  const ax = nx - anchor.x, ay = ny - anchor.y;
+  if (Math.hypot(ax, ay) > 10){ aimAngle = Math.atan2(ay, ax); anchor.x = nx; anchor.y = ny; }
+  const dAng = angleTo(shovel.angle, aimAngle) * Math.min(1, dt * 16);
+  const steps = Math.max(1, Math.ceil(Math.max(dist / 3, Math.abs(dAng) / 0.05)));
+  shovelScale += (shovelTarget - shovelScale) * Math.min(1, dt * 4);
+  markInside();
+  for (let s = 0; s < steps; s++){
+    shovel.x += mvx / steps; shovel.y += mvy / steps; shovel.angle += dAng / steps;
+    pushOut(worldShape());
+    if (s % 3 === 2) coinCollisions(1);
+    keepInside();
+  }
+  // caméra : suit la pelle, peut montrer un peu des zones fermées derrière les murs
+  const camK = Math.min(1, dt * 8);
+  const cx0 = Math.max(0, b.x0 - 90), cx1 = Math.min(WW - W, b.x1 + 90 - W);
+  cam.x += (Math.max(cx0, Math.min(cx1, shovel.x - W / 2)) - cam.x) * camK;
+  cam.y += (Math.max(0, Math.min(WH - H, shovel.y - H / 2)) - cam.y) * camK;
+
+  for (const c of coins){
+    c.x += c.vx * dt; c.y += c.vy * dt; c.vx *= 0.9; c.vy *= 0.9;
+    if (c.z > 0 || c.vz !== 0){
+      c.vz += 2200 * dt; c.z -= c.vz * dt;
+      if (c.z <= 0){ c.z = 0; c.vz = c.vz > 300 ? -c.vz * 0.3 : 0; }
+    }
+  }
+  // aimant : attire vers le trou les billes proches
+  const mr = magnetRange();
+  if (mr) for (const c of coins){
+    if (c.z > 0) continue;
+    const dx = hole.x - c.x, dy = hole.y - c.y, d = Math.hypot(dx, dy);
+    if (d < hole.r + mr){ const sp = 70 * dt; c.x += dx / d * sp; c.y += dy / d * sp; }
+  }
+  const ws = worldShape();
+  for (let k = 0; k < 4; k++){ coinCollisions(1); pushOut(ws); keepInside(); }
+  for (const c of coins){ c.x = Math.max(b.x0 + R, Math.min(b.x1 - R, c.x)); c.y = Math.max(R + 4, Math.min(WH - R - 6, c.y)); }
+
+  dropClock += dt;
+  if (dropClock > dropEvery()){ dropClock = 0; if (coins.length < maxFloor()) dropCoin(); }
+
+  // deux destinations pour chaque bille : le trou (ta fortune) ou un carré (une amélioration)
+  for (let i = coins.length - 1; i >= 0; i--){
+    const c = coins[i];
+    if (c.z > 0) continue;
+    const p = pads.find(p => !maxed(p) && !p.side && c.x > p.x && c.x < p.x + p.s && c.y > p.y && c.y < p.y + p.s);
+    if (p){
+      coins.splice(i, 1); const v = coinValue(c); p.paid += v; p.flash = 0.12;
+      floaters.push({ x: c.x, y: c.y, txt: '+' + v, life: 0.6, color: p.color });
+      if (p.paid >= p.costs[p.level]) buy(p);
+      continue;
+    }
+    if (Math.hypot(c.x - hole.x, c.y - hole.y) < hole.r - R * 0.3){ coins.splice(i, 1); swallow(c.x, c.y, c.type); }
+  }
+  for (let i = sinking.length - 1; i >= 0; i--){
+    const s = sinking[i];
+    s.x += (hole.x - s.x) * Math.min(1, dt * 10); s.y += (hole.y - s.y) * Math.min(1, dt * 10); s.k -= dt * 4;
+    if (s.k <= 0){ sinking.splice(i, 1); cashIn(s); }
+  }
+  hole.pulse = Math.max(0, hole.pulse - dt * 5);
+  hole.r += (holeTarget() - hole.r) * Math.min(1, dt * 3);
+
+  updatePads(dt);
+  updateRobots(dt);
+
+  flyers.forEach(f => { f.k += dt * 4; }); flyers = flyers.filter(f => f.k < 1);
+  sparks.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.92; p.vy *= 0.92; p.life -= dt; });
+  sparks = sparks.filter(p => p.life > 0);
+  floaters.forEach(f => { f.life -= dt; f.y -= 40 * dt; });
+  floaters = floaters.filter(f => f.life > 0);
+  countEl.textContent = bank;
+  // onboarding : une fois le premier argent gagné, on explique comment acheter
+  if (moved && purchases === 0 && swallowed >= 5){ hint.innerHTML = 'Le trou remplit ta fortune.<br>Pousse des billes dans un carré pour l\'améliorer'; hint.style.opacity = 1; }
+  else if (moved) hint.style.opacity = 0;
+}
+
+// ---------- dessin ----------
+function drawCoin(x, y, r, type = 'center'){
+  const T = ZONE_TYPES[type];
+  ctx.fillStyle = T.d; ctx.beginPath(); ctx.arc(x, y + 2, r, 0, 7); ctx.fill();
+  ctx.fillStyle = T.c; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+  ctx.fillStyle = T.h; ctx.fillRect(x - r * 0.45, y - r * 0.5, r * 0.35, r * 0.35);
+}
+function drawHole(){
+  const r = hole.r * (1 + hole.pulse * 0.08), mr = magnetRange();
+  if (mr){ // champ de l'aimant
+    ctx.strokeStyle = '#d68bff' + (Math.floor(40 + 30 * Math.sin(t * 4)).toString(16).padStart(2, '0'));
+    ctx.lineWidth = 2; ctx.setLineDash([6, 8]); ctx.beginPath(); ctx.arc(hole.x, hole.y, hole.r + mr, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+  }
+  ctx.fillStyle = '#c98a12'; ctx.beginPath(); ctx.arc(hole.x, hole.y, r + 6, 0, 7); ctx.fill();
+  ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(hole.x, hole.y - 1, r + 4, 0, 7); ctx.fill();
+  ctx.fillStyle = '#05030b'; ctx.beginPath(); ctx.arc(hole.x, hole.y, r, 0, 7); ctx.fill();
+  ctx.fillStyle = '#1a1230'; ctx.beginPath(); ctx.ellipse(hole.x, hole.y - r * 0.35, r * 0.8, r * 0.45, 0, Math.PI, 0); ctx.fill();
+  for (const s of sinking){ ctx.globalAlpha = Math.max(0, s.k); drawCoin(s.x, s.y, R * Math.max(0.2, s.k), s.type); }
+  ctx.globalAlpha = 1;
+}
+function drawPad(p){
+  if (p.side && zones[p.side]) return; // porte ouverte : le carré disparaît
+  const { x, y, s } = p, done = maxed(p), col = done ? '#3fbf7f' : p.color;
+  const cost = done ? 0 : p.costs[p.level], ok = false;
+  ctx.fillStyle = p.flash > 0 ? col + '66' : col + (ok ? '30' : '14'); ctx.fillRect(x, y, s, s);
+  ctx.strokeStyle = col; ctx.lineWidth = ok ? 4 : 3; ctx.strokeRect(x, y, s, s);
+  if (!done){
+    const k = p.paid / cost;
+    ctx.fillStyle = col + '55'; ctx.fillRect(x + 3, y + s - 3 - (s - 6) * k, s - 6, (s - 6) * k);
+  }
+  ctx.textAlign = 'center'; ctx.fillStyle = '#f6f0ff';
+  ctx.font = '7px "Press Start 2P", monospace'; ctx.fillText(p.side ? 'FORTUNE' : p.name, x + s / 2, y + s * 0.3);
+  if (p.side){ // cadenas des portes
+    const lx = x + s / 2, ly = y + s * 0.48;
+    ctx.strokeStyle = '#f6f0ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(lx, ly - 2, 4, Math.PI, 0); ctx.stroke();
+    ctx.fillRect(lx - 6, ly - 2, 12, 8);
+  } else ctx.fillText(done ? 'MAX' : 'niv ' + (p.level + 1), x + s / 2, y + s * 0.55);
+  if (!done){ ctx.fillStyle = ok ? '#ffcc33' : '#f6f0ffaa'; ctx.fillText(cost - p.paid, x + s / 2, y + s * 0.82); }
+  ctx.textAlign = 'left';
+}
+function drawShovel(){
+  const pts = worldShape();
+  const path = () => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); };
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.save(); ctx.translate(0, 4); path(); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = THICK * 2 + 4; ctx.stroke(); ctx.restore();
+  path(); ctx.strokeStyle = '#0e0a1c'; ctx.lineWidth = THICK * 2 + 4; ctx.stroke();
+  path(); ctx.strokeStyle = '#7ee0ff'; ctx.lineWidth = THICK * 2; ctx.stroke();
+  path(); ctx.strokeStyle = '#e8fbff'; ctx.lineWidth = Math.max(1, THICK * 0.6); ctx.stroke();
+}
+function drawRobot(r){
+  const y = r.y + Math.sin(r.bob) * 1.5;
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(r.x, r.y + 9, 10, 4, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#0e0a1c'; ctx.fillRect(r.x - 11, y - 9, 22, 18);
+  ctx.fillStyle = '#3fbf7f'; ctx.fillRect(r.x - 9, y - 7, 18, 14);
+  ctx.fillStyle = '#0e0a1c'; // yeux tournés vers la direction
+  const ex = Math.cos(r.angle) * 2, ey = Math.sin(r.angle) * 2;
+  ctx.fillRect(r.x - 5 + ex, y - 3 + ey, 3, 3); ctx.fillRect(r.x + 2 + ex, y - 3 + ey, 3, 3);
+  r.load.forEach((type, i) => drawCoin(r.x, y - 12 - i * 4, 4, type)); // pile de billes transportées
+}
+function drawLocked(){
+  for (const side of ['left', 'right']){
+    if (zones[side]) continue;
+    const x0 = side === 'left' ? 0 : 2 * W, wx = side === 'left' ? W : 2 * W;
+    ctx.fillStyle = '#0b0816d9'; ctx.fillRect(x0, 0, W, WH);
+    // mur avec barreaux
+    ctx.fillStyle = '#4a3f66'; ctx.fillRect(wx - 4, 0, 8, WH);
+    ctx.fillStyle = '#6b5f8a'; for (let y = 0; y < WH; y += 40) ctx.fillRect(wx - 7, y, 14, 10);
+  }
+}
+function draw(){
+  ctx.fillStyle = '#17122a'; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.translate(-Math.round(cam.x), -Math.round(cam.y));
+  ctx.fillStyle = '#2a2140'; ctx.fillRect(0, 0, WW, WH);
+  ctx.fillStyle = '#342950';
+  const gx0 = Math.floor(cam.x / 48) * 48, gy0 = Math.floor(cam.y / 48) * 48;
+  for (let gx = gx0; gx < cam.x + W; gx += 48) for (let gy = gy0; gy < cam.y + H; gy += 48)
+    if ((gx + gy) / 48 % 2 === 0) ctx.fillRect(gx, gy, 48, 48);
+  // teinte des zones latérales ouvertes
+  if (zones.left){ ctx.fillStyle = '#5ab8ff10'; ctx.fillRect(0, 0, W, WH); }
+  if (zones.right){ ctx.fillStyle = '#c77dff10'; ctx.fillRect(2 * W, 0, W, WH); }
+  ctx.strokeStyle = '#c98a12'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, WW - 4, WH - 4);
+  drawHole();
+  pads.forEach(drawPad);
+  // flèche de guidage vers le premier achat possible (seulement au début)
+  if (purchases < 3){
+    let g = null;
+    for (const p of pads) if (!maxed(p) && !p.side && (!g || p.costs[p.level] - p.paid < g.costs[g.level] - g.paid)) g = p;
+    if (g){
+      const ax = g.x + g.s / 2, ay = g.y - 10 - Math.abs(Math.sin(t * 5)) * 8;
+      ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax - 9, ay - 12); ctx.lineTo(ax + 9, ay - 12); ctx.fill();
+    }
+  }
+  for (const c of coins){
+    if (c.x < cam.x - 20 || c.x > cam.x + W + 20 || c.y - c.z < cam.y - 20 || c.y > cam.y + H + 20) continue;
+    if (c.z > 0){
+      const k = Math.max(0.3, 1 - c.z / 400);
+      ctx.fillStyle = 'rgba(0,0,0,' + (0.35 * k) + ')';
+      ctx.beginPath(); ctx.ellipse(c.x, c.y + 3, R * k, R * 0.5 * k, 0, 0, 7); ctx.fill();
+    }
+    drawCoin(c.x, c.y - c.z, R, c.type);
+  }
+  robots.forEach(drawRobot);
+  drawLocked();
+  drawShovel();
+  for (const f of flyers){ // pièces qui volent de la pelle vers le carré
+    const e = f.k * f.k, x = f.x + (f.tx - f.x) * e, y = f.y + (f.ty - f.y) * e - Math.sin(f.k * Math.PI) * 30;
+    drawCoin(x, y, 4);
+  }
+  for (const p of sparks){ ctx.globalAlpha = Math.min(1, p.life * 2); ctx.fillStyle = p.color; ctx.fillRect(p.x - 2, p.y - 2, 4, 4); }
+  ctx.textAlign = 'center'; ctx.font = '9px "Press Start 2P", monospace';
+  floaters.forEach(f => { ctx.globalAlpha = Math.max(0, f.life * 1.5); ctx.fillStyle = f.color; ctx.fillText(f.txt, f.x, f.y - 12); });
+  ctx.globalAlpha = 1; ctx.textAlign = 'left';
+  ctx.restore();
+  drawMinimap();
+  if (joy.on && !joy.mouse){
+    ctx.strokeStyle = '#f6f0ff33'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(joy.ox, joy.oy, JOY_RADIUS, 0, 7); ctx.stroke();
+    ctx.fillStyle = '#f6f0ff44'; ctx.beginPath(); ctx.arc(joy.x, joy.y, 14, 0, 7); ctx.fill();
+  }
+}
+function drawMinimap(){
+  const mw = Math.min(150, W * 0.4), sc = mw / WW, mh = WH * sc;
+  const mx = (W - mw) / 2, my = H - safeBottom() - mh - 12;
+  ctx.fillStyle = '#0e0a1ccc'; ctx.fillRect(mx - 4, my - 4, mw + 8, mh + 8);
+  ctx.fillStyle = '#2a2140'; ctx.fillRect(mx, my, mw, mh);
+  if (!zones.left){ ctx.fillStyle = '#0b0816'; ctx.fillRect(mx, my, W * sc, mh); }
+  if (!zones.right){ ctx.fillStyle = '#0b0816'; ctx.fillRect(mx + 2 * W * sc, my, W * sc, mh); }
+  for (const c of coins){ ctx.fillStyle = ZONE_TYPES[c.type].c + '99'; ctx.fillRect(mx + c.x * sc - 0.5, my + c.y * sc - 0.5, 1.5, 1.5); }
+  for (const p of pads){ if (p.side && zones[p.side]) continue; ctx.fillStyle = maxed(p) ? '#3fbf7f' : p.color; ctx.fillRect(mx + p.x * sc, my + p.y * sc, 3, 3); }
+  const hr = Math.max(3, hole.r * sc);
+  ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(mx + hole.x * sc, my + hole.y * sc, hr + 2, 0, 7); ctx.fill();
+  ctx.fillStyle = '#05030b'; ctx.beginPath(); ctx.arc(mx + hole.x * sc, my + hole.y * sc, hr, 0, 7); ctx.fill();
+  ctx.fillStyle = '#3fbf7f'; for (const r of robots) ctx.fillRect(mx + r.x * sc - 1.5, my + r.y * sc - 1.5, 3, 3);
+  ctx.strokeStyle = '#f6f0ff88'; ctx.lineWidth = 1; ctx.strokeRect(mx + cam.x * sc, my + cam.y * sc, W * sc, H * sc);
+  const px = mx + shovel.x * sc, py = my + shovel.y * sc, a = shovel.angle;
+  ctx.fillStyle = '#7ee0ff'; ctx.beginPath();
+  ctx.moveTo(px + Math.cos(a) * 6, py + Math.sin(a) * 6);
+  ctx.lineTo(px + Math.cos(a + 2.4) * 4, py + Math.sin(a + 2.4) * 4);
+  ctx.lineTo(px + Math.cos(a - 2.4) * 4, py + Math.sin(a - 2.4) * 4); ctx.fill();
+}
+
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  update(dt); draw(); requestAnimationFrame(loop);
+}
+init(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>
