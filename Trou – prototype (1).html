@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- plein écran quand la page est ajoutée à l'écran d'accueil de l'iPhone -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trou">
+<title>Trou – prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --floor:#2a2140; --ink:#f6f0ff; --gold:#ffcc33; --gold-dark:#c98a12;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --floor:#2a2140; } }
+  :root[data-theme="dark"]{ --floor:#2a2140; }
+  html{ height:100%; scroll-padding-top:env(safe-area-inset-top,0px); }
+  body{ height:100%; margin:0; background:var(--floor); overflow:hidden;
+        font-family:"Press Start 2P", "Courier New", monospace; color:var(--ink);
+        -webkit-user-select:none; user-select:none; }
+  canvas{ position:fixed; inset:0; width:100%; height:100%; touch-action:none; display:block; }
+  #wallet{ position:fixed; top:calc(14px + env(safe-area-inset-top,0px)); left:50%; transform:translateX(-50%);
+           display:flex; align-items:center; gap:10px; background:#00000055; border:3px solid var(--gold-dark);
+           padding:10px 16px; font-size:16px; pointer-events:none; }
+  #wallet i{ width:16px; height:16px; background:var(--gold); border:3px solid var(--gold-dark); border-radius:50%; display:inline-block; }
+  /* barre des bonus : boutons fixes en bas de l'écran */
+  #bonus{ position:fixed; left:0; right:0; bottom:0; padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));
+          display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; background:linear-gradient(#17122a00, #17122ae6 30%); }
+  #bonus button{ font:inherit; font-size:8px; line-height:1.6; color:#f6f0ff; background:#00000066; border:3px solid #4a3f66;
+          padding:6px 2px; text-align:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; cursor:pointer; }
+  #bonus button b{ display:block; font-weight:normal; }
+  #bonus button .price{ color:#f6f0ff88; }
+  #bonus button.ok{ border-color:var(--c); background:#00000088; }
+  #bonus button.ok .price{ color:#ffcc33; }
+  #bonus button.max{ border-color:#3fbf7f; opacity:.6; }
+  #bonus button.pop{ animation:pop .25s; }
+  #bonus button.hint{ animation:nudge 1s infinite; }
+  #bonus button:focus-visible{ outline:2px solid #fff; }
+  @keyframes pop{ 50%{ transform:scale(1.12); } }
+  @keyframes nudge{ 50%{ transform:translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce){ #bonus button.pop, #bonus button.hint{ animation:none; } }
+  #hint{ position:fixed; left:0; right:0; bottom:calc(120px + env(safe-area-inset-bottom,0px)); text-align:center;
+         font-size:11px; line-height:1.8; opacity:.85; pointer-events:none; transition:opacity .6s; padding:0 20px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="wallet"><i></i><span id="count">0</span></div>
+<div id="bonus"></div>
+<div id="hint">Glisse le doigt pour diriger la pelle<br>et pousse les billes dans le trou</div>
+<script>
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const countEl = document.getElementById('count'), hint = document.getElementById('hint');
+let W, H, dpr, t = 0, moved = false;
+
+// ---------- monde : grille de 3 x 3 cases de la taille de l'écran ----------
+// la case du centre est ouverte au départ ; 4 régions se débloquent autour (ouest, nord, est, sud)
+let WW, WH, CW, CH;
+const REGIONS = {
+  center: { col: 1, row: 1, open: true,  v: 1,  c: '#ffcc33', d: '#c98a12', h: '#fff3b0' },
+  left:   { col: 0, row: 1, open: false, v: 2,  c: '#5ab8ff', d: '#2a6fb0', h: '#d6efff', cost: 100,  name: 'OUEST' },
+  north:  { col: 1, row: 0, open: false, v: 3,  c: '#5fe08a', d: '#2b9a52', h: '#dcffe7', cost: 250,  name: 'NORD' },
+  right:  { col: 2, row: 1, open: false, v: 5,  c: '#c77dff', d: '#7b3fb3', h: '#f0dcff', cost: 500,  name: 'EST' },
+  south:  { col: 1, row: 2, open: false, v: 8,  c: '#ff8a3d', d: '#b4541a', h: '#ffe0c9', cost: 1200, name: 'SUD' }
+};
+const cellRect = r => ({ x0: r.col * CW, y0: r.row * CH, x1: (r.col + 1) * CW, y1: (r.row + 1) * CH });
+const openRegions = () => Object.values(REGIONS).filter(r => r.open);
+function regionAt(x, y){
+  const col = Math.floor(x / CW), row = Math.floor(y / CH);
+  for (const k in REGIONS) if (REGIONS[k].col === col && REGIONS[k].row === row) return k;
+  return null;
+}
+// ramène un point dans la partie ouverte du monde (union des cases ouvertes), avec une marge
+function clampOpen(x, y, m){
+  let bx = x, by = y, bd = Infinity;
+  for (const r of openRegions()){
+    const c = cellRect(r);
+    // pas de marge du côté d'une case voisine ouverte : on passe librement d'une région à l'autre
+    const op = (dc, dr) => { const k = regionAt((r.col + dc) * CW + 1, (r.row + dr) * CH + 1); return k && REGIONS[k].open && r.col + dc >= 0 && r.col + dc <= 2 && r.row + dr >= 0 && r.row + dr <= 2; };
+    const x0 = c.x0 + (op(-1, 0) ? -m : m), x1 = c.x1 - (op(1, 0) ? -m : m), y0 = c.y0 + (op(0, -1) ? -m : m), y1 = c.y1 - (op(0, 1) ? -m : m);
+    const cx = Math.max(x0, Math.min(x1, x)), cy = Math.max(y0, Math.min(y1, y));
+    const d = (cx - x) ** 2 + (cy - y) ** 2;
+    if (d === 0) return [x, y];
+    if (d < bd){ bd = d; bx = cx; by = cy; }
+  }
+  return [bx, by];
+}
+function openBox(){ // boîte englobant les cases ouvertes
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of openRegions()){ const c = cellRect(r); x0 = Math.min(x0, c.x0); y0 = Math.min(y0, c.y0); x1 = Math.max(x1, c.x1); y1 = Math.max(y1, c.y1); }
+  return { x0, y0, x1, y1 };
+}
+
+const cam = { x: 0, y: 0, z: 1 }; // z : zoom (la vue s'élargit quand la pelle grandit, comme dans hole.io)
+const joy = { on: false, ox: 0, oy: 0, x: 0, y: 0, mouse: false };
+const JOY_RADIUS = 55, MOVE_SPEED = 260;
+const shovel = { x: 0, y: 0, angle: 0, vx: 0, vy: 0 };
+const anchor = { x: 0, y: 0 }; let aimAngle = 0;
+let coins = [], sinking = [], floaters = [], sparks = [];
+let dropClock = 0, bank = 0, swallowed = 0, purchases = 0;
+const K = 0.6;
+const R = 10 * K, THICK = 5 * K, MAX_COINS = 320;
+const hole = { x: 0, y: 0, r: 0, pulse: 0, step: 0 };
+const HOLE_START = 13, HOLE_MAX = 80;
+const holeTarget = () => Math.min(HOLE_MAX, HOLE_START + 3 * Math.sqrt(swallowed));
+
+// ---------- bonus : boutons en bas, achetés avec la fortune ----------
+// PLUIE et PELLE n'ont pas de maximum : chaque palier coûte 60 % de plus que le précédent
+const BONUS = [
+  { id: 'rain',   name: 'PLUIE',  color: '#9ad0ff', price: l => Math.round(10 * Math.pow(1.6, l)), max: Infinity },
+  { id: 'shovel', name: 'PELLE',  color: '#7ee0ff', price: l => Math.round(15 * Math.pow(1.6, l)), max: Infinity },
+  { id: 'value',  name: 'VALEUR', color: '#ffcc33', price: l => [40, 120, 300, 700][l], max: 4 }
+];
+BONUS.forEach(b => { b.level = 0; });
+const bonus = id => BONUS.find(b => b.id === id);
+const lvl = id => bonus(id).level;
+const VALUES = [1, 2, 3, 5, 8];
+const dropEvery = () => 0.55 * Math.pow(0.85, lvl('rain'));
+const maxFloor = () => Math.min(MAX_COINS - 20, 45 + 15 * lvl('rain'));
+let shovelScale = 1;
+const shovelTarget = () => 1 + 0.2 * lvl('shovel');
+
+// portes des régions, collées aux murs de la case centrale
+const gates = Object.entries(REGIONS).filter(([k]) => k !== 'center').map(([k, r]) => ({ key: k, r, x: 0, y: 0, s: 0 }));
+
+// pelle en forme de « { » (creux vers l'avant, axe +x)
+function quad(a, c, b, n = 8){ const o = []; for (let i = 1; i <= n; i++){ const u = i / n;
+  o.push([(1-u)*(1-u)*a[0] + 2*(1-u)*u*c[0] + u*u*b[0], (1-u)*(1-u)*a[1] + 2*(1-u)*u*c[1] + u*u*b[1]]); } return o; }
+const SHAPE = [[40, -45], ...quad([40,-45],[6,-45],[6,-21]), [6, -9], ...quad([6,-9],[6,0],[-12,0],4),
+  ...quad([-12,0],[6,0],[6,9],4), [6, 21], ...quad([6,21],[6,45],[40,45])].map(([x, y]) => [x * K, y * K]);
+
+function safeTop(){ return parseFloat(getComputedStyle(document.documentElement).paddingTop) || 0; }
+function layout(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  CW = W; CH = H; WW = 3 * CW; WH = 3 * CH;
+  hole.x = 1.5 * CW; hole.y = 1.5 * CH; if (!hole.r || hole.r > HOLE_MAX) hole.r = HOLE_START;
+  const s = Math.min(60, W * 0.17);
+  for (const g of gates){
+    g.s = s;
+    if (g.key === 'left'){ g.x = CW + 10; g.y = 1.5 * CH - s / 2; }
+    if (g.key === 'right'){ g.x = 2 * CW - 10 - s; g.y = 1.5 * CH - s / 2; }
+    if (g.key === 'north'){ g.x = 1.5 * CW - s / 2; g.y = CH + safeTop() + 70; }   // sous la fortune et la minicarte
+    if (g.key === 'south'){ g.x = 1.5 * CW - s / 2; g.y = 2 * CH - 10 - s - 130; } // au-dessus de la barre des bonus
+  }
+}
+
+function spawnCoin(x, y, z = 0){
+  if (coins.length >= MAX_COINS) return;
+  coins.push({ x, y, vx: 0, vy: 0, z, vz: 0, type: regionAt(x, y) || 'center' });
+}
+function nearSomething(x, y, pd){
+  if (Math.hypot(x - hole.x, y - hole.y) < HOLE_MAX + pd) return true;
+  return gates.some(g => !g.r.open && x > g.x - pd && x < g.x + g.s + pd && y > g.y - pd && y < g.y + g.s + pd);
+}
+function dropCoin(region){ // une bille tombe du ciel dans une case ouverte (au hasard ou imposée)
+  const regs = openRegions(), r = region || regs[Math.floor(Math.random() * regs.length)], c = cellRect(r);
+  for (let k = 0; k < 20; k++){
+    const x = c.x0 + 30 + Math.random() * (CW - 60), y = c.y0 + 40 + Math.random() * (CH - 80);
+    if (!nearSomething(x, y, 30)){ spawnCoin(x, y, 150 + Math.random() * 250); return; }
+  }
+}
+
+function init(){
+  layout();
+  shovel.x = anchor.x = hole.x; shovel.y = anchor.y = hole.y + 60;
+  cam.x = shovel.x - W / 2; cam.y = shovel.y - H / 2;
+  for (let n = 0; n < 35; n++) dropCoin(REGIONS.center);
+  coins.forEach(c => { c.z = 0; });
+}
+
+// ---------- contrôles ----------
+const keys = {};
+function firstMove(){ if (!moved){ moved = true; hint.style.opacity = 0; } }
+const toWorld = (sx, sy) => [sx / cam.z + cam.x, sy / cam.z + cam.y];
+function gateAt(sx, sy){
+  const [x, y] = toWorld(sx, sy);
+  return gates.find(g => !g.r.open && x > g.x - 12 && x < g.x + g.s + 12 && y > g.y - 12 && y < g.y + g.s + 12);
+}
+function tryGate(g){
+  if (bank >= g.r.cost){ bank -= g.r.cost; openRegion(g); }
+  else floaters.push({ x: g.x + g.s / 2, y: g.y - 6, txt: 'IL TE FAUT ' + g.r.cost, life: 1.2, color: '#ff4d5e' });
+}
+cv.addEventListener('pointerdown', e => {
+  const g = gateAt(e.clientX, e.clientY);
+  if (g){ tryGate(g); firstMove(); return; } // toucher une porte n'active pas le joystick
+  joy.mouse = e.pointerType === 'mouse';
+  if (!joy.mouse){ joy.ox = joy.x = e.clientX; joy.oy = joy.y = e.clientY; }
+  joy.on = true; firstMove();
+});
+cv.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse'){ joy.mouse = true; joy.on = true; joy.x = e.clientX; joy.y = e.clientY; firstMove(); }
+  else if (joy.on){ joy.x = e.clientX; joy.y = e.clientY; }
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach(n => cv.addEventListener(n, () => { joy.on = false; }));
+addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; firstMove(); });
+addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+addEventListener('resize', layout);
+function wantedVelocity(){
+  const S = MOVE_SPEED / Math.sqrt(cam.z); // un peu plus rapide quand la vue est dézoomée
+  let dx = 0, dy = 0;
+  if (keys['arrowleft'] || keys['q'] || keys['a']) dx -= 1;
+  if (keys['arrowright'] || keys['d']) dx += 1;
+  if (keys['arrowup'] || keys['z'] || keys['w']) dy -= 1;
+  if (keys['arrowdown'] || keys['s']) dy += 1;
+  if (dx || dy){ const d = Math.hypot(dx, dy); return [dx / d * S, dy / d * S]; }
+  if (!joy.on) return [0, 0];
+  if (joy.mouse){
+    const vx = joy.x - (shovel.x - cam.x) * cam.z, vy = joy.y - (shovel.y - cam.y) * cam.z, d = Math.hypot(vx, vy);
+    if (d < 8) return [0, 0];
+    const sp = Math.min(S, d * 4); return [vx / d * sp, vy / d * sp];
+  }
+  const vx = joy.x - joy.ox, vy = joy.y - joy.oy, d = Math.hypot(vx, vy);
+  if (d < 6) return [0, 0];
+  if (d > JOY_RADIUS){ joy.ox = joy.x - vx / d * JOY_RADIUS; joy.oy = joy.y - vy / d * JOY_RADIUS; }
+  const sp = S * Math.min(1, d / JOY_RADIUS); return [vx / d * sp, vy / d * sp];
+}
+
+// ---------- physique de la pelle ----------
+function worldShape(){
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle), k = shovelScale;
+  return SHAPE.map(([x, y]) => [shovel.x + (x * c - y * sn) * k, shovel.y + (x * sn + y * c) * k]);
+}
+function pushOut(pts){
+  const reach = 90 * shovelScale;
+  for (const cn of coins){
+    if (cn.z > 0 || Math.abs(cn.x - shovel.x) > reach || Math.abs(cn.y - shovel.y) > reach) continue;
+    for (let i = 0; i < pts.length - 1; i++){
+      const [ax, ay] = pts[i], [bx, by] = pts[i + 1];
+      const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy || 1;
+      let u = ((cn.x - ax) * dx + (cn.y - ay) * dy) / L; u = Math.max(0, Math.min(1, u));
+      const px = ax + dx * u, py = ay + dy * u;
+      let nx = cn.x - px, ny = cn.y - py, d = Math.hypot(nx, ny);
+      const min = R + THICK;
+      if (d < min){
+        if (d < 0.001){ nx = -dy; ny = dx; d = Math.hypot(nx, ny); }
+        cn.x = px + nx / d * min; cn.y = py + ny / d * min;
+      }
+    }
+  }
+}
+// les billes déjà dans le creux de la pelle n'en ressortent que par l'avant
+let CUP_X0, CUP_X1, CUP_Y;
+function markInside(){
+  const k = shovelScale; CUP_X0 = 6 * K * k + R + THICK; CUP_X1 = 40 * K * k; CUP_Y = 45 * K * k - R - THICK;
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle);
+  for (const b of coins){
+    const dx = b.x - shovel.x, dy = b.y - shovel.y, lx = dx * c + dy * sn, ly = -dx * sn + dy * c;
+    b.inCup = b.z <= 0 && lx > 0 && lx < CUP_X1 && Math.abs(ly) < 45 * K * k;
+  }
+}
+function keepInside(){
+  const c = Math.cos(shovel.angle), sn = Math.sin(shovel.angle);
+  for (const b of coins){
+    if (!b.inCup) continue;
+    const dx = b.x - shovel.x, dy = b.y - shovel.y;
+    let lx = dx * c + dy * sn, ly = -dx * sn + dy * c;
+    if (lx > CUP_X1){ b.inCup = false; continue; } // sortie par l'avant : autorisée
+    lx = Math.max(CUP_X0, lx); ly = Math.max(-CUP_Y, Math.min(CUP_Y, ly));
+    b.x = shovel.x + lx * c - ly * sn; b.y = shovel.y + lx * sn + ly * c;
+  }
+}
+function coinCollisions(passes = 2){
+  for (let k = 0; k < passes; k++)
+    for (let i = 0; i < coins.length; i++) for (let j = i + 1; j < coins.length; j++){
+      const a = coins[i], b = coins[j]; if (a.z > 0 || b.z > 0) continue;
+      const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+      if (d2 < 4 * R * R && d2 > 0.0001){
+        const d = Math.sqrt(d2), o = (2 * R - d) / 2, nx = dx / d, ny = dy / d;
+        a.x -= nx * o; a.y -= ny * o; b.x += nx * o; b.y += ny * o;
+      }
+    }
+}
+function angleTo(a, b){ let d = b - a; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; return d; }
+function burst(x, y, color, n = 10){
+  for (let i = 0; i < n; i++){ const a = Math.random() * 7, v = 60 + Math.random() * 120;
+    sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.4 + Math.random() * 0.3, color }); }
+}
+
+
+// ---------- gains ----------
+function swallow(x, y, type){ sinking.push({ x, y, k: 1, type }); }
+function cashIn(s){
+  const v = REGIONS[s.type].v * VALUES[lvl('value')];
+  bank += v; swallowed++; hole.pulse = 1;
+  floaters.push({ x: hole.x + (Math.random() - 0.5) * 16, y: hole.y - hole.r, txt: '+' + v, life: 0.7, color: REGIONS[s.type].c });
+  const step = Math.floor(holeTarget() / 6);
+  if (step > hole.step){ hole.step = step; if (swallowed > 1){ burst(hole.x, hole.y, '#ffcc33', 26);
+    floaters.push({ x: hole.x, y: hole.y - hole.r - 24, txt: 'LE TROU GRANDIT !', life: 1.4, color: '#ffcc33' }); } }
+}
+
+// ---------- achats ----------
+function openRegion(g){
+  g.r.open = true;
+  burst(g.x + g.s / 2, g.y + g.s / 2, g.r.c, 40);
+  floaters.push({ x: g.x + g.s / 2, y: g.y - 10, txt: 'RÉGION ' + g.r.name + ' !', life: 1.8, color: g.r.c });
+  for (let n = 0; n < 30; n++) dropCoin(g.r); // pluie de billes dans la nouvelle région
+}
+function buyBonus(id){
+  const b = bonus(id);
+  if (b.level >= b.max) return;
+  const cost = b.price(b.level);
+  if (bank < cost) return;
+  bank -= cost; b.level++; purchases++;
+  burst(shovel.x, shovel.y, b.color, 26);
+  floaters.push({ x: shovel.x, y: shovel.y - 40, txt: b.name + (b.level >= b.max ? ' MAX !' : ' NIV ' + b.level + ' !'), life: 1.4, color: b.color });
+  const btn = bonusEls[id]; btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+  refreshBonus();
+}
+const bonusBar = document.getElementById('bonus'), bonusEls = {};
+BONUS.forEach(u => {
+  const b = document.createElement('button'); b.style.setProperty('--c', u.color);
+  b.addEventListener('pointerdown', e => { e.stopPropagation(); buyBonus(u.id); });
+  bonusBar.appendChild(b); bonusEls[u.id] = b;
+});
+let bonusClock = 0;
+function refreshBonus(){
+  let cheapest = null, cheapestCost = Infinity;
+  for (const u of BONUS){
+    const b = bonusEls[u.id], done = u.level >= u.max, cost = done ? 0 : u.price(u.level), ok = !done && bank >= cost;
+    const html = '<b style="color:' + u.color + '">' + u.name + '</b><b>' + (done ? 'MAX' : 'niv ' + (u.level + 1)) + '</b><b class="price">' + (done ? '' : cost) + '</b>';
+    if (b.innerHTML !== html) b.innerHTML = html;
+    b.classList.toggle('ok', ok); b.classList.toggle('max', done);
+    b.setAttribute('aria-label', u.name + (done ? ' au maximum' : ', niveau ' + (u.level + 1) + ', prix ' + cost));
+    if (ok && cost < cheapestCost){ cheapest = u.id; cheapestCost = cost; }
+  }
+  for (const u of BONUS) bonusEls[u.id].classList.toggle('hint', purchases === 0 && u.id === cheapest);
+}
+
+function update(dt){
+  t += dt;
+  // zoom : la vue recule à mesure que la pelle grandit (plafonné pour garder la lisibilité)
+  const zTarget = Math.max(0.45, 1 / (1 + 0.08 * lvl('shovel')));
+  cam.z += (zTarget - cam.z) * Math.min(1, dt * 2);
+  const VW = W / cam.z, VH = H / cam.z;
+
+  const [wvx, wvy] = wantedVelocity(), acc = Math.min(1, dt * 12);
+  shovel.vx += (wvx - shovel.vx) * acc; shovel.vy += (wvy - shovel.vy) * acc;
+  const [nx, ny] = clampOpen(shovel.x + shovel.vx * dt, shovel.y + shovel.vy * dt, 20);
+  const mvx = nx - shovel.x, mvy = ny - shovel.y, dist = Math.hypot(mvx, mvy);
+  const ax = nx - anchor.x, ay = ny - anchor.y;
+  if (Math.hypot(ax, ay) > 10){ aimAngle = Math.atan2(ay, ax); anchor.x = nx; anchor.y = ny; }
+  const dAng = angleTo(shovel.angle, aimAngle) * Math.min(1, dt * 16);
+  const steps = Math.max(1, Math.ceil(Math.max(dist / 3, Math.abs(dAng) / 0.05)));
+  shovelScale += (shovelTarget() - shovelScale) * Math.min(1, dt * 4);
+  markInside();
+  for (let s = 0; s < steps; s++){
+    shovel.x += mvx / steps; shovel.y += mvy / steps; shovel.angle += dAng / steps;
+    pushOut(worldShape());
+    if (s % 3 === 2) coinCollisions(1);
+    keepInside();
+  }
+  // caméra : centrée sur la pelle, laisse entrevoir les régions fermées derrière les murs
+  const box = openBox(), camK = Math.min(1, dt * 8);
+  const fit = (v, lo, hi, view) => hi - lo + 180 <= view ? (lo + hi) / 2 - view / 2 : Math.max(lo - 90, Math.min(hi + 90 - view, v));
+  cam.x += (fit(shovel.x - VW / 2, box.x0, box.x1, VW) - cam.x) * camK;
+  cam.y += (fit(shovel.y - VH / 2, box.y0, box.y1, VH) - cam.y) * camK;
+
+  for (const c of coins){
+    c.x += c.vx * dt; c.y += c.vy * dt; c.vx *= 0.9; c.vy *= 0.9;
+    if (c.z > 0 || c.vz !== 0){
+      c.vz += 2200 * dt; c.z -= c.vz * dt;
+      if (c.z <= 0){ c.z = 0; c.vz = c.vz > 300 ? -c.vz * 0.3 : 0; }
+    }
+  }
+  const ws = worldShape();
+  for (let k = 0; k < 4; k++){ coinCollisions(1); pushOut(ws); keepInside(); }
+  for (const c of coins){ const [x, y] = clampOpen(c.x, c.y, R + 2); c.x = x; c.y = y; }
+
+  // pluie : peut faire tomber plusieurs billes par image quand elle est très améliorée
+  dropClock += dt;
+  while (dropClock > dropEvery()){ dropClock -= dropEvery(); if (coins.length < maxFloor()) dropCoin(); }
+
+  for (let i = coins.length - 1; i >= 0; i--){
+    const c = coins[i];
+    if (c.z > 0) continue;
+    if (Math.hypot(c.x - hole.x, c.y - hole.y) < hole.r - R * 0.3){ coins.splice(i, 1); swallow(c.x, c.y, c.type); }
+  }
+  for (let i = sinking.length - 1; i >= 0; i--){
+    const s = sinking[i];
+    s.x += (hole.x - s.x) * Math.min(1, dt * 10); s.y += (hole.y - s.y) * Math.min(1, dt * 10); s.k -= dt * 4;
+    if (s.k <= 0){ sinking.splice(i, 1); cashIn(s); }
+  }
+  hole.pulse = Math.max(0, hole.pulse - dt * 5);
+  hole.r += (holeTarget() - hole.r) * Math.min(1, dt * 3);
+
+  sparks.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.92; p.vy *= 0.92; p.life -= dt; });
+  sparks = sparks.filter(p => p.life > 0);
+  floaters.forEach(f => { f.life -= dt; f.y -= 40 * dt; });
+  floaters = floaters.filter(f => f.life > 0);
+  countEl.textContent = bank;
+  bonusClock -= dt; if (bonusClock <= 0){ bonusClock = 0.1; refreshBonus(); }
+  if (moved && purchases === 0 && bank >= 10){ hint.innerHTML = 'Touche un bonus en bas<br>pour l\'acheter avec ta fortune'; hint.style.opacity = 1; }
+  else if (moved) hint.style.opacity = 0;
+}
+
+// ---------- dessin ----------
+function drawCoin(x, y, r, type = 'center'){
+  const T = REGIONS[type];
+  ctx.fillStyle = T.d; ctx.beginPath(); ctx.arc(x, y + 2, r, 0, 7); ctx.fill();
+  ctx.fillStyle = T.c; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+  ctx.fillStyle = T.h; ctx.fillRect(x - r * 0.45, y - r * 0.5, r * 0.35, r * 0.35);
+}
+function drawHole(){
+  const r = hole.r * (1 + hole.pulse * 0.08);
+  ctx.fillStyle = '#c98a12'; ctx.beginPath(); ctx.arc(hole.x, hole.y, r + 6, 0, 7); ctx.fill();
+  ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(hole.x, hole.y - 1, r + 4, 0, 7); ctx.fill();
+  ctx.fillStyle = '#05030b'; ctx.beginPath(); ctx.arc(hole.x, hole.y, r, 0, 7); ctx.fill();
+  ctx.fillStyle = '#1a1230'; ctx.beginPath(); ctx.ellipse(hole.x, hole.y - r * 0.35, r * 0.8, r * 0.45, 0, Math.PI, 0); ctx.fill();
+  for (const s of sinking){ ctx.globalAlpha = Math.max(0, s.k); drawCoin(s.x, s.y, R * Math.max(0.2, s.k), s.type); }
+  ctx.globalAlpha = 1;
+}
+function drawGate(g){
+  if (g.r.open) return;
+  const { x, y, s } = g, cost = g.r.cost, ok = bank >= cost;
+  if (ok){ ctx.fillStyle = g.r.c + '33'; const k = 6 + Math.sin(t * 6) * 4; ctx.fillRect(x - k, y - k, s + 2 * k, s + 2 * k); }
+  ctx.fillStyle = g.r.c + (ok ? '44' : '14'); ctx.fillRect(x, y, s, s);
+  ctx.strokeStyle = g.r.c; ctx.lineWidth = ok ? 4 : 3; ctx.strokeRect(x, y, s, s);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#f6f0ff';
+  ctx.font = '7px "Press Start 2P", monospace'; ctx.fillText(ok ? 'TOUCHE' : g.r.name, x + s / 2, y + s * 0.3);
+  const lx = x + s / 2, ly = y + s * 0.5;
+  ctx.strokeStyle = '#f6f0ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(lx, ly - 2, 4, Math.PI, 0); ctx.stroke();
+  ctx.fillRect(lx - 6, ly - 2, 12, 8);
+  ctx.fillStyle = ok ? '#ffcc33' : '#f6f0ffaa'; ctx.fillText(cost, x + s / 2, y + s * 0.85);
+  ctx.textAlign = 'left';
+}
+function drawShovel(){
+  const pts = worldShape();
+  const path = () => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); };
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.save(); ctx.translate(0, 4); path(); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = THICK * 2 + 4; ctx.stroke(); ctx.restore();
+  path(); ctx.strokeStyle = '#0e0a1c'; ctx.lineWidth = THICK * 2 + 4; ctx.stroke();
+  path(); ctx.strokeStyle = '#7ee0ff'; ctx.lineWidth = THICK * 2; ctx.stroke();
+  path(); ctx.strokeStyle = '#e8fbff'; ctx.lineWidth = Math.max(1, THICK * 0.6); ctx.stroke();
+}
+// cases fermées : assombries, et un mur à barreaux sur chaque bord partagé avec une case ouverte
+function drawLocked(){
+  for (let col = 0; col < 3; col++) for (let row = 0; row < 3; row++){
+    const key = regionAt(col * CW + 1, row * CH + 1), open = key && REGIONS[key].open;
+    if (open) continue;
+    ctx.fillStyle = '#0b0816e0'; ctx.fillRect(col * CW, row * CH, CW, CH);
+    if (key){ ctx.fillStyle = REGIONS[key].c + '18'; ctx.fillRect(col * CW, row * CH, CW, CH); } // teinte de la future région
+    for (const [dc, dr] of [[-1, 0], [1, 0], [0, -1], [0, 1]]){
+      const nk = regionAt((col + dc) * CW + 1, (row + dr) * CH + 1);
+      if (!nk || !REGIONS[nk].open || col + dc < 0 || col + dc > 2 || row + dr < 0 || row + dr > 2) continue;
+      ctx.fillStyle = '#4a3f66';
+      if (dc){ const wx = dc < 0 ? col * CW : (col + 1) * CW; ctx.fillRect(wx - 4, row * CH, 8, CH);
+        ctx.fillStyle = '#6b5f8a'; for (let y = row * CH; y < (row + 1) * CH; y += 40) ctx.fillRect(wx - 7, y, 14, 10); }
+      else { const wy = dr < 0 ? row * CH : (row + 1) * CH; ctx.fillRect(col * CW, wy - 4, CW, 8);
+        ctx.fillStyle = '#6b5f8a'; for (let x = col * CW; x < (col + 1) * CW; x += 40) ctx.fillRect(x, wy - 7, 10, 14); }
+    }
+  }
+}
+function draw(){
+  const VW = W / cam.z, VH = H / cam.z;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#0b0816'; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.scale(cam.z, cam.z); ctx.translate(-cam.x, -cam.y);
+  ctx.fillStyle = '#2a2140'; ctx.fillRect(0, 0, WW, WH);
+  ctx.fillStyle = '#342950';
+  const gx0 = Math.max(0, Math.floor(cam.x / 48) * 48), gy0 = Math.max(0, Math.floor(cam.y / 48) * 48);
+  for (let gx = gx0; gx < Math.min(WW, cam.x + VW); gx += 48) for (let gy = gy0; gy < Math.min(WH, cam.y + VH); gy += 48)
+    if ((gx + gy) / 48 % 2 === 0) ctx.fillRect(gx, gy, 48, 48);
+  for (const k in REGIONS){ const r = REGIONS[k]; if (r.open && k !== 'center'){ const c = cellRect(r); ctx.fillStyle = r.c + '10'; ctx.fillRect(c.x0, c.y0, CW, CH); } }
+  drawHole();
+  for (const c of coins){
+    if (c.x < cam.x - 20 || c.x > cam.x + VW + 20 || c.y - c.z < cam.y - 20 || c.y > cam.y + VH + 20) continue;
+    if (c.z > 0){
+      const k = Math.max(0.3, 1 - c.z / 400);
+      ctx.fillStyle = 'rgba(0,0,0,' + (0.35 * k) + ')';
+      ctx.beginPath(); ctx.ellipse(c.x, c.y + 3, R * k, R * 0.5 * k, 0, 0, 7); ctx.fill();
+    }
+    drawCoin(c.x, c.y - c.z, R, c.type);
+  }
+  drawLocked();
+  gates.forEach(drawGate);
+  drawShovel();
+  for (const p of sparks){ ctx.globalAlpha = Math.min(1, p.life * 2); ctx.fillStyle = p.color; ctx.fillRect(p.x - 2, p.y - 2, 4, 4); }
+  ctx.textAlign = 'center'; ctx.font = '9px "Press Start 2P", monospace';
+  floaters.forEach(f => { ctx.globalAlpha = Math.max(0, f.life * 1.5); ctx.fillStyle = f.color; ctx.fillText(f.txt, f.x, f.y - 12); });
+  ctx.globalAlpha = 1; ctx.textAlign = 'left';
+  ctx.restore();
+  drawMinimap();
+  if (joy.on && !joy.mouse){
+    ctx.strokeStyle = '#f6f0ff33'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(joy.ox, joy.oy, JOY_RADIUS, 0, 7); ctx.stroke();
+    ctx.fillStyle = '#f6f0ff44'; ctx.beginPath(); ctx.arc(joy.x, joy.y, 14, 0, 7); ctx.fill();
+  }
+}
+// minicarte en haut à droite : la grille, les régions, les portes, les billes, le trou et la pelle
+function drawMinimap(){
+  const sc = Math.min(110 / WW, 150 / WH), mw = WW * sc, mh = WH * sc;
+  const mx = W - mw - 12, my = safeTop() + 14;
+  ctx.fillStyle = '#0e0a1ccc'; ctx.fillRect(mx - 4, my - 4, mw + 8, mh + 8);
+  ctx.fillStyle = '#05030b'; ctx.fillRect(mx, my, mw, mh);
+  for (const k in REGIONS){
+    const r = REGIONS[k], c = cellRect(r);
+    ctx.fillStyle = r.open ? '#2a2140' : r.c + '22';
+    ctx.fillRect(mx + c.x0 * sc, my + c.y0 * sc, CW * sc - 1, CH * sc - 1);
+  }
+  for (const c of coins){ ctx.fillStyle = REGIONS[c.type].c + '99'; ctx.fillRect(mx + c.x * sc - 0.5, my + c.y * sc - 0.5, 1.5, 1.5); }
+  for (const g of gates){ if (g.r.open || (bank >= g.r.cost && Math.sin(t * 8) < 0)) continue; ctx.fillStyle = g.r.c; ctx.fillRect(mx + g.x * sc - 1, my + g.y * sc - 1, 4, 4); }
+  const hr = Math.max(3, hole.r * sc);
+  ctx.fillStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(mx + hole.x * sc, my + hole.y * sc, hr + 2, 0, 7); ctx.fill();
+  ctx.fillStyle = '#05030b'; ctx.beginPath(); ctx.arc(mx + hole.x * sc, my + hole.y * sc, hr, 0, 7); ctx.fill();
+  ctx.strokeStyle = '#f6f0ff88'; ctx.lineWidth = 1; ctx.strokeRect(mx + cam.x * sc, my + cam.y * sc, W / cam.z * sc, H / cam.z * sc);
+  const px = mx + shovel.x * sc, py = my + shovel.y * sc, a = shovel.angle;
+  ctx.fillStyle = '#7ee0ff'; ctx.beginPath();
+  ctx.moveTo(px + Math.cos(a) * 6, py + Math.sin(a) * 6);
+  ctx.lineTo(px + Math.cos(a + 2.4) * 4, py + Math.sin(a + 2.4) * 4);
+  ctx.lineTo(px + Math.cos(a - 2.4) * 4, py + Math.sin(a - 2.4) * 4); ctx.fill();
+}
+
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  update(dt); draw(); requestAnimationFrame(loop);
+}
+init(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>
